@@ -273,24 +273,20 @@ export class TemplateEngine {
       // Get version from predefined data
       const version = this.badgeGenerator.getVersion(manager) || "N/A";
       
-      // Stars badge - use GitHub social style
-      badges.push(
-        `![${manager} stars](https://img.shields.io/github/stars/${repo}?style=social&label=${encodeURIComponent(manager)})`
-      );
+      // Create a line for each manager with version first, then stars
+      let managerLine = `- **${manager}**: `;
       
       // Version badge
       if (version !== "N/A") {
         // Clean version string (remove 'v' prefix for consistency)
         const cleanVersion = version.startsWith('v') ? version.substring(1) : version;
-        badges.push(
-          `![${manager} version](https://img.shields.io/badge/v-${cleanVersion}-blue?label=${encodeURIComponent(manager)})`
-        );
+        managerLine += `![version](https://img.shields.io/badge/v-${cleanVersion}-blue) `;
       }
-    }
-    
-    // Group badges by manager (2 badges per manager, so group by 2)
-    for (let i = 0; i < badges.length; i += 2) {
-      sections.push(badges.slice(i, i + 2).join(" "));
+      
+      // Stars badge - use GitHub social style
+      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social)`;
+      
+      sections.push(managerLine);
     }
     
     return sections.join("\n");
