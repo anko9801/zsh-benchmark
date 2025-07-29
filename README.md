@@ -103,10 +103,6 @@ _Plugin installation time comparison across different plugin managers_
 ![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm) ![zpm version](https://img.shields.io/badge/v-1.4.0-blue?label=zpm)
 ![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zplug version](https://img.shields.io/badge/v-2.4.2-blue?label=zplug)
 
-## 🛠️ Environment
-
-![Deno](https://img.shields.io/badge/Deno-v2.4.2-black?logo=deno&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-v5.8.3-blue?logo=typescript&logoColor=white) ![V8](https://img.shields.io/badge/V8-v13.7.152.14--rusty-green?logo=v8&logoColor=white) ![OS](https://img.shields.io/badge/OS-macOS%20-lightgray?logo=apple&logoColor=white)
-
 ## 📝 Methodology
 
 Benchmarks were performed using:

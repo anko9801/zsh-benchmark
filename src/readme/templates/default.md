@@ -32,10 +32,6 @@
 
 {{managerBadges}}
 
-## 🛠️ Environment
-
-{{environmentBadges}}
-
 ## 📝 Methodology
 
 Benchmarks were performed using:
