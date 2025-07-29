@@ -1,6 +1,6 @@
 // Template engine for README generation
 
-import { TemplateData, VersionInfo } from "./types.ts";
+import { TemplateData } from "./types.ts";
 import {
   calculatePercentageIncrease,
   formatNumber,
@@ -35,9 +35,8 @@ export class TemplateEngine {
       const defaultPath =
         new URL("./templates/default.md", import.meta.url).pathname;
       return await Deno.readTextFile(defaultPath);
-    } catch {
-      // Fallback to embedded template
-      return this.getDefaultTemplate();
+    } catch (error) {
+      throw new Error(`Failed to load template: ${error}`);
     }
   }
 
@@ -115,11 +114,6 @@ export class TemplateEngine {
       this.formatManagerBadges(data),
     );
     
-    // Replace environment badges
-    result = result.replace(
-      "{{environmentBadges}}",
-      this.formatEnvironmentBadges(data.versionInfo),
-    );
 
     // Replace any remaining executedAt placeholders
     result = result.replace(
@@ -173,7 +167,6 @@ export class TemplateEngine {
 
     for (const ranking of rankings) {
       const rank = `#${ranking.rank}`;
-      const medal = ranking.medal || "-";
       const displayRank = ranking.medal || rank;
       sections.push(
         `| ${displayRank} | ${ranking.manager} | ${
@@ -185,61 +178,9 @@ export class TemplateEngine {
     return sections.join("\n");
   }
 
-  private formatVersionInfo(versionInfo: VersionInfo): string {
-    const badges: string[] = [];
-
-    // Tools badges
-    for (const [tool, version] of versionInfo.tools) {
-      const color = tool === "Deno" ? "black" : tool === "TypeScript" ? "blue" : "green";
-      const logo = tool === "Deno" ? "deno" : tool === "TypeScript" ? "typescript" : "v8";
-      badges.push(
-        `![${tool}](https://img.shields.io/badge/${tool.replace(" ", "%20")}-v${version.replace("-", "--")}-${color}?logo=${logo}&logoColor=white)`
-      );
-    }
-
-    // Environment badges
-    if (versionInfo.environment.os) {
-      const osName = versionInfo.environment.os === "darwin" ? "macOS" : versionInfo.environment.os;
-      const osVersion = versionInfo.environment.osVersion || "";
-      badges.push(
-        `![OS](https://img.shields.io/badge/OS-${osName}%20${osVersion}-lightgray?logo=apple&logoColor=white)`
-      );
-    }
-
-    if (versionInfo.environment.shell) {
-      const shellVersion = versionInfo.environment.shellVersion || "";
-      badges.push(
-        `![Shell](https://img.shields.io/badge/Shell-${versionInfo.environment.shell}%20${shellVersion}-orange?logo=gnu-bash&logoColor=white)`
-      );
-    }
-
-    // Plugin managers table with version badges
-    const sections: string[] = [];
-    sections.push(badges.join(" "));
-    sections.push("");
-    sections.push("### Plugin Manager Versions");
-    sections.push("");
-    
-    const managerBadges: string[] = [];
-    for (const [manager, version] of versionInfo.managers) {
-      if (version !== "N/A") {
-        managerBadges.push(
-          `![${manager}](https://img.shields.io/badge/${manager}-${version}-blue)`
-        );
-      }
-    }
-    
-    // Split manager badges into groups of 4 for readability
-    for (let i = 0; i < managerBadges.length; i += 4) {
-      sections.push(managerBadges.slice(i, i + 4).join(" "));
-    }
-
-    return sections.join("\n");
-  }
 
   private formatManagerBadges(data: TemplateData): string {
     const sections: string[] = [];
-    const badges: string[] = [];
     
     const repoMapping = new Map([
       ["alf", "psyrendust/alf"],
@@ -271,7 +212,7 @@ export class TemplateEngine {
     // Calculate max name length for alignment
     const maxNameLength = Math.max(...managersWithStars.map(m => m.manager.length));
     
-    for (const { manager, stars } of managersWithStars) {
+    for (const { manager } of managersWithStars) {
       const repo = repoMapping.get(manager);
       if (!repo) continue;
       
@@ -281,8 +222,6 @@ export class TemplateEngine {
       // Pad manager name for alignment
       const paddedManager = manager.padEnd(maxNameLength);
       
-      // Get last release from predefined data
-      const lastRelease = this.badgeGenerator.getLastRelease(manager) || "N/A";
       
       // Create a line for each manager with aligned formatting
       let managerLine = `| ${paddedManager} | `;
@@ -312,100 +251,6 @@ export class TemplateEngine {
     return sections.join("\n");
   }
   
-  private formatEnvironmentBadges(versionInfo: VersionInfo): string {
-    const badges: string[] = [];
-
-    // Tools badges
-    for (const [tool, version] of versionInfo.tools) {
-      const color = tool === "Deno" ? "black" : tool === "TypeScript" ? "blue" : "green";
-      const logo = tool === "Deno" ? "deno" : tool === "TypeScript" ? "typescript" : "v8";
-      badges.push(
-        `![${tool}](https://img.shields.io/badge/${tool.replace(" ", "%20")}-v${version.replace("-", "--")}-${color}?logo=${logo}&logoColor=white)`
-      );
-    }
-
-    // Environment badges
-    if (versionInfo.environment.os) {
-      const osName = versionInfo.environment.os === "darwin" ? "macOS" : versionInfo.environment.os;
-      const osVersion = versionInfo.environment.osVersion || "";
-      badges.push(
-        `![OS](https://img.shields.io/badge/OS-${osName}%20${osVersion}-lightgray?logo=apple&logoColor=white)`
-      );
-    }
-
-    if (versionInfo.environment.shell) {
-      const shellVersion = versionInfo.environment.shellVersion || "";
-      badges.push(
-        `![Shell](https://img.shields.io/badge/Shell-${versionInfo.environment.shell}%20${shellVersion}-orange?logo=gnu-bash&logoColor=white)`
-      );
-    }
-
-    return badges.join(" ");
-  }
   
-  private formatStars(stars: number): string {
-    if (stars >= 1000) {
-      return `${(stars / 1000).toFixed(1)}k`;
-    }
-    return stars.toString();
-  }
 
-  private getDefaultTemplate(): string {
-    return `# Zsh Plugin Manager Benchmark Results
-
-{{badges}}
-
-## 📊 Executive Summary
-
-- **Benchmark Date:** {{executedAt}}
-- **Test Environment:** {{environment}}
-- **Key Findings:**
-  - {{keyFindings}}
-
-## 🏆 Performance Rankings
-
-### Load Time Rankings
-
-{{loadTimeRankings}}
-
-### Installation Time Rankings
-
-{{installTimeRankings}}
-
-### Overall Performance
-
-{{overallRankings}}
-
-## 📈 Detailed Comparison
-
-### Performance Metrics
-
-{{comparisonTable}}
-
-### Visual Analysis
-
-{{graphs}}
-
-## 💡 Recommendations
-
-### For Speed-Focused Users
-{{speedRecommendation}}
-
-### For Feature-Rich Setup
-{{featureRecommendation}}
-
-### Balanced Approach
-{{balancedRecommendation}}
-
-## 🔍 Plugin Manager Characteristics
-
-
-## 📦 Version Information
-
-{{versionInfo}}
-
----
-_Generated by [zsh-benchmark](https://github.com/your-repo/zsh-benchmark)_
-`;
-  }
 }

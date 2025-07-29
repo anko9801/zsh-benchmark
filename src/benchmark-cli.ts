@@ -22,7 +22,7 @@ async function prepareConfig(manager: PluginManager, pluginCount: number): Promi
     let template: string;
     try {
       template = await loadTemplate(config.template);
-    } catch (error) {
+    } catch (_error) {
       logger.warn(`Template ${config.template} not found, creating minimal config`);
       // Create minimal configs for missing templates
       if (config.isPluginList) {

@@ -1,7 +1,7 @@
 // Chart generation utilities
 
 import { BenchmarkData, ChartOptions } from "./types.ts";
-import { formatDuration, formatPercentage, calculatePercentageIncrease } from "./utils.ts";
+// Removed unused imports from utils.ts
 
 export class ChartGenerator {
   private options: ChartOptions;

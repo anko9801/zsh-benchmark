@@ -45,25 +45,6 @@ export class BadgeGenerator {
     ["alf", "v0.2.0"],
   ]);
   
-  // Predefined last release dates
-  private lastReleases: Map<string, string> = new Map([
-    ["oh-my-zsh", "2024-12"],
-    ["prezto", "2024-11"],
-    ["antigen", "2018-10"],
-    ["zplug", "2016-11"],
-    ["zim", "2024-10"],
-    ["zinit", "2024-01"],
-    ["antibody", "2020-02"],
-    ["znap", "2024-09"],
-    ["antidote", "2024-11"],
-    ["sheldon", "2024-10"],
-    ["zpm", "2019-11"],
-    ["zgenom", "2024-11"],
-    ["zcomet", "2024-08"],
-    ["antigen-hs", "2015-03"],
-    ["zr", "2016-11"],
-    ["alf", "2015-12"],
-  ]);
 
   constructor(repoMapping: Map<string, string>) {
     this.repoMapping = repoMapping;
@@ -81,28 +62,6 @@ export class BadgeGenerator {
     return badges;
   }
 
-  generateManagerBadges(manager: string, repo: string): {
-    stars: string;
-    version: string;
-    lastCommit: string;
-  } {
-    return {
-      stars: `https://img.shields.io/github/stars/${repo}?style=social`,
-      version: `https://img.shields.io/github/v/release/${repo}?label=version`,
-      lastCommit: `https://img.shields.io/github/last-commit/${repo}?label=last%20commit`,
-    };
-  }
-
-  generateStatusBadge(status: "passing" | "failing" | "unknown"): string {
-    const color = status === "passing" ? "green" : status === "failing" ? "red" : "gray";
-    return `https://img.shields.io/badge/benchmark-${status}-${color}`;
-  }
-
-  generateTimeBadge(label: string, time: number, unit: "ms" | "s" = "ms"): string {
-    const color = time < 50 ? "green" : time < 100 ? "yellow" : "red";
-    const formattedTime = unit === "s" ? (time / 1000).toFixed(2) : time.toFixed(0);
-    return `https://img.shields.io/badge/${encodeURIComponent(label)}-${formattedTime}${unit}-${color}`;
-  }
   
   getStarCount(manager: string): number | undefined {
     return this.starCounts.get(manager);
@@ -112,7 +71,4 @@ export class BadgeGenerator {
     return this.versions.get(manager);
   }
   
-  getLastRelease(manager: string): string | undefined {
-    return this.lastReleases.get(manager);
-  }
 }

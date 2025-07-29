@@ -128,7 +128,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "sheldon.zshrc" }
     ],
     generatePluginLoad: (plugin) => {
-      const [user, repo] = plugin.split('/');
+      const [_user, repo] = plugin.split('/');
       return `[plugins.${repo}]\ngithub = "${plugin}"`;
     },
     preInstallCommand: "sheldon lock",

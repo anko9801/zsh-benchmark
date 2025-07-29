@@ -45,18 +45,21 @@ async function diagnoseManager(managerName: string) {
 
   // Check for specific manager files
   switch (managerName) {
-    case "antigen":
+    case "antigen": {
       const antigenExists = await exists(expandPath("~/antigen.zsh"));
       console.log(`~/antigen.zsh: ${antigenExists ? "✅ exists" : "❌ missing"}`);
       break;
-    case "antidote":
+    }
+    case "antidote": {
       const antidoteExists = await exists("/usr/local/share/antidote");
       console.log(`/usr/local/share/antidote: ${antidoteExists ? "✅ exists" : "❌ missing"}`);
       break;
-    case "zcomet":
+    }
+    case "zcomet": {
       const zcometExists = await exists(expandPath("~/.zcomet"));
       console.log(`~/.zcomet: ${zcometExists ? "✅ exists" : "❌ missing"}`);
       break;
+    }
   }
 }
 

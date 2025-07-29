@@ -1,7 +1,6 @@
 // Main README generator class that orchestrates all modules
 
 import {
-  BadgeInfo,
   ExecutiveSummary,
   GenerateReadmeOptions,
   ParsedData,
@@ -18,7 +17,6 @@ import { GitHubAPI } from "./github-api.ts";
 import { GraphHandler } from "./graph-handler.ts";
 import { TemplateEngine } from "./template-engine.ts";
 // Removed unused imports: createError, ErrorCode
-import { PerformanceMonitor } from "./performance.ts";
 import { BadgeGenerator } from "./badge-generator.ts";
 
 export class ReadmeGenerator {
@@ -29,7 +27,6 @@ export class ReadmeGenerator {
   private githubAPI: GitHubAPI;
   private graphHandler: GraphHandler;
   private templateEngine: TemplateEngine;
-  private performanceMonitor: PerformanceMonitor;
   private badgeGenerator: BadgeGenerator;
 
   constructor(options: GenerateReadmeOptions) {
@@ -40,51 +37,32 @@ export class ReadmeGenerator {
     this.githubAPI = new GitHubAPI();
     this.graphHandler = new GraphHandler();
     this.templateEngine = new TemplateEngine();
-    this.performanceMonitor = new PerformanceMonitor();
     this.badgeGenerator = new BadgeGenerator(this.githubAPI.getRepoMapping());
   }
 
   async generate(): Promise<void> {
     try {
-      if (this.options.debug) {
-        this.performanceMonitor.mark("start");
-      }
 
       // Step 1: Parse benchmark data
       if (this.options.debug) {
         console.log("Parsing benchmark data...");
-        this.performanceMonitor.mark("parse-start");
       }
       const parsedData = await this.dataParser.parse(this.options.inputFile!);
-      if (this.options.debug) {
-        this.performanceMonitor.measure("Data parsing", "parse-start");
-      }
 
       // Step 2: Calculate rankings
       if (this.options.debug) {
         console.log("Calculating rankings...");
-        this.performanceMonitor.mark("rankings-start");
       }
       const rankings = this.rankingEngine.generateRankings(parsedData);
-      if (this.options.debug) {
-        this.performanceMonitor.measure(
-          "Rankings calculation",
-          "rankings-start",
-        );
-      }
 
       // Step 3: Fetch GitHub information (parallel)
       if (this.options.debug) {
         console.log("Fetching GitHub information...");
-        this.performanceMonitor.mark("github-start");
       }
       const managerNames = parsedData.managers.map((m) => m.name);
       const githubInfo = await this.githubAPI.fetchMultipleManagers(
         managerNames,
       );
-      if (this.options.debug) {
-        this.performanceMonitor.measure("GitHub API calls", "github-start");
-      }
 
       // Step 4: Detect graphs
       if (this.options.debug) {
@@ -132,9 +110,7 @@ export class ReadmeGenerator {
       await Deno.writeTextFile(this.options.outputFile!, readme);
 
       if (this.options.debug) {
-        this.performanceMonitor.measure("Total time", "start");
         console.log("README generation complete!");
-        console.log(this.performanceMonitor.getReport());
       }
     } catch (error) {
       throw error; // Re-throw to be handled by CLI

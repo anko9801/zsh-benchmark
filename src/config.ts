@@ -58,7 +58,7 @@ export function validatePluginCounts(counts: number[]): number[] {
   return counts;
 }
 
-export function parseOptions(args: any): BenchmarkOptions {
+export function parseOptions(args: Record<string, unknown>): BenchmarkOptions {
   // Parse managers
   let managers = DEFAULT_CONFIG.defaults.managers;
   if (args.managers) {
