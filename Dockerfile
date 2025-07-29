@@ -1,5 +1,5 @@
 # Zsh plugin manager benchmarking Docker image
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Prevent interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
