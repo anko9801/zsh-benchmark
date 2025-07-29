@@ -181,6 +181,7 @@ export class ReadmeGenerator {
       graphs,
       versionInfo,
       badges,
+      githubInfo,
     };
   }
 

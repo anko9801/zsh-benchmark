@@ -1,10 +1,5 @@
 # Zsh Plugin Manager Benchmark Results
 
-![Deno](https://img.shields.io/badge/deno-1.46.0-black?logo=deno) ![License](https://img.shields.io/badge/license-MIT-blue) ![alf stars](https://img.shields.io/github/stars/psyrendust/alf?style=social&label=alf) ![antibody stars](https://img.shields.io/github/stars/getantibody/antibody?style=social&label=antibody) ![antidote stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social&label=antidote) ![antigen stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social&label=antigen)
-![antigen-hs stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social&label=antigen-hs) ![oh-my-zsh stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social&label=oh-my-zsh) ![prezto stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social&label=prezto) ![sheldon stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social&label=sheldon) ![zcomet stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social&label=zcomet) ![zgen stars](https://img.shields.io/github/stars/tarjoilija/zgen?style=social&label=zgen)
-![zgenom stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social&label=zgenom) ![zim stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social&label=zim) ![zinit stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social&label=zinit) ![znap stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social&label=znap) ![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm)
-![zr stars](https://img.shields.io/github/stars/jedahan/zr?style=social&label=zr)
-
 ![Benchmark Status](https://img.shields.io/badge/benchmark%20status-automated-brightgreen)
 ![Last Updated](https://img.shields.io/badge/last%20updated-2025-07-29-blue)
 
@@ -89,33 +84,28 @@ _Plugin installation time comparison across different plugin managers_
 | #15 | zpm | 302.62 |
 | #16 | zplug | 404.93 |
 
-## 📈 Detailed Comparison
+## 📦 Plugin Managers
 
-| Plugin Manager | Stars | Install (25) | Load (25) | Install (0) | Load (0) |
-|---|---|---|---|---|---|
-| antigen | 0 | 395 | **35.16** | 394 | 34.88 |
-| antidote | 0 | **33** | 37.48 | 34 | 34.36 |
-| znap | 0 | 138 | 101.26 | 63 | 33.67 |
-| zim | 0 | 35 | 121.79 | 38 | 34.18 |
-| zgenom | 0 | 124 | 131.34 | **32** | 33.26 |
-| zcomet | 0 | 149 | 142.41 | 37 | 37.65 |
-| antigen-hs | 0 | 146 | 144.01 | 33 | **32.56** |
-| sheldon | 0 | 569 | 154.25 | 54 | 34.65 |
-| alf | 0 | 151 | 160.55 | 36 | 40.74 |
-| zr | 0 | 146 | 171.31 | 33 | 32.71 |
-| prezto | 0 | 203 | 198.09 | 150 | 116.57 |
-| oh-my-zsh | 0 | 352 | 236.00 | 153 | 193.51 |
-| antibody | 0 | 258 | 278.79 | 38 | 38.30 |
-| zinit | 0 | 541 | 485.30 | 82 | 50.41 |
-| zpm | 0 | 564 | 526.62 | 71 | 65.52 |
-| zplug | 0 | 665 | 676.48 | 133 | 138.25 |
+![antidote stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social&label=antidote) ![antidote version](https://img.shields.io/badge/v-1.9.7-blue?label=antidote)
+![zim stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social&label=zim) ![zim version](https://img.shields.io/badge/v-1.14.0-blue?label=zim)
+![znap stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social&label=znap) ![znap version](https://img.shields.io/badge/v-1.2.0-blue?label=znap)
+![zgenom stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social&label=zgenom) ![zgenom version](https://img.shields.io/badge/v-master-blue?label=zgenom)
+![antigen-hs stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social&label=antigen-hs) ![antigen-hs version](https://img.shields.io/badge/v-1.1.0.0-blue?label=antigen-hs)
+![zcomet stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social&label=zcomet) ![zcomet version](https://img.shields.io/badge/v-1.5.0-blue?label=zcomet)
+![zr stars](https://img.shields.io/github/stars/jedahan/zr?style=social&label=zr) ![zr version](https://img.shields.io/badge/v-1.0.0-blue?label=zr)
+![alf stars](https://img.shields.io/github/stars/psyrendust/alf?style=social&label=alf) ![alf version](https://img.shields.io/badge/v-0.2.0-blue?label=alf)
+![antigen stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social&label=antigen) ![antigen version](https://img.shields.io/badge/v-2.2.3-blue?label=antigen)
+![antibody stars](https://img.shields.io/github/stars/getantibody/antibody?style=social&label=antibody) ![antibody version](https://img.shields.io/badge/v-6.1.1-blue?label=antibody)
+![sheldon stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social&label=sheldon) ![sheldon version](https://img.shields.io/badge/v-0.8.0-blue?label=sheldon)
+![prezto stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social&label=prezto) ![prezto version](https://img.shields.io/badge/v-master-blue?label=prezto)
+![oh-my-zsh stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social&label=oh-my-zsh) ![oh-my-zsh version](https://img.shields.io/badge/v-master-blue?label=oh-my-zsh)
+![zinit stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social&label=zinit) ![zinit version](https://img.shields.io/badge/v-3.13.1-blue?label=zinit)
+![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm) ![zpm version](https://img.shields.io/badge/v-1.4.0-blue?label=zpm)
+![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zplug version](https://img.shields.io/badge/v-2.4.2-blue?label=zplug)
 
-## 📦 Version Information
+## 🛠️ Environment
 
 ![Deno](https://img.shields.io/badge/Deno-v2.4.2-black?logo=deno&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-v5.8.3-blue?logo=typescript&logoColor=white) ![V8](https://img.shields.io/badge/V8-v13.7.152.14--rusty-green?logo=v8&logoColor=white) ![OS](https://img.shields.io/badge/OS-macOS%20-lightgray?logo=apple&logoColor=white)
-
-### Plugin Manager Versions
-
 
 ## 📝 Methodology
 
@@ -132,6 +122,8 @@ Benchmarks were performed using:
 Found an issue or want to add your plugin manager? Please open an issue or PR!
 
 ---
+
+![License](https://img.shields.io/badge/license-MIT-blue)
 
 _Generated by [zsh-benchmark](https://github.com/your-repo/zsh-benchmark) on
 2025-07-29_

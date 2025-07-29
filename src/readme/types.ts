@@ -83,6 +83,7 @@ export interface TemplateData {
   graphs: GraphInfo[];
   versionInfo: VersionInfo;
   badges: BadgeInfo[];
+  githubInfo?: Map<string, GitHubInfo>;
 }
 
 export interface ExecutiveSummary {

@@ -6,8 +6,16 @@ import {
   formatNumber,
   formatPercentage,
 } from "../utils.ts";
+import { BadgeGenerator } from "./badge-generator.ts";
 
 export class TemplateEngine {
+  private badgeGenerator: BadgeGenerator;
+  
+  constructor() {
+    // Initialize with empty repo mapping - we'll use predefined data
+    this.badgeGenerator = new BadgeGenerator(new Map());
+  }
+  
   async render(data: TemplateData, templatePath?: string): Promise<string> {
     const template = await this.loadTemplate(templatePath);
     return this.replacePlaceholders(template, data);
@@ -76,8 +84,8 @@ export class TemplateEngine {
       this.formatOverallRankings(data),
     );
 
-    // Replace comparison table
-    result = result.replace("{{comparisonTable}}", data.comparisonTable);
+    // Remove comparison table placeholder if still present
+    result = result.replace("{{comparisonTable}}", "");
 
     // Replace individual graphs
     const loadTimeGraph = data.graphs.find(g => g.path.includes("load-time"));
@@ -101,10 +109,16 @@ export class TemplateEngine {
       result = result.replace("{{installTimeGraph}}", "");
     }
 
-    // Replace version info
+    // Replace manager badges
     result = result.replace(
-      "{{versionInfo}}",
-      this.formatVersionInfo(data.versionInfo),
+      "{{managerBadges}}",
+      this.formatManagerBadges(data),
+    );
+    
+    // Replace environment badges
+    result = result.replace(
+      "{{environmentBadges}}",
+      this.formatEnvironmentBadges(data.versionInfo),
     );
 
     // Replace any remaining executedAt placeholders
@@ -221,6 +235,103 @@ export class TemplateEngine {
     }
 
     return sections.join("\n");
+  }
+
+  private formatManagerBadges(data: TemplateData): string {
+    const sections: string[] = [];
+    const badges: string[] = [];
+    
+    const repoMapping = new Map([
+      ["alf", "psyrendust/alf"],
+      ["antibody", "getantibody/antibody"],
+      ["antidote", "mattmc3/antidote"],
+      ["antigen", "zsh-users/antigen"],
+      ["antigen-hs", "Tarrasch/antigen-hs"],
+      ["oh-my-zsh", "ohmyzsh/ohmyzsh"],
+      ["prezto", "sorin-ionescu/prezto"],
+      ["sheldon", "rossmacarthur/sheldon"],
+      ["zcomet", "agkozak/zcomet"],
+      ["zgen", "tarjoilija/zgen"],
+      ["zgenom", "jandamm/zgenom"],
+      ["zim", "zimfw/zimfw"],
+      ["zinit", "zdharma-continuum/zinit"],
+      ["znap", "marlonrichert/zsh-snap"],
+      ["zplug", "zplug/zplug"],
+      ["zpm", "zpm-zsh/zpm"],
+      ["zr", "jedahan/zr"],
+    ]);
+    
+    // Sort managers by overall ranking
+    const sortedManagers = [...data.rankings.overall]
+      .sort((a, b) => a.rank - b.rank)
+      .map(r => r.manager);
+    
+    for (const manager of sortedManagers) {
+      const repo = repoMapping.get(manager);
+      if (!repo) continue;
+      
+      // Get version from predefined data
+      const version = this.badgeGenerator.getVersion(manager) || "N/A";
+      
+      // Stars badge - use GitHub social style
+      badges.push(
+        `![${manager} stars](https://img.shields.io/github/stars/${repo}?style=social&label=${encodeURIComponent(manager)})`
+      );
+      
+      // Version badge
+      if (version !== "N/A") {
+        // Clean version string (remove 'v' prefix for consistency)
+        const cleanVersion = version.startsWith('v') ? version.substring(1) : version;
+        badges.push(
+          `![${manager} version](https://img.shields.io/badge/v-${cleanVersion}-blue?label=${encodeURIComponent(manager)})`
+        );
+      }
+    }
+    
+    // Group badges by manager (2 badges per manager, so group by 2)
+    for (let i = 0; i < badges.length; i += 2) {
+      sections.push(badges.slice(i, i + 2).join(" "));
+    }
+    
+    return sections.join("\n");
+  }
+  
+  private formatEnvironmentBadges(versionInfo: VersionInfo): string {
+    const badges: string[] = [];
+
+    // Tools badges
+    for (const [tool, version] of versionInfo.tools) {
+      const color = tool === "Deno" ? "black" : tool === "TypeScript" ? "blue" : "green";
+      const logo = tool === "Deno" ? "deno" : tool === "TypeScript" ? "typescript" : "v8";
+      badges.push(
+        `![${tool}](https://img.shields.io/badge/${tool.replace(" ", "%20")}-v${version.replace("-", "--")}-${color}?logo=${logo}&logoColor=white)`
+      );
+    }
+
+    // Environment badges
+    if (versionInfo.environment.os) {
+      const osName = versionInfo.environment.os === "darwin" ? "macOS" : versionInfo.environment.os;
+      const osVersion = versionInfo.environment.osVersion || "";
+      badges.push(
+        `![OS](https://img.shields.io/badge/OS-${osName}%20${osVersion}-lightgray?logo=apple&logoColor=white)`
+      );
+    }
+
+    if (versionInfo.environment.shell) {
+      const shellVersion = versionInfo.environment.shellVersion || "";
+      badges.push(
+        `![Shell](https://img.shields.io/badge/Shell-${versionInfo.environment.shell}%20${shellVersion}-orange?logo=gnu-bash&logoColor=white)`
+      );
+    }
+
+    return badges.join(" ");
+  }
+  
+  private formatStars(stars: number): string {
+    if (stars >= 1000) {
+      return `${(stars / 1000).toFixed(1)}k`;
+    }
+    return stars.toString();
   }
 
   private getDefaultTemplate(): string {
