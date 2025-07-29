@@ -1,6 +1,6 @@
 // Type definitions for README generator
 
-import { BenchmarkResult } from "../types.ts";
+import { BenchmarkResult, BenchmarkData as BaseBenchmarkData, EnvironmentInfo } from "../types.ts";
 
 // CLI Options
 export interface GenerateReadmeOptions {
@@ -13,23 +13,9 @@ export interface GenerateReadmeOptions {
   sections?: string[]; // Sections to display
 }
 
-// Data structures
-export interface BenchmarkData {
-  results: BenchmarkResult[];
-  metadata?: {
-    executedAt?: string;
-    environment?: EnvironmentInfo;
-  };
-}
-
-export interface EnvironmentInfo {
-  os?: string;
-  osVersion?: string;
-  shell?: string;
-  shellVersion?: string;
-  denoVersion?: string;
-  hyperfineVersion?: string;
-}
+// Re-export for convenience
+export type BenchmarkData = BaseBenchmarkData;
+export type { EnvironmentInfo };
 
 export interface ParsedData {
   managers: ManagerData[];

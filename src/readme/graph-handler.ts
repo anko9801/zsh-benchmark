@@ -2,6 +2,7 @@
 
 import { GraphInfo } from "./types.ts";
 import { basename, join } from "https://deno.land/std@0.220.0/path/mod.ts";
+import { exists } from "../utils.ts";
 
 export class GraphHandler {
   async detectGraphs(resultsDir = "results"): Promise<GraphInfo[]> {
@@ -84,11 +85,6 @@ export class GraphHandler {
 
   // Helper to check if a specific graph exists
   async graphExists(graphPath: string): Promise<boolean> {
-    try {
-      const stat = await Deno.stat(graphPath);
-      return stat.isFile;
-    } catch {
-      return false;
-    }
+    return await exists(graphPath);
   }
 }

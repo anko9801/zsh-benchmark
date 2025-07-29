@@ -28,6 +28,19 @@ export interface BenchmarkResult {
 
 export interface BenchmarkData {
   results: BenchmarkResult[];
+  metadata?: {
+    executedAt?: string;
+    environment?: EnvironmentInfo;
+  };
+}
+
+export interface EnvironmentInfo {
+  os?: string;
+  osVersion?: string;
+  shell?: string;
+  shellVersion?: string;
+  denoVersion?: string;
+  hyperfineVersion?: string;
 }
 
 export interface CommandResult {
