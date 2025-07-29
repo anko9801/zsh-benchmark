@@ -1,0 +1,19 @@
+{
+  "oh-my-zsh": "ohmyzsh/ohmyzsh",
+  "prezto": "sorin-ionescu/prezto",
+  "zinit": "zdharma-continuum/zinit",
+  "zplug": "zplug/zplug",
+  "antigen": "zsh-users/antigen",
+  "zim": "zimfw/zimfw",
+  "znap": "marlonrichert/zsh-snap",
+  "sheldon": "rossmacarthur/sheldon",
+  "antibody": "getantibody/antibody",
+  "zgen": "tarjoilija/zgen",
+  "zgenom": "jandamm/zgenom",
+  "zcomet": "agkozak/zcomet",
+  "zpm": "zpm-zsh/zpm",
+  "zr": "jedahan/zr",
+  "alf": "psyrendust/alf",
+  "antidote": "mattmc3/antidote",
+  "antigen-hs": "Tarrasch/antigen-hs"
+}

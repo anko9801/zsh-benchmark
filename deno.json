@@ -1,0 +1,32 @@
+{
+  "tasks": {
+    "benchmark": "deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME src/benchmark-cli.ts",
+    "test": "deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME src/benchmark-cli.ts test",
+    "versions": "deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME src/benchmark-cli.ts versions",
+    "chart:comparison": "deno run --allow-read --allow-write src/generate-comparison-chart.ts",
+    "chart:scalability": "deno run --allow-read --allow-write src/generate-scalability-chart.ts",
+    "charts": "deno task chart:comparison && deno task chart:scalability",
+    "generate-readme": "deno run --allow-read --allow-write --allow-net src/generate-readme.ts",
+    "docker:build": "docker build -t zsh-benchmark .",
+    "docker:run": "docker run --rm -v $(pwd):/benchmark zsh-benchmark",
+    "docker": "deno task docker:build && deno task docker:run",
+    "clean": "rm -rf results/*.json results/*.svg",
+    "fmt": "deno fmt",
+    "lint": "deno lint"
+  },
+  "compilerOptions": {
+    "strict": true
+  },
+  "fmt": {
+    "files": {
+      "include": ["src/"],
+      "exclude": ["results/"]
+    }
+  },
+  "lint": {
+    "files": {
+      "include": ["src/"],
+      "exclude": ["results/"]
+    }
+  }
+}

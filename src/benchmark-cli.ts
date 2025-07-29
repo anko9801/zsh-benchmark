@@ -1,0 +1,379 @@
+import { parse } from "https://deno.land/std@0.220.0/flags/mod.ts";
+import { ensureDir } from "https://deno.land/std@0.220.0/fs/mod.ts";
+import { join, dirname } from "https://deno.land/std@0.220.0/path/mod.ts";
+import { blue, bold } from "https://deno.land/std@0.220.0/fmt/colors.ts";
+
+import { BenchmarkResult, PluginManager } from "./types.ts";
+import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
+import { ALL_PLUGINS } from "./plugins.ts";
+import { expandPath, exists, runCommand, formatDuration, createTimestamp } from "./utils.ts";
+import { logger, LogLevel } from "./logger.ts";
+import { DEFAULT_CONFIG, parseOptions } from "./config.ts";
+
+async function loadTemplate(templateName: string): Promise<string> {
+  const templatePath = join(dirname(new URL(import.meta.url).pathname), "templates", templateName);
+  return await Deno.readTextFile(templatePath);
+}
+
+async function prepareConfig(manager: PluginManager, pluginCount: number): Promise<void> {
+  const plugins = ALL_PLUGINS.slice(0, pluginCount);
+
+  for (const config of manager.configFiles) {
+    let template: string;
+    try {
+      template = await loadTemplate(config.template);
+    } catch (error) {
+      logger.warn(`Template ${config.template} not found, creating minimal config`);
+      // Create minimal configs for missing templates
+      if (config.isPluginList) {
+        template = '{{PLUGIN_LIST}}';
+      } else {
+        template = '# Minimal config\n{{PLUGIN_LOADS}}';
+      }
+    }
+    let content = template;
+
+    if (config.isPluginList) {
+      // For plugin list files (like .zimrc)
+      const pluginList = plugins.map(p => manager.generatePluginLoad(p)).join('\n');
+      content = content.replace('{{PLUGIN_LOADS}}', pluginList);
+      content = content.replace('{{PLUGIN_LIST}}', plugins.join('\n'));
+    } else if (config.template === "sheldon.plugins.toml") {
+      // Special handling for sheldon TOML
+      const pluginConfigs = plugins.map(p => manager.generatePluginLoad(p)).join('\n\n');
+      content = content.replace('{{PLUGIN_CONFIGS}}', pluginConfigs);
+    } else {
+      // For regular zshrc files
+      const pluginLoads = plugins.map(p => manager.generatePluginLoad(p)).join('\n');
+      content = content.replace('{{PLUGIN_LOADS}}', pluginLoads);
+    }
+
+    const configPath = expandPath(config.path);
+    await ensureDir(dirname(configPath));
+    await Deno.writeTextFile(configPath, content);
+  }
+}
+
+async function runBenchmark(manager: PluginManager, pluginCount: number): Promise<BenchmarkResult> {
+  const result: BenchmarkResult = {
+    manager: manager.name,
+    pluginCount,
+    installTime: null,
+    loadTime: null,
+  };
+
+  try {
+    logger.debug(`Starting benchmark for ${manager.name} with ${pluginCount} plugins`);
+    
+    // Prepare configuration
+    logger.debug(`Preparing configuration files...`);
+    await prepareConfig(manager, pluginCount);
+
+    // Special initialization if needed
+    if (manager.specialInit) {
+      await manager.specialInit();
+    }
+
+    // Clean cache for install benchmark
+    logger.progress("Cleaning cache");
+    const cacheClean = await runCommand(manager.cacheCleanCommand);
+    if (!cacheClean.success) {
+      logger.warn(`Cache clean failed: ${cacheClean.error}`);
+    }
+
+    // Pre-install command if needed (after cache clean for managers like oh-my-zsh/prezto)
+    if (manager.preInstallCommand) {
+      if (typeof manager.preInstallCommand === 'string') {
+        await runCommand(manager.preInstallCommand);
+      } else {
+        // It's a function, call it with the plugins
+        const plugins = ALL_PLUGINS.slice(0, pluginCount);
+        await manager.preInstallCommand(plugins);
+      }
+    }
+
+    // Install benchmark
+    logger.progress("Running install benchmark");
+    let hyperfineCmd = `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
+    
+    // Special handling for some managers
+    if (manager.name === "sheldon" || manager.name === "zim" || manager.name === "antigen") {
+      logger.warn(`Special timing for ${manager.name} (hyperfine timeout issues)`);
+      const start = Date.now();
+      const { success } = await runCommand("timeout 60 zsh -ic exit");
+      const elapsed = Date.now() - start;
+      if (success) {
+        result.installTime = elapsed;
+        result.installStddev = 0;
+      }
+    } else {
+      const { success, output, error } = await runCommand(hyperfineCmd, { silent: true });
+      if (success && await exists("/tmp/" + manager.name + "-install.json")) {
+        const data = JSON.parse(await Deno.readTextFile("/tmp/" + manager.name + "-install.json"));
+        result.installTime = data.results[0].mean * 1000;
+        result.installStddev = data.results[0].stddev * 1000;
+      } else {
+        logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
+        logger.debug(`Hyperfine output: ${output}`);
+        
+        // Retry once with longer timeout
+        logger.info("  Retrying with longer timeout...");
+        const retryCmd = hyperfineCmd.replace('timeout 30', 'timeout 60');
+        const retry = await runCommand(retryCmd, { silent: true });
+        if (retry.success && await exists("/tmp/" + manager.name + "-install.json")) {
+          const data = JSON.parse(await Deno.readTextFile("/tmp/" + manager.name + "-install.json"));
+          result.installTime = data.results[0].mean * 1000;
+          result.installStddev = data.results[0].stddev * 1000;
+          logger.success("  Retry successful!");
+        }
+      }
+    }
+
+    // Post-install command if needed
+    if (manager.postInstallCommand) {
+      await runCommand(manager.postInstallCommand);
+    }
+
+    // Load benchmark (warm cache)
+    logger.progress("Running load benchmark");
+    hyperfineCmd = `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.loadRuns} --export-json /tmp/${manager.name}-load.json --command-name '${manager.name}-load' 'timeout 10 zsh -ic exit'`;
+    
+    if (manager.name === "sheldon" && pluginCount > 20) {
+      logger.warn("Special timing for sheldon (hyperfine timeout issues)");
+      const times: number[] = [];
+      for (let i = 0; i < DEFAULT_CONFIG.hyperfine.loadRuns; i++) {
+        const start = Date.now();
+        await runCommand("timeout 30 zsh -ic exit");
+        times.push(Date.now() - start);
+      }
+      result.loadTime = times.reduce((a, b) => a + b) / times.length;
+      result.loadStddev = Math.sqrt(
+        times.reduce((sum, time) => sum + Math.pow(time - result.loadTime!, 2), 0) / times.length
+      );
+    } else {
+      const { success, output, error } = await runCommand(hyperfineCmd, { silent: true });
+      if (success && await exists("/tmp/" + manager.name + "-load.json")) {
+        const data = JSON.parse(await Deno.readTextFile("/tmp/" + manager.name + "-load.json"));
+        result.loadTime = data.results[0].mean * 1000;
+        result.loadStddev = data.results[0].stddev * 1000;
+      } else {
+        logger.warn(`Load benchmark failed for ${manager.name}: ${error}`);
+        logger.debug(`Hyperfine output: ${output}`);
+        
+        // Retry once with longer timeout
+        logger.info("  Retrying with longer timeout...");
+        const retryCmd = hyperfineCmd.replace('timeout 10', 'timeout 20');
+        const retry = await runCommand(retryCmd, { silent: true });
+        if (retry.success && await exists("/tmp/" + manager.name + "-load.json")) {
+          const data = JSON.parse(await Deno.readTextFile("/tmp/" + manager.name + "-load.json"));
+          result.loadTime = data.results[0].mean * 1000;
+          result.loadStddev = data.results[0].stddev * 1000;
+          logger.success("  Retry successful!");
+        }
+      }
+    }
+
+    // Clean up temp files
+    await runCommand(`rm -f /tmp/${manager.name}-*.json`);
+
+  } catch (error) {
+    logger.error(`Benchmark failed for ${manager.name}`, error);
+    result.error = error.message;
+  }
+
+  return result;
+}
+
+// Command implementations
+async function benchmark(managers: string[], pluginCounts: number[]) {
+  console.log(blue(bold("🚀 Zsh Plugin Manager Scalability Benchmark")));
+  console.log(blue(`📊 Testing with plugin counts: ${pluginCounts.join(", ")}`));
+
+  const results: BenchmarkResult[] = [];
+
+  for (const managerName of managers) {
+    const manager = PLUGIN_MANAGERS[managerName];
+    if (!manager) {
+      logger.error(`Unknown manager: ${managerName}`);
+      continue;
+    }
+
+    logger.header(`Testing: ${managerName}`);
+
+    for (const count of pluginCounts) {
+      logger.subheader(`Testing with ${count} plugins`);
+      const result = await runBenchmark(manager, count);
+      results.push(result);
+
+      // Display results
+      if (result.installTime !== null) {
+        logger.result("Install time", formatDuration(result.installTime), ` ± ${formatDuration(result.installStddev || 0)}`);
+      } else {
+        logger.error("Install benchmark failed");
+      }
+
+      if (result.loadTime !== null) {
+        logger.result("Load time", formatDuration(result.loadTime), ` ± ${formatDuration(result.loadStddev || 0)}`);
+      } else {
+        logger.error("Load benchmark failed");
+      }
+    }
+  }
+
+  // Save results
+  const timestamp = createTimestamp();
+  const resultsPath = `${DEFAULT_CONFIG.paths.results}/benchmark-results-latest.json`;
+  const backupPath = `${DEFAULT_CONFIG.paths.results}/benchmark-results-${timestamp}.json`;
+  
+  await ensureDir(DEFAULT_CONFIG.paths.results);
+  
+  // Backup existing results if they exist
+  if (await exists(resultsPath)) {
+    const existingData = await Deno.readTextFile(resultsPath);
+    await Deno.writeTextFile(backupPath, existingData);
+  }
+  
+  await Deno.writeTextFile(resultsPath, JSON.stringify({ results }, null, 2));
+  logger.success(`\n✅ Results saved to: ${resultsPath}`);
+}
+
+async function test(managers: string[]) {
+  console.log(blue(bold("🧪 Testing Zsh Plugin Managers")));
+
+  for (const managerName of managers) {
+    const manager = PLUGIN_MANAGERS[managerName];
+    if (!manager) {
+      logger.error(`Unknown manager: ${managerName}`);
+      continue;
+    }
+
+    logger.info(`\nTesting ${managerName}...`);
+    await prepareConfig(manager, 3); // Test with 3 plugins
+    
+    const { success, output, error } = await runCommand("timeout 10 zsh -ic 'echo TEST_OK'");
+    if (success && output.includes("TEST_OK")) {
+      logger.success(`  ✅ ${managerName} works correctly`);
+    } else {
+      logger.error(`  ${managerName} failed`);
+      if (error) logger.error(`     Error: ${error}`);
+    }
+  }
+}
+
+async function versions(managers: string[]) {
+  console.log(blue(bold("📋 Plugin Manager Versions")));
+
+  const versionCommands: Record<string, string> = {
+    "oh-my-zsh": "cd ~/.oh-my-zsh && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "prezto": "cd ~/.zprezto && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "zim": "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
+    "znap": "cd ~/Git/zsh-snap && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "zinit": "cd ~/.local/share/zinit/zinit.git && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "zplug": "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || echo 'unknown'",
+    "antigen": "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh | cut -d'=' -f2 | tr -d '\"' || echo 'unknown'",
+    "antibody": "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
+    "antidote": "antidote -v 2>/dev/null | awk '{print $2}' || echo 'unknown'",
+    "sheldon": "sheldon --version 2>/dev/null | awk '{print $2}' || echo 'unknown'",
+    "zgenom": "cd ~/.zgenom && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "zpm": "cd ~/.zpm && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "zr": "echo 'custom implementation'",
+    "antigen-hs": "echo 'custom implementation'",
+    "zcomet": "cd ~/.zcomet && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+    "alf": "echo 'custom implementation'",
+  };
+
+  for (const managerName of managers) {
+    const cmd = versionCommands[managerName];
+    if (cmd) {
+      const { output } = await runCommand(cmd, { silent: true });
+      console.log(`${managerName}: ${output.trim()}`);
+    }
+  }
+}
+
+function showHelp() {
+  console.log(`
+${bold("Zsh Plugin Manager Benchmark")}
+
+${bold("USAGE:")}
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts [COMMAND] [OPTIONS]
+
+${bold("COMMANDS:")}
+    benchmark    Run scalability benchmark (default)
+    test         Test all plugin managers
+    versions     Show version information
+    help         Show this help message
+
+${bold("OPTIONS:")}
+    --managers     Space-separated list of managers to test
+    --counts       Space-separated list of plugin counts (default: 0 25)
+    --runs, -r     Number of runs for hyperfine (default: install=10, load=20)
+    --warmup, -w   Number of warmup runs for hyperfine (default: 1)
+    --debug, -d    Enable debug logging
+
+${bold("EXAMPLES:")}
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts test
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts versions
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts benchmark --managers "zinit zplug"
+    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts benchmark --counts "0 10 25"
+  `);
+}
+
+// Main CLI
+async function main() {
+  const args = parse(Deno.args, {
+    string: ["managers", "counts"],
+    number: ["runs", "warmup"],
+    boolean: ["help", "version", "debug"],
+    alias: { h: "help", v: "version", d: "debug", r: "runs", w: "warmup" },
+  });
+
+  const command = args._[0]?.toString() || "benchmark";
+  
+  if (args.help || command === "help") {
+    showHelp();
+    return;
+  }
+
+  try {
+    // Set debug mode if requested
+    if (args.debug) {
+      logger.level = LogLevel.DEBUG;
+    }
+    
+    // Override hyperfine runs if specified
+    if (args.runs) {
+      DEFAULT_CONFIG.hyperfine.installRuns = args.runs;
+      DEFAULT_CONFIG.hyperfine.loadRuns = args.runs;
+    }
+    if (args.warmup) {
+      DEFAULT_CONFIG.hyperfine.warmupRuns = args.warmup;
+    }
+    
+    const options = parseOptions(args);
+
+    switch (command) {
+      case "test":
+        await test(options.managers);
+        break;
+
+      case "versions":
+        await versions(options.managers);
+        break;
+
+      case "benchmark":
+      default:
+        await benchmark(options.managers, options.pluginCounts);
+        break;
+    }
+  } catch (error) {
+    logger.error("Command failed", error);
+    Deno.exit(1);
+  }
+}
+
+// Run the CLI
+if (import.meta.main) {
+  await main();
+}

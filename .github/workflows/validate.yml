@@ -1,0 +1,62 @@
+name: Validate
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - '.github/workflows/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      
+      - name: Format check
+        run: deno fmt --check
+      
+      - name: Lint
+        run: deno lint
+      
+      - name: Type check
+        run: deno check src/*.ts
+  
+  docker-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          ignore: DL3008,DL3009  # Ignore apt-get version pinning
+  
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Test Docker build
+        run: docker build -t test-build .
+      
+      - name: Test benchmark execution
+        run: |
+          # Create minimal test
+          echo "zsh-users/zsh-autosuggestions" > src/test-plugins.txt
+          docker run --rm \
+            -v ${{ github.workspace }}/src/test-plugins.txt:/benchmark/src/plugins.txt \
+            -v ${{ github.workspace }}/results:/benchmark/results \
+            test-build
+          
+          # Verify results
+          test -f results/latest.json || exit 1
+          jq '.results | length > 0' results/latest.json || exit 1

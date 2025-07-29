@@ -1,0 +1,39 @@
+# Results and temporary files
+results/history/*
+results/graphs/*
+!results/graphs/.gitkeep
+results/latest.json
+*.tmp
+*.log
+
+# Deno cache
+.deno/
+
+# Docker
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+*.coverage
+
+# Environment files
+.env
+.env.local
+
+# Benchmark temporary files
+/tmp/
+/temp/
+benchmark-*.json
+
+CLAUDE.md
+.kiro/
