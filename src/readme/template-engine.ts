@@ -212,25 +212,26 @@ export class TemplateEngine {
       managerLine +=
         `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
 
-      // Version badge (second) - show release version or commit info
-      // Use custom endpoint that shows tag/release or defaults to showing branch
+      // Version badge (second) - show release/tag or indicate commit-based version
+      // This shows the latest tag/release, or "commit" if none exists
       managerLine +=
-        `![Version](https://img.shields.io/github/v/tag/${repo}?include_prereleases&sort=semver&label=version) | `;
+        `![Version](https://img.shields.io/github/v/tag/${repo}?include_prereleases&sort=semver&label=version&fallback=commit) | `;
 
-      // Last release badge (third) - use GitHub last-commit API
+      // Last commit badge (third) - show shortened commit SHA
+      const [owner, repoName] = repo.split('/');
       managerLine +=
-        `![GitHub last commit](https://img.shields.io/github/last-commit/${repo}) |`;
+        `![Commit](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/${owner}/${repoName}/commits/HEAD&query=$.sha&label=commit&color=blue&style=flat) |`;
 
       sections.push(managerLine);
     }
 
     // Add table header
-    sections.unshift("| Plugin Manager | Stars | Version | Last Release |");
+    sections.unshift("| Plugin Manager | Stars | Version | Last Commit |");
     sections.splice(
       1,
       0,
       "|" + "-".repeat(maxNameLength + 2) +
-        "|-------|---------|--------------|",
+        "|-------|---------|-------------|",
     );
 
     return sections.join("\n");
