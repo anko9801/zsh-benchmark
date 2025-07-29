@@ -285,7 +285,7 @@ export class TemplateEngine {
       const lastRelease = this.badgeGenerator.getLastRelease(manager) || "N/A";
       
       // Create a line for each manager with aligned formatting
-      let managerLine = `| **${paddedManager}** | `;
+      let managerLine = `| ${paddedManager} | `;
       
       // Stars badge - use GitHub social style (first)
       managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
@@ -299,21 +299,8 @@ export class TemplateEngine {
         managerLine += `![version](https://img.shields.io/badge/v-N/A-gray) | `;
       }
       
-      // Last release badge (third)
-      if (lastRelease !== "N/A") {
-        // Calculate color based on how recent the release is
-        const releaseYear = parseInt(lastRelease.split('-')[0]);
-        const currentYear = new Date().getFullYear();
-        const yearsDiff = currentYear - releaseYear;
-        let color = "brightgreen"; // < 1 year
-        if (yearsDiff >= 3) color = "red";
-        else if (yearsDiff >= 2) color = "orange";
-        else if (yearsDiff >= 1) color = "yellow";
-        
-        managerLine += `![last release](https://img.shields.io/badge/last%20release-${lastRelease}-${color}) |`;
-      } else {
-        managerLine += `![last release](https://img.shields.io/badge/last%20release-N/A-gray) |`;
-      }
+      // Last release badge (third) - use GitHub last-commit API
+      managerLine += `![GitHub last commit](https://img.shields.io/github/last-commit/${repo}) |`;
       
       sections.push(managerLine);
     }
