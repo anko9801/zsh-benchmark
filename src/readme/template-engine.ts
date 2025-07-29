@@ -66,7 +66,7 @@ export class TemplateEngine {
     );
     result = result.replace(
       "{{keyFindings}}",
-      data.executiveSummary.keyFindings.join("\n- "),
+      data.executiveSummary.keyFindings.join("\n  - "),
     );
 
     // Replace rankings
