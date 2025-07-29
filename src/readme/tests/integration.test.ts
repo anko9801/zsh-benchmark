@@ -107,19 +107,18 @@ Deno.test({
       assert(content.includes("# Zsh Plugin Manager Benchmark Results"));
       assert(content.includes("## 📊 Executive Summary"));
       assert(content.includes("## 🏆 Performance Rankings (25 Plugins)"));
-      assert(content.includes("## 📈 Detailed Comparison"));
-      assert(content.includes("## 📦 Version Information"));
+      assert(content.includes("## 📦 Plugin Managers"));
 
       // Check for data in tables
       assert(content.includes("antigen"));
       assert(content.includes("antidote"));
       assert(content.includes("zim"));
 
-      // Check for unified table format
-      assert(content.includes("Install (25)"));
-      assert(content.includes("Load (25)"));
-      assert(content.includes("Install (0)"));
-      assert(content.includes("Load (0)"));
+      // Check for ranking table format
+      assert(content.includes("| Plugin Manager | Time (ms) | vs Best |"));
+      assert(content.includes("Load Time Rankings"));
+      assert(content.includes("Installation Time Rankings"));
+      assert(content.includes("Overall Performance"));
 
       // Check that removed sections are not present
       assert(!content.includes("## 🔍 Plugin Manager Characteristics"));
@@ -167,9 +166,14 @@ Deno.test("Integration: Handle missing data gracefully", async () => {
     await generator.generate();
 
     const content = await Deno.readTextFile(testOutputPath);
-
-    // Should handle null values
-    assert(content.includes("N/A"));
+    
+    // Should handle null values gracefully
+    // With null load time, the manager should still appear in install time rankings
+    assert(content.includes("test-manager"));
+    assert(content.includes("100.00")); // Install time should be shown
+    
+    // For null load time, we should see "No ranking data available"
+    assert(content.includes("No ranking data available"));
   } finally {
     try {
       await Deno.remove(testDataPath);

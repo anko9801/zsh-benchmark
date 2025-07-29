@@ -6,14 +6,11 @@ import {
   formatNumber,
   formatPercentage,
 } from "../utils.ts";
-import { BadgeGenerator } from "./badge-generator.ts";
+// Badge generation handled by shields.io
 
 export class TemplateEngine {
-  private badgeGenerator: BadgeGenerator;
-  
   constructor() {
-    // Initialize with empty repo mapping - we'll use predefined data
-    this.badgeGenerator = new BadgeGenerator(new Map());
+    // No initialization needed - badges are generated via shields.io
   }
   
   async render(data: TemplateData, templatePath?: string): Promise<string> {
@@ -202,12 +199,11 @@ export class TemplateEngine {
       ["zr", "jedahan/zr"],
     ]);
     
-    // Get star counts and sort by stars
+    // Sort by overall ranking (already sorted)
     const managersWithStars = data.rankings.overall.map(ranking => {
       const manager = ranking.manager;
-      const stars = this.badgeGenerator.getStarCount(manager) || 0;
-      return { manager, stars };
-    }).sort((a, b) => b.stars - a.stars);
+      return { manager };
+    });
     
     // Calculate max name length for alignment
     const maxNameLength = Math.max(...managersWithStars.map(m => m.manager.length));
@@ -216,8 +212,6 @@ export class TemplateEngine {
       const repo = repoMapping.get(manager);
       if (!repo) continue;
       
-      // Get version from predefined data
-      const version = this.badgeGenerator.getVersion(manager) || "N/A";
       
       // Pad manager name for alignment
       const paddedManager = manager.padEnd(maxNameLength);
@@ -229,14 +223,8 @@ export class TemplateEngine {
       // Stars badge - use GitHub social style (first)
       managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
       
-      // Version badge (second)
-      if (version !== "N/A") {
-        // Clean version string (remove 'v' prefix for consistency)
-        const cleanVersion = version.startsWith('v') ? version.substring(1) : version;
-        managerLine += `![version](https://img.shields.io/badge/v-${cleanVersion}-blue) | `;
-      } else {
-        managerLine += `![version](https://img.shields.io/badge/v-N/A-gray) | `;
-      }
+      // Version badge (second) - use GitHub release badge
+      managerLine += `![GitHub Release](https://img.shields.io/github/release/${repo}.svg?style=flat) | `;
       
       // Last release badge (third) - use GitHub last-commit API
       managerLine += `![GitHub last commit](https://img.shields.io/github/last-commit/${repo}) |`;

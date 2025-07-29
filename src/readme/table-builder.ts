@@ -1,7 +1,6 @@
 // Table builder for markdown tables
 
 import {
-  GitHubInfo,
   ParsedData,
   RankingResult,
   TableOptions,
@@ -11,28 +10,22 @@ import {
   formatDuration,
   formatNumber,
   formatPercentage,
-  formatStars,
 } from "../utils.ts";
 
 export class TableBuilder {
   buildComparisonTable(
     data: ParsedData,
-    githubInfo?: Map<string, GitHubInfo>,
     options: TableOptions = {},
   ): string {
     const {
       highlightBest = true,
       includeStdDev = false,
-      includeStars = true,
     } = options;
 
     const lines: string[] = [];
 
     // Build header - combine 0 and 25 plugins in same table
     const headers = ["Plugin Manager"];
-    if (includeStars && githubInfo) {
-      headers.push("Stars");
-    }
     // 25 plugins columns (main focus)
     headers.push("Install (25)", "Load (25)");
     // 0 plugins columns (secondary)
@@ -86,11 +79,6 @@ export class TableBuilder {
 
       const row: string[] = [manager.name];
 
-      // Add stars if available
-      if (includeStars && githubInfo) {
-        const info = githubInfo.get(manager.name);
-        row.push(info ? formatStars(info.stars) : "0");
-      }
 
       // 25 plugins - Install time
       if (result25.installTime !== null) {
@@ -212,30 +200,6 @@ export class TableBuilder {
     return lines.join("\n");
   }
 
-  buildManagerDetailsTable(
-    managers: string[],
-    githubInfo: Map<string, GitHubInfo>,
-  ): string {
-    const lines: string[] = [];
-
-    lines.push("| Plugin Manager | Version | Stars | Last Release |");
-    lines.push("|----------------|---------|-------|--------------|");
-
-    for (const manager of managers) {
-      const info = githubInfo.get(manager);
-      if (info) {
-        lines.push(
-          `| ${manager} | ${info.version} | ${formatStars(info.stars)} | ${
-            info.lastRelease || "N/A"
-          } |`,
-        );
-      } else {
-        lines.push(`| ${manager} | N/A | N/A | N/A |`);
-      }
-    }
-
-    return lines.join("\n");
-  }
 
   private isBestValue(value: number, allValues: number[]): boolean {
     if (allValues.length === 0) return false;

@@ -57,22 +57,11 @@ export interface Rankings {
   overall: RankingResult[];
 }
 
-// GitHub API
-export interface GitHubInfo {
-  stars: number;
-  version: string;
-  lastRelease?: string;
-  badge: {
-    stars: string;
-    version: string;
-  };
-}
 
 // Table generation
 export interface TableOptions {
   highlightBest?: boolean;
   includeStdDev?: boolean;
-  includeStars?: boolean;
 }
 
 // Template data
@@ -83,7 +72,6 @@ export interface TemplateData {
   graphs: GraphInfo[];
   versionInfo: VersionInfo;
   badges: BadgeInfo[];
-  githubInfo?: Map<string, GitHubInfo>;
 }
 
 export interface ExecutiveSummary {

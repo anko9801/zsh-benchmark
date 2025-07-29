@@ -7,37 +7,32 @@ import {
   Rankings,
   TemplateData,
   VersionInfo,
-  GitHubInfo,
   GraphInfo,
 } from "./types.ts";
 import { DataParser } from "./data-parser.ts";
 import { RankingEngine } from "./ranking-engine.ts";
 import { TableBuilder } from "./table-builder.ts";
-import { GitHubAPI } from "./github-api.ts";
+// GitHub API no longer needed - using shields.io badges
 import { GraphHandler } from "./graph-handler.ts";
 import { TemplateEngine } from "./template-engine.ts";
 // Removed unused imports: createError, ErrorCode
-import { BadgeGenerator } from "./badge-generator.ts";
+// Badge generation handled by shields.io
 
 export class ReadmeGenerator {
   private options: GenerateReadmeOptions;
   private dataParser: DataParser;
   private rankingEngine: RankingEngine;
   private tableBuilder: TableBuilder;
-  private githubAPI: GitHubAPI;
   private graphHandler: GraphHandler;
   private templateEngine: TemplateEngine;
-  private badgeGenerator: BadgeGenerator;
 
   constructor(options: GenerateReadmeOptions) {
     this.options = options;
     this.dataParser = new DataParser();
     this.rankingEngine = new RankingEngine();
     this.tableBuilder = new TableBuilder();
-    this.githubAPI = new GitHubAPI();
     this.graphHandler = new GraphHandler();
     this.templateEngine = new TemplateEngine();
-    this.badgeGenerator = new BadgeGenerator(this.githubAPI.getRepoMapping());
   }
 
   async generate(): Promise<void> {
@@ -55,14 +50,6 @@ export class ReadmeGenerator {
       }
       const rankings = this.rankingEngine.generateRankings(parsedData);
 
-      // Step 3: Fetch GitHub information (parallel)
-      if (this.options.debug) {
-        console.log("Fetching GitHub information...");
-      }
-      const managerNames = parsedData.managers.map((m) => m.name);
-      const githubInfo = await this.githubAPI.fetchMultipleManagers(
-        managerNames,
-      );
 
       // Step 4: Detect graphs
       if (this.options.debug) {
@@ -76,8 +63,7 @@ export class ReadmeGenerator {
       }
       const comparisonTable = this.tableBuilder.buildComparisonTable(
         parsedData,
-        githubInfo,
-        { highlightBest: true, includeStars: true },
+        { highlightBest: true },
       );
 
       // Step 7: Prepare template data
@@ -87,7 +73,6 @@ export class ReadmeGenerator {
       const templateData = await this.prepareTemplateData(
         parsedData,
         rankings,
-        githubInfo,
         graphs,
         comparisonTable,
       );
@@ -120,7 +105,6 @@ export class ReadmeGenerator {
   private prepareTemplateData(
     parsedData: ParsedData,
     rankings: Rankings,
-    githubInfo: Map<string, GitHubInfo>,
     graphs: GraphInfo[],
     comparisonTable: string,
   ): TemplateData {
@@ -131,8 +115,13 @@ export class ReadmeGenerator {
       keyFindings: this.generateKeyFindings(parsedData, rankings),
     };
 
-    // Generate badges (pre-generated, not dependent on API calls)
-    const badges = this.badgeGenerator.generateBadges();
+    // Generate badges
+    const badges = [
+      {
+        name: "License",
+        url: "https://img.shields.io/badge/license-MIT-blue",
+      },
+    ];
 
     // Prepare version info
     const versionInfo: VersionInfo = {
@@ -145,10 +134,7 @@ export class ReadmeGenerator {
       environment: parsedData.environment,
     };
 
-    // Add manager versions from GitHub
-    for (const [manager, info] of githubInfo) {
-      versionInfo.managers.set(manager, info.version || "N/A");
-    }
+    // Manager versions now handled by shields.io badges
 
     return {
       executiveSummary,
@@ -157,7 +143,6 @@ export class ReadmeGenerator {
       graphs,
       versionInfo,
       badges,
-      githubInfo,
     };
   }
 

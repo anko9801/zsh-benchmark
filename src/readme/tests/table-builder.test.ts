@@ -4,7 +4,7 @@ import {
   assertStringIncludes,
 } from "https://deno.land/std@0.220.0/assert/mod.ts";
 import { TableBuilder } from "../table-builder.ts";
-import { GitHubInfo, ParsedData, RankingResult } from "../types.ts";
+import { ParsedData, RankingResult } from "../types.ts";
 
 const mockData: ParsedData = {
   managers: [
@@ -56,27 +56,6 @@ const mockData: ParsedData = {
   environment: {},
 };
 
-const mockGitHubInfo: Map<string, GitHubInfo> = new Map([
-  ["zinit", {
-    stars: 2534,
-    version: "v3.7.0",
-    lastRelease: "2023-01-15",
-    badge: {
-      stars: "https://img.shields.io/github/stars/zdharma-continuum/zinit",
-      version:
-        "https://img.shields.io/github/v/release/zdharma-continuum/zinit",
-    },
-  }],
-  ["zim", {
-    stars: 3200,
-    version: "v1.9.1",
-    lastRelease: "2023-03-20",
-    badge: {
-      stars: "https://img.shields.io/github/stars/zimfw/zimfw",
-      version: "https://img.shields.io/github/v/release/zimfw/zimfw",
-    },
-  }],
-]);
 
 Deno.test("TableBuilder formats numbers correctly", () => {
   const builder = new TableBuilder();
@@ -94,7 +73,7 @@ Deno.test("TableBuilder formats numbers correctly", () => {
 
 Deno.test("TableBuilder highlights best values", () => {
   const builder = new TableBuilder();
-  const table = builder.buildComparisonTable(mockData, undefined, {
+  const table = builder.buildComparisonTable(mockData, {
     highlightBest: true,
   });
 
@@ -107,22 +86,6 @@ Deno.test("TableBuilder highlights best values", () => {
   assertStringIncludes(table, "**38**");
 });
 
-Deno.test("TableBuilder includes GitHub stars", () => {
-  const builder = new TableBuilder();
-  const table = builder.buildComparisonTable(mockData, mockGitHubInfo, {
-    includeStars: true,
-  });
-
-  // Check headers - new format with combined columns
-  assertStringIncludes(
-    table,
-    "| Plugin Manager | Stars | Install (25) | Load (25) |",
-  );
-
-  // Check star formatting
-  assertStringIncludes(table, "2.5k"); // zinit stars
-  assertStringIncludes(table, "3.2k"); // zim stars
-});
 
 Deno.test("TableBuilder ranking table", () => {
   const builder = new TableBuilder();
@@ -146,23 +109,6 @@ Deno.test("TableBuilder ranking table", () => {
   assertStringIncludes(table, "| 🥉 | oh-my-zsh | 193.00 | +467.6% |");
 });
 
-Deno.test("TableBuilder manager details table", () => {
-  const builder = new TableBuilder();
-  const managers = ["zinit", "zim", "unknown"];
-
-  const table = builder.buildManagerDetailsTable(managers, mockGitHubInfo);
-
-  // Check headers
-  assertStringIncludes(
-    table,
-    "| Plugin Manager | Version | Stars | Last Release |",
-  );
-
-  // Check data
-  assertStringIncludes(table, "| zinit | v3.7.0 | 2.5k | 2023-01-15 |");
-  assertStringIncludes(table, "| zim | v1.9.1 | 3.2k | 2023-03-20 |");
-  assertStringIncludes(table, "| unknown | N/A | N/A | N/A |");
-});
 
 Deno.test("TableBuilder handles missing data", () => {
   const builder = new TableBuilder();
