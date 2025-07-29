@@ -86,22 +86,22 @@ _Plugin installation time comparison across different plugin managers_
 
 ## 📦 Plugin Managers
 
-![antidote stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social&label=antidote) ![antidote version](https://img.shields.io/badge/v-1.9.7-blue?label=antidote)
-![zim stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social&label=zim) ![zim version](https://img.shields.io/badge/v-1.14.0-blue?label=zim)
-![znap stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social&label=znap) ![znap version](https://img.shields.io/badge/v-1.2.0-blue?label=znap)
-![zgenom stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social&label=zgenom) ![zgenom version](https://img.shields.io/badge/v-master-blue?label=zgenom)
-![antigen-hs stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social&label=antigen-hs) ![antigen-hs version](https://img.shields.io/badge/v-1.1.0.0-blue?label=antigen-hs)
-![zcomet stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social&label=zcomet) ![zcomet version](https://img.shields.io/badge/v-1.5.0-blue?label=zcomet)
-![zr stars](https://img.shields.io/github/stars/jedahan/zr?style=social&label=zr) ![zr version](https://img.shields.io/badge/v-1.0.0-blue?label=zr)
-![alf stars](https://img.shields.io/github/stars/psyrendust/alf?style=social&label=alf) ![alf version](https://img.shields.io/badge/v-0.2.0-blue?label=alf)
-![antigen stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social&label=antigen) ![antigen version](https://img.shields.io/badge/v-2.2.3-blue?label=antigen)
-![antibody stars](https://img.shields.io/github/stars/getantibody/antibody?style=social&label=antibody) ![antibody version](https://img.shields.io/badge/v-6.1.1-blue?label=antibody)
-![sheldon stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social&label=sheldon) ![sheldon version](https://img.shields.io/badge/v-0.8.0-blue?label=sheldon)
-![prezto stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social&label=prezto) ![prezto version](https://img.shields.io/badge/v-master-blue?label=prezto)
-![oh-my-zsh stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social&label=oh-my-zsh) ![oh-my-zsh version](https://img.shields.io/badge/v-master-blue?label=oh-my-zsh)
-![zinit stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social&label=zinit) ![zinit version](https://img.shields.io/badge/v-3.13.1-blue?label=zinit)
-![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm) ![zpm version](https://img.shields.io/badge/v-1.4.0-blue?label=zpm)
-![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zplug version](https://img.shields.io/badge/v-2.4.2-blue?label=zplug)
+- **antidote**: ![version](https://img.shields.io/badge/v-1.9.7-blue) ![stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social)
+- **zim**: ![version](https://img.shields.io/badge/v-1.14.0-blue) ![stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social)
+- **znap**: ![version](https://img.shields.io/badge/v-1.2.0-blue) ![stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social)
+- **zgenom**: ![version](https://img.shields.io/badge/v-master-blue) ![stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social)
+- **antigen-hs**: ![version](https://img.shields.io/badge/v-1.1.0.0-blue) ![stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social)
+- **zcomet**: ![version](https://img.shields.io/badge/v-1.5.0-blue) ![stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social)
+- **zr**: ![version](https://img.shields.io/badge/v-1.0.0-blue) ![stars](https://img.shields.io/github/stars/jedahan/zr?style=social)
+- **alf**: ![version](https://img.shields.io/badge/v-0.2.0-blue) ![stars](https://img.shields.io/github/stars/psyrendust/alf?style=social)
+- **antigen**: ![version](https://img.shields.io/badge/v-2.2.3-blue) ![stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social)
+- **antibody**: ![version](https://img.shields.io/badge/v-6.1.1-blue) ![stars](https://img.shields.io/github/stars/getantibody/antibody?style=social)
+- **sheldon**: ![version](https://img.shields.io/badge/v-0.8.0-blue) ![stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social)
+- **prezto**: ![version](https://img.shields.io/badge/v-master-blue) ![stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social)
+- **oh-my-zsh**: ![version](https://img.shields.io/badge/v-master-blue) ![stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social)
+- **zinit**: ![version](https://img.shields.io/badge/v-3.13.1-blue) ![stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social)
+- **zpm**: ![version](https://img.shields.io/badge/v-1.4.0-blue) ![stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social)
+- **zplug**: ![version](https://img.shields.io/badge/v-2.4.2-blue) ![stars](https://img.shields.io/github/stars/zplug/zplug?style=social)
 
 ## 📝 Methodology
 

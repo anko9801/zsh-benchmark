@@ -261,33 +261,47 @@ export class TemplateEngine {
       ["zr", "jedahan/zr"],
     ]);
     
-    // Sort managers by overall ranking
-    const sortedManagers = [...data.rankings.overall]
-      .sort((a, b) => a.rank - b.rank)
-      .map(r => r.manager);
+    // Get star counts and sort by stars
+    const managersWithStars = data.rankings.overall.map(ranking => {
+      const manager = ranking.manager;
+      const stars = this.badgeGenerator.getStarCount(manager) || 0;
+      return { manager, stars };
+    }).sort((a, b) => b.stars - a.stars);
     
-    for (const manager of sortedManagers) {
+    // Calculate max name length for alignment
+    const maxNameLength = Math.max(...managersWithStars.map(m => m.manager.length));
+    
+    for (const { manager, stars } of managersWithStars) {
       const repo = repoMapping.get(manager);
       if (!repo) continue;
       
       // Get version from predefined data
       const version = this.badgeGenerator.getVersion(manager) || "N/A";
       
-      // Create a line for each manager with version first, then stars
-      let managerLine = `- **${manager}**: `;
+      // Pad manager name for alignment
+      const paddedManager = manager.padEnd(maxNameLength);
+      
+      // Create a line for each manager with aligned formatting
+      let managerLine = `| **${paddedManager}** | `;
       
       // Version badge
       if (version !== "N/A") {
         // Clean version string (remove 'v' prefix for consistency)
         const cleanVersion = version.startsWith('v') ? version.substring(1) : version;
         managerLine += `![version](https://img.shields.io/badge/v-${cleanVersion}-blue) `;
+      } else {
+        managerLine += `![version](https://img.shields.io/badge/v-N/A-gray) `;
       }
       
       // Stars badge - use GitHub social style
-      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social)`;
+      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) |`;
       
       sections.push(managerLine);
     }
+    
+    // Add table header
+    sections.unshift("| Plugin Manager | Version & Stars |");
+    sections.splice(1, 0, "|" + "-".repeat(maxNameLength + 2) + "|-----------------|");
     
     return sections.join("\n");
   }
