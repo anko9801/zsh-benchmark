@@ -155,37 +155,52 @@ export class TemplateEngine {
   }
 
   private formatVersionInfo(versionInfo: VersionInfo): string {
-    const sections: string[] = [];
+    const badges: string[] = [];
 
-    sections.push("### Plugin Managers");
-    sections.push("| Manager | Version |");
-    sections.push("|---------|---------|");
-
-    for (const [manager, version] of versionInfo.managers) {
-      sections.push(`| ${manager} | ${version} |`);
-    }
-
-    sections.push("\n### Tools");
-    sections.push("| Tool | Version |");
-    sections.push("|------|---------|");
-
+    // Tools badges
     for (const [tool, version] of versionInfo.tools) {
-      sections.push(`| ${tool} | ${version} |`);
+      const color = tool === "Deno" ? "black" : tool === "TypeScript" ? "blue" : "green";
+      const logo = tool === "Deno" ? "deno" : tool === "TypeScript" ? "typescript" : "v8";
+      badges.push(
+        `![${tool}](https://img.shields.io/badge/${tool.replace(" ", "%20")}-v${version.replace("-", "--")}-${color}?logo=${logo}&logoColor=white)`
+      );
     }
 
+    // Environment badges
     if (versionInfo.environment.os) {
-      sections.push(
-        `\n**OS:** ${versionInfo.environment.os} ${
-          versionInfo.environment.osVersion || ""
-        }`,
+      const osName = versionInfo.environment.os === "darwin" ? "macOS" : versionInfo.environment.os;
+      const osVersion = versionInfo.environment.osVersion || "";
+      badges.push(
+        `![OS](https://img.shields.io/badge/OS-${osName}%20${osVersion}-lightgray?logo=apple&logoColor=white)`
       );
     }
+
     if (versionInfo.environment.shell) {
-      sections.push(
-        `**Shell:** ${versionInfo.environment.shell} ${
-          versionInfo.environment.shellVersion || ""
-        }`,
+      const shellVersion = versionInfo.environment.shellVersion || "";
+      badges.push(
+        `![Shell](https://img.shields.io/badge/Shell-${versionInfo.environment.shell}%20${shellVersion}-orange?logo=gnu-bash&logoColor=white)`
       );
+    }
+
+    // Plugin managers table with version badges
+    const sections: string[] = [];
+    sections.push(badges.join(" "));
+    sections.push("");
+    sections.push("### Plugin Manager Versions");
+    sections.push("");
+    
+    const managerBadges: string[] = [];
+    for (const [manager, version] of versionInfo.managers) {
+      if (version !== "N/A") {
+        managerBadges.push(
+          `![${manager}](https://img.shields.io/badge/${manager}-${version}-blue)`
+        );
+      }
+    }
+    
+    // Split manager badges into groups of 4 for readability
+    for (let i = 0; i < managerBadges.length; i += 4) {
+      sections.push(managerBadges.slice(i, i + 4).join(" "));
     }
 
     return sections.join("\n");

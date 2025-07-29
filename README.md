@@ -16,6 +16,7 @@
   - antidote が総合パフォーマンスで最高評価🥇
 - 25プラグイン環境では antigen が最速 (35ms)
 - パフォーマンス差は最大 11.5倍
+- zim は最小構成で驚異的な速度 (34ms)
 
 ## 🏆 Performance Rankings (25 Plugins)
 
@@ -84,8 +85,6 @@
 
 ## 📈 Detailed Comparison
 
-### Performance Metrics
-
 | Plugin Manager | Stars | Install (25) | Load (25) | Install (0) | Load (0) |
 |---|---|---|---|---|---|
 | antigen | 0 | 395 | **35.16** | 394 | 34.88 |
@@ -105,8 +104,6 @@
 | zpm | 0 | 564 | 526.62 | 71 | 65.52 |
 | zplug | 0 | 665 | 676.48 | 133 | 138.25 |
 
-### Visual Analysis
-
 ### Installation Time Comparison
 ![Installation Time Comparison](results/install-time-comparison-chart.svg)
 _Plugin installation time comparison across different plugin managers_
@@ -115,40 +112,12 @@ _Plugin installation time comparison across different plugin managers_
 ![Load Time Comparison](results/load-time-comparison-chart.svg)
 _Shell startup time comparison across different plugin managers_
 
-### Load Time Comparison
-![Load Time Comparison](results/load-time-scalability-chart.svg)
-_Shell startup time comparison across different plugin managers_
-
 ## 📦 Version Information
 
-### Plugin Managers
-| Manager | Version |
-|---------|---------|
-| zcomet | N/A |
-| antigen | N/A |
-| alf | N/A |
-| antibody | N/A |
-| zgenom | N/A |
-| prezto | N/A |
-| sheldon | N/A |
-| zinit | N/A |
-| zim | N/A |
-| znap | N/A |
-| zr | N/A |
-| antidote | N/A |
-| oh-my-zsh | N/A |
-| zplug | N/A |
-| antigen-hs | N/A |
-| zpm | N/A |
+![Deno](https://img.shields.io/badge/Deno-v2.4.2-black?logo=deno&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-v5.8.3-blue?logo=typescript&logoColor=white) ![V8](https://img.shields.io/badge/V8-v13.7.152.14--rusty-green?logo=v8&logoColor=white) ![OS](https://img.shields.io/badge/OS-macOS%20-lightgray?logo=apple&logoColor=white)
 
-### Tools
-| Tool | Version |
-|------|---------|
-| Deno | 2.4.2 |
-| TypeScript | 5.8.3 |
-| V8 | 13.7.152.14-rusty |
+### Plugin Manager Versions
 
-**OS:** darwin 
 
 ## 📝 Methodology
 

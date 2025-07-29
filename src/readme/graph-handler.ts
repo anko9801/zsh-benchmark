@@ -19,8 +19,12 @@ export class GraphHandler {
       // Sort files for consistent ordering
       entries.sort();
 
-      // Process each SVG file
+      // Process each SVG file (excluding scalability graphs)
       for (const filename of entries) {
+        // Skip scalability graphs
+        if (filename.includes("scalability")) {
+          continue;
+        }
         const path = join(resultsDir, filename);
         const info = this.createGraphInfo(path, filename);
         graphs.push(info);
@@ -47,9 +51,7 @@ export class GraphHandler {
       title = "Installation Time Comparison";
       caption =
         "Plugin installation time comparison across different plugin managers";
-    } else if (name.includes("scalability")) {
-      title = "Scalability Analysis";
-      caption = "Performance scaling with increasing plugin counts";
+    // Scalability graphs are skipped
     } else if (name.includes("comparison")) {
       title = "Overall Comparison";
       caption = "Comprehensive performance comparison";

@@ -28,11 +28,7 @@
 
 ## 📈 Detailed Comparison
 
-### Performance Metrics
-
 {{comparisonTable}}
-
-### Visual Analysis
 
 {{graphs}}
 

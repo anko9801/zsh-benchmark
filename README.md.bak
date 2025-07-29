@@ -1,6 +1,9 @@
 # Zsh Plugin Manager Benchmark Results
 
-![Deno](https://img.shields.io/badge/deno-1.46.0-black?logo=deno) ![License](https://img.shields.io/badge/license-MIT-blue) ![alf stars](https://img.shields.io/github/stars/psyrendust/alf?style=social&label=alf) ![antibody stars](https://img.shields.io/github/stars/getantibody/antibody?style=social&label=antibody) ![antidote stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social&label=antidote) ![antigen stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social&label=antigen) ![antigen-hs stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social&label=antigen-hs) ![oh-my-zsh stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social&label=oh-my-zsh) ![prezto stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social&label=prezto) ![sheldon stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social&label=sheldon) ![zcomet stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social&label=zcomet) ![zgen stars](https://img.shields.io/github/stars/tarjoilija/zgen?style=social&label=zgen) ![zgenom stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social&label=zgenom) ![zim stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social&label=zim) ![zinit stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social&label=zinit) ![znap stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social&label=znap) ![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm) ![zr stars](https://img.shields.io/github/stars/jedahan/zr?style=social&label=zr)
+![Deno](https://img.shields.io/badge/deno-1.46.0-black?logo=deno) ![License](https://img.shields.io/badge/license-MIT-blue) ![alf stars](https://img.shields.io/github/stars/psyrendust/alf?style=social&label=alf) ![antibody stars](https://img.shields.io/github/stars/getantibody/antibody?style=social&label=antibody) ![antidote stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social&label=antidote) ![antigen stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social&label=antigen)
+![antigen-hs stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social&label=antigen-hs) ![oh-my-zsh stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social&label=oh-my-zsh) ![prezto stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social&label=prezto) ![sheldon stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social&label=sheldon) ![zcomet stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social&label=zcomet) ![zgen stars](https://img.shields.io/github/stars/tarjoilija/zgen?style=social&label=zgen)
+![zgenom stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social&label=zgenom) ![zim stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social&label=zim) ![zinit stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social&label=zinit) ![znap stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social&label=znap) ![zplug stars](https://img.shields.io/github/stars/zplug/zplug?style=social&label=zplug) ![zpm stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social&label=zpm)
+![zr stars](https://img.shields.io/github/stars/jedahan/zr?style=social&label=zr)
 
 ![Benchmark Status](https://img.shields.io/badge/benchmark%20status-automated-brightgreen)
 ![Last Updated](https://img.shields.io/badge/last%20updated-2025-07-29-blue)
@@ -82,8 +85,6 @@
 
 ## 📈 Detailed Comparison
 
-### Performance Metrics
-
 | Plugin Manager | Stars | Install (25) | Load (25) | Install (0) | Load (0) |
 |---|---|---|---|---|---|
 | antigen | 0 | 395 | **35.16** | 394 | 34.88 |
@@ -103,8 +104,6 @@
 | zpm | 0 | 564 | 526.62 | 71 | 65.52 |
 | zplug | 0 | 665 | 676.48 | 133 | 138.25 |
 
-### Visual Analysis
-
 ### Installation Time Comparison
 ![Installation Time Comparison](results/install-time-comparison-chart.svg)
 _Plugin installation time comparison across different plugin managers_
@@ -113,40 +112,12 @@ _Plugin installation time comparison across different plugin managers_
 ![Load Time Comparison](results/load-time-comparison-chart.svg)
 _Shell startup time comparison across different plugin managers_
 
-### Load Time Comparison
-![Load Time Comparison](results/load-time-scalability-chart.svg)
-_Shell startup time comparison across different plugin managers_
-
 ## 📦 Version Information
 
-### Plugin Managers
-| Manager | Version |
-|---------|---------|
-| antidote | N/A |
-| alf | N/A |
-| sheldon | N/A |
-| antibody | N/A |
-| antigen | N/A |
-| antigen-hs | N/A |
-| zcomet | N/A |
-| zgenom | N/A |
-| oh-my-zsh | N/A |
-| zr | N/A |
-| prezto | N/A |
-| zim | N/A |
-| zinit | N/A |
-| znap | N/A |
-| zplug | N/A |
-| zpm | N/A |
+![Deno](https://img.shields.io/badge/Deno-v2.4.2-black?logo=deno&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-v5.8.3-blue?logo=typescript&logoColor=white) ![V8](https://img.shields.io/badge/V8-v13.7.152.14-rusty-green?logo=v8&logoColor=white) ![OS](https://img.shields.io/badge/OS-macOS%20-lightgray?logo=apple&logoColor=white)
 
-### Tools
-| Tool | Version |
-|------|---------|
-| Deno | 2.4.2 |
-| TypeScript | 5.8.3 |
-| V8 | 13.7.152.14-rusty |
+### Plugin Manager Versions
 
-**OS:** darwin 
 
 ## 📝 Methodology
 
