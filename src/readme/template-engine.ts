@@ -217,21 +217,20 @@ export class TemplateEngine {
       managerLine +=
         `![Version](https://img.shields.io/github/v/tag/${repo}?include_prereleases&sort=semver&label=version&fallback=commit) | `;
 
-      // Last commit badge (third) - show shortened commit SHA
-      const [owner, repoName] = repo.split('/');
+      // Last commit badge (third) - show commit date
       managerLine +=
-        `![Commit](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/${owner}/${repoName}/commits/HEAD&query=$.sha&label=commit&color=blue&style=flat) |`;
+        `![Last Update](https://img.shields.io/github/last-commit/${repo}?style=flat&label=updated) |`;
 
       sections.push(managerLine);
     }
 
     // Add table header
-    sections.unshift("| Plugin Manager | Stars | Version | Last Commit |");
+    sections.unshift("| Plugin Manager | Stars | Version | Last Updated |");
     sections.splice(
       1,
       0,
       "|" + "-".repeat(maxNameLength + 2) +
-        "|-------|---------|-------------|",
+        "|-------|---------|--------------|",
     );
 
     return sections.join("\n");
