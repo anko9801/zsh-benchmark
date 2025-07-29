@@ -212,9 +212,10 @@ export class TemplateEngine {
       managerLine +=
         `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
 
-      // Version badge (second) - use GitHub release badge
+      // Version badge (second) - show release version or commit info
+      // Use custom endpoint that shows tag/release or defaults to showing branch
       managerLine +=
-        `![GitHub Release](https://img.shields.io/github/release/${repo}.svg?style=flat) | `;
+        `![Version](https://img.shields.io/github/v/tag/${repo}?include_prereleases&sort=semver&label=version) | `;
 
       // Last release badge (third) - use GitHub last-commit API
       managerLine +=
