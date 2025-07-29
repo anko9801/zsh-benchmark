@@ -1,8 +1,6 @@
-#!/usr/bin/env -S deno run --allow-all
-
 // Script to fix common issues with plugin managers
 
-import { runCommand, exists, expandPath } from "./utils.ts";
+import { exists, expandPath, runCommand } from "./utils.ts";
 import { ensureDir } from "https://deno.land/std@0.220.0/fs/mod.ts";
 
 const createFileIfMissing = async (path: string, content: string) => {
@@ -15,23 +13,28 @@ const createFileIfMissing = async (path: string, content: string) => {
 const fixes = {
   zim: async () => {
     await ensureDir(expandPath("~/.zim"));
-    await createFileIfMissing("~/.zim/init.zsh", "# Empty init.zsh for benchmarking\n");
+    await createFileIfMissing(
+      "~/.zim/init.zsh",
+      "# Empty init.zsh for benchmarking\n",
+    );
     await ensureDir(expandPath("~/.zim/modules"));
   },
-  
+
   antigen: async () => {
     const path = expandPath("~/antigen.zsh");
     if (!await exists(path)) {
       await runCommand("curl -L git.io/antigen > ~/antigen.zsh");
     }
   },
-  
+
   antidote: async () => {
     await createFileIfMissing("~/.zsh_plugins.txt", "# Empty plugin list\n");
     const antidotePath = "/usr/local/share/antidote/antidote.zsh";
     if (!await exists(antidotePath)) {
       await ensureDir("/usr/local/share/antidote");
-      await Deno.writeTextFile(antidotePath, `#!/usr/bin/env zsh
+      await Deno.writeTextFile(
+        antidotePath,
+        `#!/usr/bin/env zsh
 # Minimal antidote implementation for benchmarking
 antidote() {
   local cmd="\$1"
@@ -46,13 +49,14 @@ antidote() {
       done < ~/.zsh_plugins.txt
       ;;
   esac
-}`);
+}`,
+      );
     }
   },
-  
+
   zcomet: async () => {
     await createFileIfMissing("~/.zshrc.zcomet", "# Empty zcomet config\n");
-  }
+  },
 };
 
 // Main

@@ -1,13 +1,11 @@
-#!/usr/bin/env -S deno run --allow-all
-
 // Diagnostic script to check plugin manager installations
 
-import { runCommand, exists, expandPath } from "./utils.ts";
+import { exists, expandPath, runCommand } from "./utils.ts";
 import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
 
 async function diagnoseManager(managerName: string) {
   console.log(`\n=== Diagnosing ${managerName} ===`);
-  
+
   const manager = PLUGIN_MANAGERS[managerName];
   if (!manager) {
     console.log("❌ Manager not found in configuration");
@@ -18,13 +16,15 @@ async function diagnoseManager(managerName: string) {
   for (const config of manager.configFiles) {
     const path = expandPath(config.path);
     const fileExists = await exists(path);
-    console.log(`Config file ${config.path}: ${fileExists ? "✅ exists" : "❌ missing"}`);
-    
+    console.log(
+      `Config file ${config.path}: ${fileExists ? "✅ exists" : "❌ missing"}`,
+    );
+
     if (fileExists && managerName === "zim") {
       // Check zim specific files
       const zimInit = await exists(expandPath("~/.zim/init.zsh"));
       console.log(`~/.zim/init.zsh: ${zimInit ? "✅ exists" : "❌ missing"}`);
-      
+
       const zimfw = await exists(expandPath("~/.zim/zimfw.zsh"));
       console.log(`~/.zim/zimfw.zsh: ${zimfw ? "✅ exists" : "❌ missing"}`);
     }
@@ -34,7 +34,7 @@ async function diagnoseManager(managerName: string) {
   console.log("\nTesting shell startup:");
   const testCmd = `timeout 5 zsh -ic 'echo "TEST_OK"' 2>&1`;
   const { success, output, error } = await runCommand(testCmd);
-  
+
   if (success && output.includes("TEST_OK")) {
     console.log("✅ Shell starts successfully");
   } else {
@@ -47,12 +47,18 @@ async function diagnoseManager(managerName: string) {
   switch (managerName) {
     case "antigen": {
       const antigenExists = await exists(expandPath("~/antigen.zsh"));
-      console.log(`~/antigen.zsh: ${antigenExists ? "✅ exists" : "❌ missing"}`);
+      console.log(
+        `~/antigen.zsh: ${antigenExists ? "✅ exists" : "❌ missing"}`,
+      );
       break;
     }
     case "antidote": {
       const antidoteExists = await exists("/usr/local/share/antidote");
-      console.log(`/usr/local/share/antidote: ${antidoteExists ? "✅ exists" : "❌ missing"}`);
+      console.log(
+        `/usr/local/share/antidote: ${
+          antidoteExists ? "✅ exists" : "❌ missing"
+        }`,
+      );
       break;
     }
     case "zcomet": {
@@ -66,7 +72,7 @@ async function diagnoseManager(managerName: string) {
 // Main
 if (import.meta.main) {
   const managers = ["zim", "antigen", "antidote", "zcomet"];
-  
+
   for (const manager of managers) {
     await diagnoseManager(manager);
   }

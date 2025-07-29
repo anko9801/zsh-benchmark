@@ -1,6 +1,10 @@
 // Type definitions for README generator
 
-import { BenchmarkResult, BenchmarkData as BaseBenchmarkData, EnvironmentInfo } from "../types.ts";
+import {
+  BenchmarkData as BaseBenchmarkData,
+  BenchmarkResult,
+  EnvironmentInfo,
+} from "../types.ts";
 
 // CLI Options
 export interface GenerateReadmeOptions {
@@ -42,7 +46,6 @@ export interface Rankings {
   installTime: Map<number, RankingResult[]>; // pluginCount -> rankings
   overall: RankingResult[];
 }
-
 
 // Table generation
 export interface TableOptions {

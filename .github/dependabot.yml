@@ -7,7 +7,7 @@ updates:
       interval: "weekly"
     assignees:
       - "@me"
-    
+
   # GitHub Actions updates
   - package-ecosystem: "github-actions"
     directory: "/"

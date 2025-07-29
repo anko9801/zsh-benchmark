@@ -1,10 +1,6 @@
 // Table builder for markdown tables
 
-import {
-  ParsedData,
-  RankingResult,
-  TableOptions,
-} from "./types.ts";
+import { ParsedData, RankingResult, TableOptions } from "./types.ts";
 import {
   calculatePercentageIncrease,
   formatDuration,
@@ -78,7 +74,6 @@ export class TableBuilder {
       if (!result25) continue;
 
       const row: string[] = [manager.name];
-
 
       // 25 plugins - Install time
       if (result25.installTime !== null) {
@@ -168,25 +163,36 @@ export class TableBuilder {
     return lines.join("\n");
   }
 
-  buildRankingTable(rankings: RankingResult[], metric: string, pluginCount?: number): string {
-    const title = pluginCount !== undefined ? `${metric} (${pluginCount} plugins)` : metric;
+  buildRankingTable(
+    rankings: RankingResult[],
+    metric: string,
+    pluginCount?: number,
+  ): string {
+    const title = pluginCount !== undefined
+      ? `${metric} (${pluginCount} plugins)`
+      : metric;
     const lines = [
       `| Rank | Plugin Manager | ${title} (ms) | vs Best |`,
-      "|------|----------------|-----------:|--------:|"
+      "|------|----------------|-----------:|--------:|",
     ];
-    
+
     if (!rankings.length) return lines.join("\n");
-    
+
     const best = rankings[0].score;
-    rankings.forEach(r => lines.push(
-      `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${formatNumber(r.score, 2)} | ${
-        r.rank === 1 ? "-" : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
-      } |`
-    ));
-    
+    rankings.forEach((r) =>
+      lines.push(
+        `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${
+          formatNumber(r.score, 2)
+        } | ${
+          r.rank === 1
+            ? "-"
+            : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
+        } |`,
+      )
+    );
+
     return lines.join("\n");
   }
-
 
   private isBestValue(value: number, allValues: number[]): boolean {
     if (allValues.length === 0) return false;

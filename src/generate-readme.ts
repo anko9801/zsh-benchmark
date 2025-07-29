@@ -33,20 +33,24 @@ function parseArgs(args: string[]): GenerateReadmeOptions {
     },
     default: DEFAULT_OPTIONS,
   });
-  
+
   if (flags.help) {
     printHelp();
     Deno.exit(0);
   }
-  
+
   return {
     inputFile: (flags.input as string) || DEFAULT_OPTIONS.inputFile,
     outputFile: (flags.output as string) || DEFAULT_OPTIONS.outputFile,
     template: flags.template as string | undefined,
     language: (flags.language as "ja" | "en") || DEFAULT_OPTIONS.language,
-    backup: flags["no-backup"] ? false : (flags.backup as boolean ?? DEFAULT_OPTIONS.backup),
+    backup: flags["no-backup"]
+      ? false
+      : (flags.backup as boolean ?? DEFAULT_OPTIONS.backup),
     debug: flags.debug as boolean ?? DEFAULT_OPTIONS.debug,
-    sections: flags.sections ? (flags.sections as string).split(",") : undefined,
+    sections: flags.sections
+      ? (flags.sections as string).split(",")
+      : undefined,
   };
 }
 
@@ -87,26 +91,26 @@ ${yellow("Examples:")}
 // Main function
 async function main(): Promise<void> {
   const options = parseArgs(Deno.args);
-  
+
   if (options.debug) {
     logger.level = LogLevel.DEBUG;
     logger.debug("Debug mode enabled");
     logger.debug(`Options: ${JSON.stringify(options)}`);
   }
-  
+
   logger.info(bold("🚀 Generating README from benchmark results..."));
-  
+
   try {
     const generator = new ReadmeGenerator(options);
-    
+
     // Show progress
     logger.progress(`Reading benchmark data from ${options.inputFile}`);
-    
+
     // Generate README
     await generator.generate();
-    
+
     logger.success(`✅ README successfully generated at ${options.outputFile}`);
-    
+
     if (options.backup && await fileExists(options.outputFile + ".bak")) {
       logger.info(yellow(`📁 Backup saved as ${options.outputFile}.bak`));
     }

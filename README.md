@@ -17,93 +17,93 @@
 
 ### Load Time Rankings
 
-![Load Time Comparison](results/load-time-comparison-chart.svg)
-_Shell startup time comparison across different plugin managers_
+![Load Time Comparison](results/load-time-comparison-chart.svg) _Shell startup
+time comparison across different plugin managers_
 
-| Rank | Plugin Manager | Time (ms) | vs Best |
-|------|----------------|-----------|---------|
-| 🥇 | antigen | 35.16 | - |
-| 🥈 | antidote | 37.48 | +6.6% |
-| 🥉 | znap | 101.26 | +188.0% |
-| #4 | zim | 121.79 | +246.3% |
-| #5 | zgenom | 131.34 | +273.5% |
-| #6 | zcomet | 142.41 | +305.0% |
-| #7 | antigen-hs | 144.01 | +309.5% |
-| #8 | sheldon | 154.25 | +338.6% |
-| #9 | alf | 160.55 | +356.6% |
-| #10 | zr | 171.31 | +387.2% |
-| #11 | prezto | 198.09 | +463.3% |
-| #12 | oh-my-zsh | 236.00 | +571.1% |
-| #13 | antibody | 278.79 | +692.8% |
-| #14 | zinit | 485.30 | +1280.1% |
-| #15 | zpm | 526.62 | +1397.6% |
-| #16 | zplug | 676.48 | +1823.7% |
+| Rank | Plugin Manager | Time (ms) | vs Best  |
+| ---- | -------------- | --------- | -------- |
+| 🥇   | antigen        | 35.16     | -        |
+| 🥈   | antidote       | 37.48     | +6.6%    |
+| 🥉   | znap           | 101.26    | +188.0%  |
+| #4   | zim            | 121.79    | +246.3%  |
+| #5   | zgenom         | 131.34    | +273.5%  |
+| #6   | zcomet         | 142.41    | +305.0%  |
+| #7   | antigen-hs     | 144.01    | +309.5%  |
+| #8   | sheldon        | 154.25    | +338.6%  |
+| #9   | alf            | 160.55    | +356.6%  |
+| #10  | zr             | 171.31    | +387.2%  |
+| #11  | prezto         | 198.09    | +463.3%  |
+| #12  | oh-my-zsh      | 236.00    | +571.1%  |
+| #13  | antibody       | 278.79    | +692.8%  |
+| #14  | zinit          | 485.30    | +1280.1% |
+| #15  | zpm            | 526.62    | +1397.6% |
+| #16  | zplug          | 676.48    | +1823.7% |
 
 ### Installation Time Rankings
 
 ![Installation Time Comparison](results/install-time-comparison-chart.svg)
 _Plugin installation time comparison across different plugin managers_
 
-| Rank | Plugin Manager | Time (ms) | vs Best |
-|------|----------------|-----------|---------|
-| 🥇 | antidote | 32.52 | - |
-| 🥈 | zim | 35.00 | +7.6% |
-| 🥉 | zgenom | 124.47 | +282.7% |
-| #4 | znap | 137.53 | +322.9% |
-| #5 | antigen-hs | 146.19 | +349.5% |
-| #6 | zr | 146.27 | +349.7% |
-| #7 | zcomet | 148.67 | +357.1% |
-| #8 | alf | 150.80 | +363.6% |
-| #9 | prezto | 203.48 | +525.6% |
-| #10 | antibody | 257.66 | +692.2% |
-| #11 | oh-my-zsh | 351.95 | +982.1% |
-| #12 | antigen | 395.00 | +1114.5% |
-| #13 | zinit | 541.31 | +1564.3% |
-| #14 | zpm | 564.46 | +1635.5% |
-| #15 | sheldon | 569.00 | +1649.4% |
-| #16 | zplug | 665.32 | +1945.6% |
+| Rank | Plugin Manager | Time (ms) | vs Best  |
+| ---- | -------------- | --------- | -------- |
+| 🥇   | antidote       | 32.52     | -        |
+| 🥈   | zim            | 35.00     | +7.6%    |
+| 🥉   | zgenom         | 124.47    | +282.7%  |
+| #4   | znap           | 137.53    | +322.9%  |
+| #5   | antigen-hs     | 146.19    | +349.5%  |
+| #6   | zr             | 146.27    | +349.7%  |
+| #7   | zcomet         | 148.67    | +357.1%  |
+| #8   | alf            | 150.80    | +363.6%  |
+| #9   | prezto         | 203.48    | +525.6%  |
+| #10  | antibody       | 257.66    | +692.2%  |
+| #11  | oh-my-zsh      | 351.95    | +982.1%  |
+| #12  | antigen        | 395.00    | +1114.5% |
+| #13  | zinit          | 541.31    | +1564.3% |
+| #14  | zpm            | 564.46    | +1635.5% |
+| #15  | sheldon        | 569.00    | +1649.4% |
+| #16  | zplug          | 665.32    | +1945.6% |
 
 ### Overall Performance
 
-| Rank | Plugin Manager | Score |
-|------|----------------|-------|
-| 🥇 | antidote | 35.09 |
-| 🥈 | zim | 65.54 |
-| 🥉 | znap | 77.29 |
-| #4 | zgenom | 81.10 |
-| #5 | antigen-hs | 88.64 |
-| #6 | zcomet | 90.84 |
-| #7 | zr | 98.26 |
-| #8 | alf | 98.48 |
-| #9 | antigen | 142.86 |
-| #10 | antibody | 155.26 |
-| #11 | sheldon | 159.56 |
-| #12 | prezto | 163.08 |
-| #13 | oh-my-zsh | 226.04 |
-| #14 | zinit | 280.97 |
-| #15 | zpm | 302.62 |
-| #16 | zplug | 404.93 |
+| Rank | Plugin Manager | Score  |
+| ---- | -------------- | ------ |
+| 🥇   | antidote       | 35.09  |
+| 🥈   | zim            | 65.54  |
+| 🥉   | znap           | 77.29  |
+| #4   | zgenom         | 81.10  |
+| #5   | antigen-hs     | 88.64  |
+| #6   | zcomet         | 90.84  |
+| #7   | zr             | 98.26  |
+| #8   | alf            | 98.48  |
+| #9   | antigen        | 142.86 |
+| #10  | antibody       | 155.26 |
+| #11  | sheldon        | 159.56 |
+| #12  | prezto         | 163.08 |
+| #13  | oh-my-zsh      | 226.04 |
+| #14  | zinit          | 280.97 |
+| #15  | zpm            | 302.62 |
+| #16  | zplug          | 404.93 |
 
 ## 📦 Plugin Managers
 
-| Plugin Manager | Stars | Version | Last Release |
-|------------|-------|---------|--------------|
-| oh-my-zsh  | ![stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social) | ![GitHub Release](https://img.shields.io/github/release/ohmyzsh/ohmyzsh.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/ohmyzsh/ohmyzsh) |
-| prezto     | ![stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social) | ![GitHub Release](https://img.shields.io/github/release/sorin-ionescu/prezto.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/sorin-ionescu/prezto) |
-| antigen    | ![stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social) | ![GitHub Release](https://img.shields.io/github/release/zsh-users/antigen.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zsh-users/antigen) |
-| zplug      | ![stars](https://img.shields.io/github/stars/zplug/zplug?style=social) | ![GitHub Release](https://img.shields.io/github/release/zplug/zplug.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zplug/zplug) |
-| zim        | ![stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social) | ![GitHub Release](https://img.shields.io/github/release/zimfw/zimfw.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zimfw/zimfw) |
-| zinit      | ![stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social) | ![GitHub Release](https://img.shields.io/github/release/zdharma-continuum/zinit.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zdharma-continuum/zinit) |
-| antibody   | ![stars](https://img.shields.io/github/stars/getantibody/antibody?style=social) | ![GitHub Release](https://img.shields.io/github/release/getantibody/antibody.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/getantibody/antibody) |
-| znap       | ![stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social) | ![GitHub Release](https://img.shields.io/github/release/marlonrichert/zsh-snap.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/marlonrichert/zsh-snap) |
-| antidote   | ![stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social) | ![GitHub Release](https://img.shields.io/github/release/mattmc3/antidote.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/mattmc3/antidote) |
-| sheldon    | ![stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social) | ![GitHub Release](https://img.shields.io/github/release/rossmacarthur/sheldon.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/rossmacarthur/sheldon) |
-| zgenom     | ![stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social) | ![GitHub Release](https://img.shields.io/github/release/jandamm/zgenom.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/jandamm/zgenom) |
-| zpm        | ![stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social) | ![GitHub Release](https://img.shields.io/github/release/zpm-zsh/zpm.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zpm-zsh/zpm) |
-| zcomet     | ![stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social) | ![GitHub Release](https://img.shields.io/github/release/agkozak/zcomet.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/agkozak/zcomet) |
-| antigen-hs | ![stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social) | ![GitHub Release](https://img.shields.io/github/release/Tarrasch/antigen-hs.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/Tarrasch/antigen-hs) |
-| zr         | ![stars](https://img.shields.io/github/stars/jedahan/zr?style=social) | ![GitHub Release](https://img.shields.io/github/release/jedahan/zr.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/jedahan/zr) |
-| alf        | ![stars](https://img.shields.io/github/stars/psyrendust/alf?style=social) | ![GitHub Release](https://img.shields.io/github/release/psyrendust/alf.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/psyrendust/alf) |
+| Plugin Manager | Stars                                                                              | Version                                                                                         | Last Release                                                                             |
+| -------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| oh-my-zsh      | ![stars](https://img.shields.io/github/stars/ohmyzsh/ohmyzsh?style=social)         | ![GitHub Release](https://img.shields.io/github/release/ohmyzsh/ohmyzsh.svg?style=flat)         | ![GitHub last commit](https://img.shields.io/github/last-commit/ohmyzsh/ohmyzsh)         |
+| prezto         | ![stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social)    | ![GitHub Release](https://img.shields.io/github/release/sorin-ionescu/prezto.svg?style=flat)    | ![GitHub last commit](https://img.shields.io/github/last-commit/sorin-ionescu/prezto)    |
+| antigen        | ![stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social)       | ![GitHub Release](https://img.shields.io/github/release/zsh-users/antigen.svg?style=flat)       | ![GitHub last commit](https://img.shields.io/github/last-commit/zsh-users/antigen)       |
+| zplug          | ![stars](https://img.shields.io/github/stars/zplug/zplug?style=social)             | ![GitHub Release](https://img.shields.io/github/release/zplug/zplug.svg?style=flat)             | ![GitHub last commit](https://img.shields.io/github/last-commit/zplug/zplug)             |
+| zim            | ![stars](https://img.shields.io/github/stars/zimfw/zimfw?style=social)             | ![GitHub Release](https://img.shields.io/github/release/zimfw/zimfw.svg?style=flat)             | ![GitHub last commit](https://img.shields.io/github/last-commit/zimfw/zimfw)             |
+| zinit          | ![stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social) | ![GitHub Release](https://img.shields.io/github/release/zdharma-continuum/zinit.svg?style=flat) | ![GitHub last commit](https://img.shields.io/github/last-commit/zdharma-continuum/zinit) |
+| antibody       | ![stars](https://img.shields.io/github/stars/getantibody/antibody?style=social)    | ![GitHub Release](https://img.shields.io/github/release/getantibody/antibody.svg?style=flat)    | ![GitHub last commit](https://img.shields.io/github/last-commit/getantibody/antibody)    |
+| znap           | ![stars](https://img.shields.io/github/stars/marlonrichert/zsh-snap?style=social)  | ![GitHub Release](https://img.shields.io/github/release/marlonrichert/zsh-snap.svg?style=flat)  | ![GitHub last commit](https://img.shields.io/github/last-commit/marlonrichert/zsh-snap)  |
+| antidote       | ![stars](https://img.shields.io/github/stars/mattmc3/antidote?style=social)        | ![GitHub Release](https://img.shields.io/github/release/mattmc3/antidote.svg?style=flat)        | ![GitHub last commit](https://img.shields.io/github/last-commit/mattmc3/antidote)        |
+| sheldon        | ![stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social)   | ![GitHub Release](https://img.shields.io/github/release/rossmacarthur/sheldon.svg?style=flat)   | ![GitHub last commit](https://img.shields.io/github/last-commit/rossmacarthur/sheldon)   |
+| zgenom         | ![stars](https://img.shields.io/github/stars/jandamm/zgenom?style=social)          | ![GitHub Release](https://img.shields.io/github/release/jandamm/zgenom.svg?style=flat)          | ![GitHub last commit](https://img.shields.io/github/last-commit/jandamm/zgenom)          |
+| zpm            | ![stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social)             | ![GitHub Release](https://img.shields.io/github/release/zpm-zsh/zpm.svg?style=flat)             | ![GitHub last commit](https://img.shields.io/github/last-commit/zpm-zsh/zpm)             |
+| zcomet         | ![stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social)          | ![GitHub Release](https://img.shields.io/github/release/agkozak/zcomet.svg?style=flat)          | ![GitHub last commit](https://img.shields.io/github/last-commit/agkozak/zcomet)          |
+| antigen-hs     | ![stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social)     | ![GitHub Release](https://img.shields.io/github/release/Tarrasch/antigen-hs.svg?style=flat)     | ![GitHub last commit](https://img.shields.io/github/last-commit/Tarrasch/antigen-hs)     |
+| zr             | ![stars](https://img.shields.io/github/stars/jedahan/zr?style=social)              | ![GitHub Release](https://img.shields.io/github/release/jedahan/zr.svg?style=flat)              | ![GitHub last commit](https://img.shields.io/github/last-commit/jedahan/zr)              |
+| alf            | ![stars](https://img.shields.io/github/stars/psyrendust/alf?style=social)          | ![GitHub Release](https://img.shields.io/github/release/psyrendust/alf.svg?style=flat)          | ![GitHub last commit](https://img.shields.io/github/last-commit/psyrendust/alf)          |
 
 ## 📝 Methodology
 

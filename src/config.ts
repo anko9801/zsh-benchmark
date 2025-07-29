@@ -39,22 +39,30 @@ export const DEFAULT_CONFIG: Config = {
 
 export function validateManagers(managers: string[]): string[] {
   const validManagers = Object.keys(PLUGIN_MANAGERS);
-  const invalidManagers = managers.filter(m => !validManagers.includes(m));
-  
+  const invalidManagers = managers.filter((m) => !validManagers.includes(m));
+
   if (invalidManagers.length > 0) {
-    throw new Error(`Unknown managers: ${invalidManagers.join(", ")}\nValid managers: ${validManagers.join(", ")}`);
+    throw new Error(
+      `Unknown managers: ${invalidManagers.join(", ")}\nValid managers: ${
+        validManagers.join(", ")
+      }`,
+    );
   }
-  
+
   return managers;
 }
 
 export function validatePluginCounts(counts: number[]): number[] {
-  const invalidCounts = counts.filter(c => c < 0 || !Number.isInteger(c));
-  
+  const invalidCounts = counts.filter((c) => c < 0 || !Number.isInteger(c));
+
   if (invalidCounts.length > 0) {
-    throw new Error(`Invalid plugin counts: ${invalidCounts.join(", ")}\nPlugin counts must be non-negative integers`);
+    throw new Error(
+      `Invalid plugin counts: ${
+        invalidCounts.join(", ")
+      }\nPlugin counts must be non-negative integers`,
+    );
   }
-  
+
   return counts;
 }
 
@@ -69,7 +77,9 @@ export function parseOptions(args: Record<string, unknown>): BenchmarkOptions {
   // Parse plugin counts
   let pluginCounts = DEFAULT_CONFIG.defaults.pluginCounts;
   if (args.counts) {
-    pluginCounts = args.counts.split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
+    pluginCounts = args.counts.split(/[\s,]+/).map(Number).filter((n) =>
+      !isNaN(n)
+    );
     pluginCounts = validatePluginCounts(pluginCounts);
   }
 

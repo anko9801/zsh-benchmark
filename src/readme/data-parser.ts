@@ -47,12 +47,17 @@ export class DataParser {
     const obj = data as Record<string, unknown>;
     if (!data || typeof data !== "object" || !Array.isArray(obj.results)) {
       throw createError(ErrorCode.VALIDATION_ERROR, {
-        reason: !data ? "Data must be an object" : "Missing or invalid results array",
+        reason: !data
+          ? "Data must be an object"
+          : "Missing or invalid results array",
       });
     }
 
-    obj.results.forEach(r => this.validateBenchmarkResult(r));
-    return { results: obj.results as BenchmarkResult[], metadata: obj.metadata as BenchmarkData["metadata"] };
+    obj.results.forEach((r) => this.validateBenchmarkResult(r));
+    return {
+      results: obj.results as BenchmarkResult[],
+      metadata: obj.metadata as BenchmarkData["metadata"],
+    };
   }
 
   private validateBenchmarkResult(result: unknown): void {
@@ -61,21 +66,34 @@ export class DataParser {
       [!result || typeof result !== "object", "Invalid benchmark result"],
       [typeof r.manager !== "string", "Missing or invalid manager name"],
       [typeof r.pluginCount !== "number", "Missing or invalid plugin count"],
-      [r.loadTime !== null && typeof r.loadTime !== "number", "Invalid load time"],
-      [r.installTime !== null && typeof r.installTime !== "number", "Invalid install time"],
+      [
+        r.loadTime !== null && typeof r.loadTime !== "number",
+        "Invalid load time",
+      ],
+      [
+        r.installTime !== null && typeof r.installTime !== "number",
+        "Invalid install time",
+      ],
     ] as const;
-    
+
     const error = checks.find(([condition]) => condition);
-    if (error) throw createError(ErrorCode.VALIDATION_ERROR, { reason: error[1] });
+    if (error) {
+      throw createError(ErrorCode.VALIDATION_ERROR, { reason: error[1] });
+    }
   }
 
-  extractMetadata(data: BenchmarkData): { timestamp: Date; environment: EnvironmentInfo } {
+  extractMetadata(
+    data: BenchmarkData,
+  ): { timestamp: Date; environment: EnvironmentInfo } {
     return {
-      timestamp: data.metadata?.executedAt ? new Date(data.metadata.executedAt) : new Date(),
+      timestamp: data.metadata?.executedAt
+        ? new Date(data.metadata.executedAt)
+        : new Date(),
       environment: {
         ...data.metadata?.environment,
         os: data.metadata?.environment?.os || Deno.build.os,
-        denoVersion: data.metadata?.environment?.denoVersion || Deno.version.deno,
+        denoVersion: data.metadata?.environment?.denoVersion ||
+          Deno.version.deno,
       },
     };
   }
@@ -83,15 +101,18 @@ export class DataParser {
   private parseManagers(results: BenchmarkResult[]): ManagerData[] {
     return Array.from(
       results.reduce((map, result) => {
-        const manager = map.get(result.manager) || map.set(result.manager, new Map()).get(result.manager)!;
+        const manager = map.get(result.manager) ||
+          map.set(result.manager, new Map()).get(result.manager)!;
         manager.set(result.pluginCount, result);
         return map;
       }, new Map<string, Map<number, BenchmarkResult>>()),
-      ([name, results]) => ({ name, results })
+      ([name, results]) => ({ name, results }),
     ).sort((a, b) => a.name.localeCompare(b.name));
   }
 
   private extractPluginCounts(results: BenchmarkResult[]): number[] {
-    return [...new Set(results.map(r => r.pluginCount))].sort((a, b) => a - b);
+    return [...new Set(results.map((r) => r.pluginCount))].sort((a, b) =>
+      a - b
+    );
   }
 }

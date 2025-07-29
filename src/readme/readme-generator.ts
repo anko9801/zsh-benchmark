@@ -2,10 +2,10 @@
 
 import {
   GenerateReadmeOptions,
+  GraphInfo,
   ParsedData,
   Rankings,
   TemplateData,
-  GraphInfo,
 } from "./types.ts";
 import { DataParser } from "./data-parser.ts";
 import { RankingEngine } from "./ranking-engine.ts";
@@ -32,27 +32,37 @@ export class ReadmeGenerator {
 
   async generate(): Promise<void> {
     const log = (msg: string) => this.options.debug && console.log(msg);
-    
+
     log("Parsing benchmark data...");
     const parsedData = await this.dataParser.parse(this.options.inputFile!);
-    
+
     log("Calculating rankings...");
     const rankings = this.rankingEngine.generateRankings(parsedData);
-    
+
     log("Detecting graphs...");
     const graphs = await this.graphHandler.detectGraphs();
-    
+
     log("Building comparison table...");
-    const comparisonTable = this.tableBuilder.buildComparisonTable(parsedData, { highlightBest: true });
-    
+    const comparisonTable = this.tableBuilder.buildComparisonTable(parsedData, {
+      highlightBest: true,
+    });
+
     log("Preparing template data...");
-    const templateData = this.prepareTemplateData(parsedData, rankings, graphs, comparisonTable);
-    
+    const templateData = this.prepareTemplateData(
+      parsedData,
+      rankings,
+      graphs,
+      comparisonTable,
+    );
+
     if (this.options.backup) await this.createBackup();
-    
+
     log("Rendering README...");
-    const readme = await this.templateEngine.render(templateData, this.options.template);
-    
+    const readme = await this.templateEngine.render(
+      templateData,
+      this.options.template,
+    );
+
     await Deno.writeTextFile(this.options.outputFile!, readme);
     log("README generation complete!");
   }
@@ -74,10 +84,17 @@ export class ReadmeGenerator {
       graphs,
       versionInfo: {
         managers: new Map(),
-        tools: new Map(Object.entries(Deno.version).filter(([k]) => ['deno', 'typescript', 'v8'].includes(k))),
+        tools: new Map(
+          Object.entries(Deno.version).filter(([k]) =>
+            ["deno", "typescript", "v8"].includes(k)
+          ),
+        ),
         environment: parsedData.environment,
       },
-      badges: [{ name: "License", url: "https://img.shields.io/badge/license-MIT-blue" }],
+      badges: [{
+        name: "License",
+        url: "https://img.shields.io/badge/license-MIT-blue",
+      }],
     };
   }
 
@@ -106,15 +123,23 @@ export class ReadmeGenerator {
 
   private generateKeyFindings(data: ParsedData, rankings: Rankings): string[] {
     const findings: string[] = [];
-    
+
     const overall = rankings.overall;
     if (overall.length > 0) {
-      findings.push(`${overall[0].manager} が総合パフォーマンスで最高評価${overall[0].medal || ""}`);
+      findings.push(
+        `${overall[0].manager} が総合パフォーマンスで最高評価${
+          overall[0].medal || ""
+        }`,
+      );
     }
 
     const loadTime25 = rankings.loadTime.get(25)?.[0];
     if (loadTime25) {
-      findings.push(`25プラグイン環境では ${loadTime25.manager} が最速 (${Math.round(loadTime25.score)}ms)`);
+      findings.push(
+        `25プラグイン環境では ${loadTime25.manager} が最速 (${
+          Math.round(loadTime25.score)
+        }ms)`,
+      );
     }
 
     if (overall.length >= 3) {
@@ -122,9 +147,13 @@ export class ReadmeGenerator {
       findings.push(`パフォーマンス差は最大 ${ratio}倍`);
     }
 
-    const zimResult = data.managers.find(m => m.name === "zim")?.results.get(0);
+    const zimResult = data.managers.find((m) => m.name === "zim")?.results.get(
+      0,
+    );
     if (zimResult?.loadTime && zimResult.loadTime < 40) {
-      findings.push(`zim は最小構成で驚異的な速度 (${Math.round(zimResult.loadTime)}ms)`);
+      findings.push(
+        `zim は最小構成で驚異的な速度 (${Math.round(zimResult.loadTime)}ms)`,
+      );
     }
 
     return findings;

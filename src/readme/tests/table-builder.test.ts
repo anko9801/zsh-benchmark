@@ -56,7 +56,6 @@ const mockData: ParsedData = {
   environment: {},
 };
 
-
 Deno.test("TableBuilder formats numbers correctly", () => {
   const builder = new TableBuilder();
   const table = builder.buildComparisonTable(mockData);
@@ -86,7 +85,6 @@ Deno.test("TableBuilder highlights best values", () => {
   assertStringIncludes(table, "**38**");
 });
 
-
 Deno.test("TableBuilder ranking table", () => {
   const builder = new TableBuilder();
   const rankings: RankingResult[] = [
@@ -108,7 +106,6 @@ Deno.test("TableBuilder ranking table", () => {
   assertStringIncludes(table, "| 🥈 | zinit | 50.50 | +48.5% |");
   assertStringIncludes(table, "| 🥉 | oh-my-zsh | 193.00 | +467.6% |");
 });
-
 
 Deno.test("TableBuilder handles missing data", () => {
   const builder = new TableBuilder();

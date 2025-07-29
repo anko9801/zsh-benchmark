@@ -7,10 +7,10 @@ export class RankingEngine {
   private calculateRanking(
     data: ParsedData,
     pluginCount: number,
-    metric: 'loadTime' | 'installTime',
+    metric: "loadTime" | "installTime",
   ): RankingResult[] {
     const rankings = data.managers
-      .map(manager => {
+      .map((manager) => {
         const result = manager.results.get(pluginCount);
         const score = result?.[metric];
         return score !== null && score !== undefined
@@ -25,27 +25,38 @@ export class RankingEngine {
     return rankings;
   }
 
-  calculateLoadTimeRanking(data: ParsedData, pluginCount: number): RankingResult[] {
-    return this.calculateRanking(data, pluginCount, 'loadTime');
+  calculateLoadTimeRanking(
+    data: ParsedData,
+    pluginCount: number,
+  ): RankingResult[] {
+    return this.calculateRanking(data, pluginCount, "loadTime");
   }
 
-  calculateInstallTimeRanking(data: ParsedData, pluginCount: number): RankingResult[] {
-    return this.calculateRanking(data, pluginCount, 'installTime');
+  calculateInstallTimeRanking(
+    data: ParsedData,
+    pluginCount: number,
+  ): RankingResult[] {
+    return this.calculateRanking(data, pluginCount, "installTime");
   }
 
   calculateOverallRanking(data: ParsedData): RankingResult[] {
     const rankings = data.managers
-      .map(manager => {
+      .map((manager) => {
         const scores = Array.from(manager.results.values())
-          .flatMap(r => [
+          .flatMap((r) => [
             r.loadTime !== null ? { score: r.loadTime, weight: 0.7 } : null,
-            r.installTime !== null ? { score: r.installTime, weight: 0.3 } : null,
+            r.installTime !== null
+              ? { score: r.installTime, weight: 0.3 }
+              : null,
           ])
           .filter((s): s is { score: number; weight: number } => s !== null);
-        
+
         const totalWeight = scores.reduce((sum, s) => sum + s.weight, 0);
-        const weightedSum = scores.reduce((sum, s) => sum + s.score * s.weight, 0);
-        
+        const weightedSum = scores.reduce(
+          (sum, s) => sum + s.score * s.weight,
+          0,
+        );
+
         return totalWeight > 0
           ? { manager: manager.name, score: weightedSum / totalWeight, rank: 0 }
           : null;
@@ -61,10 +72,14 @@ export class RankingEngine {
   generateRankings(data: ParsedData): Rankings {
     return {
       loadTime: new Map(
-        data.pluginCounts.map(count => [count, this.calculateLoadTimeRanking(data, count)])
+        data.pluginCounts.map(
+          (count) => [count, this.calculateLoadTimeRanking(data, count)],
+        ),
       ),
       installTime: new Map(
-        data.pluginCounts.map(count => [count, this.calculateInstallTimeRanking(data, count)])
+        data.pluginCounts.map(
+          (count) => [count, this.calculateInstallTimeRanking(data, count)],
+        ),
       ),
       overall: this.calculateOverallRanking(data),
     };
@@ -72,8 +87,8 @@ export class RankingEngine {
 
   private assignRanks(rankings: RankingResult[]): void {
     rankings.forEach((r, i) => {
-      r.rank = i > 0 && r.score === rankings[i - 1].score 
-        ? rankings[i - 1].rank 
+      r.rank = i > 0 && r.score === rankings[i - 1].score
+        ? rankings[i - 1].rank
         : i + 1;
     });
   }
@@ -85,8 +100,9 @@ export class RankingEngine {
     });
   }
 
-  getBestPerformer = (rankings: RankingResult[]) => rankings.find(r => r.rank === 1);
-  
-  getPercentageDifference = (value: number, bestValue: number) => 
+  getBestPerformer = (rankings: RankingResult[]) =>
+    rankings.find((r) => r.rank === 1);
+
+  getPercentageDifference = (value: number, bestValue: number) =>
     bestValue === 0 ? 0 : calculatePercentageIncrease(bestValue, value);
 }

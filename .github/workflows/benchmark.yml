@@ -13,36 +13,36 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Need full history for comparisons
-      
+          fetch-depth: 0 # Need full history for comparisons
+
       - name: Build Docker image
         run: docker build -t zsh-benchmark .
-      
+
       - name: Run benchmark
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/results:/benchmark/results \
             -v ${{ github.workspace }}/README.md:/benchmark/README.md \
             zsh-benchmark
-      
+
       - name: Generate graphs
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/benchmark \
             --entrypoint deno \
             zsh-benchmark run --allow-all src/generate-graphs.ts
-      
+
       - name: Save benchmark results
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: pr-benchmark-results
           path: results/latest.json
-      
+
       - name: Compare with main branch
         if: github.event_name == 'pull_request'
         id: compare
@@ -50,11 +50,11 @@ jobs:
           # Checkout main branch results
           git fetch origin main
           git checkout origin/main -- results/latest.json 2>/dev/null || echo "No previous results"
-          
+
           if [ -f results/latest.json ]; then
             mv results/latest.json results/main.json
           fi
-          
+
           # Generate comparison if both files exist
           if [ -f results/main.json ] && [ -f results/latest.json ]; then
             docker run --rm \
@@ -64,7 +64,7 @@ jobs:
                 const main = JSON.parse(await Deno.readTextFile('results/main.json'));
                 const pr = JSON.parse(await Deno.readTextFile('results/latest.json'));
                 const comparison = [];
-                
+
                 for (const result of pr.results) {
                   const mainResult = main.results.find(r => r.manager === result.manager);
                   if (mainResult) {
@@ -79,11 +79,11 @@ jobs:
                     });
                   }
                 }
-                
+
                 await Deno.writeTextFile('results/comparison.json', JSON.stringify(comparison, null, 2));
               "
           fi
-      
+
       - name: Comment PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -91,48 +91,48 @@ jobs:
           script: |
             const fs = require('fs');
             let comment = '## 📊 Benchmark Results\n\n';
-            
+
             // Read latest results
             const results = JSON.parse(fs.readFileSync('results/latest.json', 'utf8'));
-            
+
             // Add results table
             comment += '### Current Results\n\n';
             comment += '| Plugin Manager | Install Time | Load Time |\n';
             comment += '|----------------|--------------|----------|\n';
-            
+
             const sorted = results.results.sort((a, b) => a.loadTime - b.loadTime);
             for (const result of sorted) {
               comment += `| ${result.manager} | ${result.installTime.toFixed(0)}ms | ${result.loadTime.toFixed(0)}ms |\n`;
             }
-            
+
             // Add comparison if available
             if (fs.existsSync('results/comparison.json')) {
               const comparison = JSON.parse(fs.readFileSync('results/comparison.json', 'utf8'));
-              
+
               comment += '\n### Comparison with main branch\n\n';
               comment += '| Plugin Manager | Load Time | Change | Install Time | Change |\n';
               comment += '|----------------|-----------|--------|--------------|--------|\n';
-              
+
               for (const comp of comparison) {
                 const loadEmoji = comp.loadDiff > 5 ? '🔴' : comp.loadDiff < -5 ? '🟢' : '⚪';
                 const installEmoji = comp.installDiff > 5 ? '🔴' : comp.installDiff < -5 ? '🟢' : '⚪';
                 comment += `| ${comp.manager} | ${comp.loadTime.toFixed(0)}ms | ${loadEmoji} ${comp.loadDiff}% | ${comp.installTime.toFixed(0)}ms | ${installEmoji} ${comp.installDiff}% |\n`;
               }
-              
+
               comment += '\n🟢 Improvement | ⚪ No significant change | 🔴 Regression\n';
             }
-            
+
             // Find and update or create comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
-            const botComment = comments.find(comment => 
+
+            const botComment = comments.find(comment =>
               comment.user.type === 'Bot' && comment.body.includes('📊 Benchmark Results')
             );
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -148,7 +148,7 @@ jobs:
                 body: comment
               });
             }
-      
+
       - name: Commit results
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -157,7 +157,7 @@ jobs:
           git add README.md results/
           git diff --staged --quiet || git commit -m "Update benchmark results [skip ci]"
           git push
-      
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:

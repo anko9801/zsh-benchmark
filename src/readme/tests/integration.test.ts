@@ -166,12 +166,12 @@ Deno.test("Integration: Handle missing data gracefully", async () => {
     await generator.generate();
 
     const content = await Deno.readTextFile(testOutputPath);
-    
+
     // Should handle null values gracefully
     // With null load time, the manager should still appear in install time rankings
     assert(content.includes("test-manager"));
     assert(content.includes("100.00")); // Install time should be shown
-    
+
     // For null load time, we should see "No ranking data available"
     assert(content.includes("No ranking data available"));
   } finally {

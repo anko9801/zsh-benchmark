@@ -30,7 +30,7 @@ export async function exists(path: string): Promise<boolean> {
  */
 export async function runCommand(
   command: string,
-  options?: { silent?: boolean }
+  options?: { silent?: boolean },
 ): Promise<CommandResult> {
   const cmd = new Deno.Command("bash", {
     args: ["-c", command],
@@ -70,7 +70,10 @@ export function formatPercentage(value: number, precision: number = 1): string {
 /**
  * Calculates the percentage increase between two values
  */
-export function calculatePercentageIncrease(oldValue: number, newValue: number): number {
+export function calculatePercentageIncrease(
+  oldValue: number,
+  newValue: number,
+): number {
   return ((newValue - oldValue) / oldValue) * 100;
 }
 
@@ -78,7 +81,7 @@ export function calculatePercentageIncrease(oldValue: number, newValue: number):
  * Creates a timestamp string for backup files
  */
 export function createTimestamp(): string {
-  return new Date().toISOString().replace(/[:.]/g, '-');
+  return new Date().toISOString().replace(/[:.]/g, "-");
 }
 
 /**

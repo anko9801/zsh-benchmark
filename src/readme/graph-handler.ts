@@ -52,7 +52,7 @@ export class GraphHandler {
       title = "Installation Time Comparison";
       caption =
         "Plugin installation time comparison across different plugin managers";
-    // Scalability graphs are skipped
+      // Scalability graphs are skipped
     } else if (name.includes("comparison")) {
       title = "Overall Comparison";
       caption = "Comprehensive performance comparison";

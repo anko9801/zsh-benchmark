@@ -11,7 +11,7 @@ export class TemplateEngine {
   constructor() {
     // No initialization needed - badges are generated via shields.io
   }
-  
+
   async render(data: TemplateData, templatePath?: string): Promise<string> {
     const template = await this.loadTemplate(templatePath);
     return this.replacePlaceholders(template, data);
@@ -42,7 +42,7 @@ export class TemplateEngine {
     // Replace badges - split into multiple lines for readability
     const badgesPerLine = 6;
     const badgeGroups: string[] = [];
-    
+
     for (let i = 0; i < data.badges.length; i += badgesPerLine) {
       const group = data.badges
         .slice(i, i + badgesPerLine)
@@ -50,7 +50,7 @@ export class TemplateEngine {
         .join(" ");
       badgeGroups.push(group);
     }
-    
+
     const badgesMarkdown = badgeGroups.join("\n");
     result = result.replace("{{badges}}", badgesMarkdown);
 
@@ -83,22 +83,24 @@ export class TemplateEngine {
     result = result.replace("{{comparisonTable}}", "");
 
     // Replace individual graphs
-    const loadTimeGraph = data.graphs.find(g => g.path.includes("load-time"));
-    const installTimeGraph = data.graphs.find(g => g.path.includes("install-time"));
-    
+    const loadTimeGraph = data.graphs.find((g) => g.path.includes("load-time"));
+    const installTimeGraph = data.graphs.find((g) =>
+      g.path.includes("install-time")
+    );
+
     if (loadTimeGraph) {
       result = result.replace(
         "{{loadTimeGraph}}",
-        `![${loadTimeGraph.title}](${loadTimeGraph.path})\n_${loadTimeGraph.caption}_`
+        `![${loadTimeGraph.title}](${loadTimeGraph.path})\n_${loadTimeGraph.caption}_`,
       );
     } else {
       result = result.replace("{{loadTimeGraph}}", "");
     }
-    
+
     if (installTimeGraph) {
       result = result.replace(
         "{{installTimeGraph}}",
-        `![${installTimeGraph.title}](${installTimeGraph.path})\n_${installTimeGraph.caption}_`
+        `![${installTimeGraph.title}](${installTimeGraph.path})\n_${installTimeGraph.caption}_`,
       );
     } else {
       result = result.replace("{{installTimeGraph}}", "");
@@ -109,7 +111,6 @@ export class TemplateEngine {
       "{{managerBadges}}",
       this.formatManagerBadges(data),
     );
-    
 
     // Replace any remaining executedAt placeholders
     result = result.replace(
@@ -120,7 +121,10 @@ export class TemplateEngine {
     return result;
   }
 
-  private formatRankings(data: TemplateData, type: "loadTime" | "installTime"): string {
+  private formatRankings(
+    data: TemplateData,
+    type: "loadTime" | "installTime",
+  ): string {
     const rankings = data.rankings[type].get(25);
     if (!rankings?.length) return "No ranking data available";
 
@@ -128,11 +132,15 @@ export class TemplateEngine {
     return [
       "| Rank | Plugin Manager | Time (ms) | vs Best |",
       "|------|----------------|-----------|---------|",
-      ...rankings.map(r => 
-        `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${formatNumber(r.score, 2)} | ${
-          r.rank === 1 ? "-" : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
+      ...rankings.map((r) =>
+        `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${
+          formatNumber(r.score, 2)
+        } | ${
+          r.rank === 1
+            ? "-"
+            : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
         } |`
-      )
+      ),
     ].join("\n");
   }
 
@@ -156,10 +164,9 @@ export class TemplateEngine {
     return sections.join("\n");
   }
 
-
   private formatManagerBadges(data: TemplateData): string {
     const sections: string[] = [];
-    
+
     const repoMapping = new Map([
       ["alf", "psyrendust/alf"],
       ["antibody", "getantibody/antibody"],
@@ -179,47 +186,52 @@ export class TemplateEngine {
       ["zpm", "zpm-zsh/zpm"],
       ["zr", "jedahan/zr"],
     ]);
-    
+
     // Sort by overall ranking (already sorted)
-    const managersWithStars = data.rankings.overall.map(ranking => {
+    const managersWithStars = data.rankings.overall.map((ranking) => {
       const manager = ranking.manager;
       return { manager };
     });
-    
+
     // Calculate max name length for alignment
-    const maxNameLength = Math.max(...managersWithStars.map(m => m.manager.length));
-    
+    const maxNameLength = Math.max(
+      ...managersWithStars.map((m) => m.manager.length),
+    );
+
     for (const { manager } of managersWithStars) {
       const repo = repoMapping.get(manager);
       if (!repo) continue;
-      
-      
+
       // Pad manager name for alignment
       const paddedManager = manager.padEnd(maxNameLength);
-      
-      
+
       // Create a line for each manager with aligned formatting
       let managerLine = `| ${paddedManager} | `;
-      
+
       // Stars badge - use GitHub social style (first)
-      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
-      
+      managerLine +=
+        `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
+
       // Version badge (second) - use GitHub release badge
-      managerLine += `![GitHub Release](https://img.shields.io/github/release/${repo}.svg?style=flat) | `;
-      
+      managerLine +=
+        `![GitHub Release](https://img.shields.io/github/release/${repo}.svg?style=flat) | `;
+
       // Last release badge (third) - use GitHub last-commit API
-      managerLine += `![GitHub last commit](https://img.shields.io/github/last-commit/${repo}) |`;
-      
+      managerLine +=
+        `![GitHub last commit](https://img.shields.io/github/last-commit/${repo}) |`;
+
       sections.push(managerLine);
     }
-    
+
     // Add table header
     sections.unshift("| Plugin Manager | Stars | Version | Last Release |");
-    sections.splice(1, 0, "|" + "-".repeat(maxNameLength + 2) + "|-------|---------|--------------|");
-    
+    sections.splice(
+      1,
+      0,
+      "|" + "-".repeat(maxNameLength + 2) +
+        "|-------|---------|--------------|",
+    );
+
     return sections.join("\n");
   }
-  
-  
-
 }
