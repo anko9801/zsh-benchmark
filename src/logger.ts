@@ -10,65 +10,38 @@ export enum LogLevel {
 }
 
 export class Logger {
-  public level: LogLevel;
+  constructor(public level: LogLevel = LogLevel.INFO) {}
 
-  constructor(level: LogLevel = LogLevel.INFO) {
-    this.level = level;
-  }
-
-  debug(message: string): void {
-    if (this.level <= LogLevel.DEBUG) {
-      console.log(blue(`[DEBUG] ${message}`));
+  private log(level: LogLevel, message: string, color?: (str: string) => string): void {
+    if (this.level <= level) {
+      console.log(color ? color(message) : message);
     }
   }
 
-  info(message: string): void {
-    if (this.level <= LogLevel.INFO) {
-      console.log(message);
-    }
-  }
-
-  success(message: string): void {
-    if (this.level <= LogLevel.INFO) {
-      console.log(green(message));
-    }
-  }
-
-  warn(message: string): void {
-    if (this.level <= LogLevel.WARN) {
-      console.log(yellow(`⚠️  ${message}`));
-    }
-  }
-
+  debug = (message: string) => this.log(LogLevel.DEBUG, `[DEBUG] ${message}`, blue);
+  info = (message: string) => this.log(LogLevel.INFO, message);
+  success = (message: string) => this.log(LogLevel.INFO, message, green);
+  warn = (message: string) => this.log(LogLevel.WARN, `⚠️  ${message}`, yellow);
+  
   error(message: string, error?: Error): void {
-    if (this.level <= LogLevel.ERROR) {
-      console.error(red(`❌ ${message}`));
-      if (error) {
-        console.error(red(`   ${error.message}`));
-        if (error.stack && this.level === LogLevel.DEBUG) {
-          console.error(red(error.stack));
-        }
+    if (this.level > LogLevel.ERROR) return;
+    console.error(red(`❌ ${message}`));
+    if (error) {
+      console.error(red(`   ${error.message}`));
+      if (error.stack && this.level === LogLevel.DEBUG) {
+        console.error(red(error.stack));
       }
     }
   }
 
   header(message: string): void {
-    console.log(bold(`\n${"=".repeat(40)}`));
-    console.log(bold(message));
-    console.log(bold(`${"=".repeat(40)}`));
+    const separator = "=".repeat(40);
+    console.log(bold(`\n${separator}\n${message}\n${separator}`));
   }
 
-  subheader(message: string): void {
-    console.log(green(`\n📦 ${message}`));
-  }
-
-  result(label: string, value: string | number, unit: string = ""): void {
-    console.log(`  ✅ ${label}: ${value}${unit}`);
-  }
-
-  progress(message: string): void {
-    console.log(`  ${message}...`);
-  }
+  subheader = (message: string) => console.log(green(`\n📦 ${message}`));
+  result = (label: string, value: string | number, unit = "") => console.log(`  ✅ ${label}: ${value}${unit}`);
+  progress = (message: string) => console.log(`  ${message}...`);
 }
 
 // Default logger instance
