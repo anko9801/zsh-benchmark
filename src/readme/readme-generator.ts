@@ -1,22 +1,17 @@
 // Main README generator class that orchestrates all modules
 
 import {
-  ExecutiveSummary,
   GenerateReadmeOptions,
   ParsedData,
   Rankings,
   TemplateData,
-  VersionInfo,
   GraphInfo,
 } from "./types.ts";
 import { DataParser } from "./data-parser.ts";
 import { RankingEngine } from "./ranking-engine.ts";
 import { TableBuilder } from "./table-builder.ts";
-// GitHub API no longer needed - using shields.io badges
 import { GraphHandler } from "./graph-handler.ts";
 import { TemplateEngine } from "./template-engine.ts";
-// Removed unused imports: createError, ErrorCode
-// Badge generation handled by shields.io
 
 export class ReadmeGenerator {
   private options: GenerateReadmeOptions;
@@ -36,70 +31,30 @@ export class ReadmeGenerator {
   }
 
   async generate(): Promise<void> {
-    try {
-
-      // Step 1: Parse benchmark data
-      if (this.options.debug) {
-        console.log("Parsing benchmark data...");
-      }
-      const parsedData = await this.dataParser.parse(this.options.inputFile!);
-
-      // Step 2: Calculate rankings
-      if (this.options.debug) {
-        console.log("Calculating rankings...");
-      }
-      const rankings = this.rankingEngine.generateRankings(parsedData);
-
-
-      // Step 4: Detect graphs
-      if (this.options.debug) {
-        console.log("Detecting graphs...");
-      }
-      const graphs = await this.graphHandler.detectGraphs();
-
-      // Step 6: Build comparison table
-      if (this.options.debug) {
-        console.log("Building comparison table...");
-      }
-      const comparisonTable = this.tableBuilder.buildComparisonTable(
-        parsedData,
-        { highlightBest: true },
-      );
-
-      // Step 7: Prepare template data
-      if (this.options.debug) {
-        console.log("Preparing template data...");
-      }
-      const templateData = await this.prepareTemplateData(
-        parsedData,
-        rankings,
-        graphs,
-        comparisonTable,
-      );
-
-      // Step 8: Create backup if needed
-      if (this.options.backup) {
-        await this.createBackup();
-      }
-
-      // Step 9: Render and write README
-      if (this.options.debug) {
-        console.log("Rendering README...");
-      }
-      const readme = await this.templateEngine.render(
-        templateData,
-        this.options.template,
-      );
-
-      // Step 10: Write to file
-      await Deno.writeTextFile(this.options.outputFile!, readme);
-
-      if (this.options.debug) {
-        console.log("README generation complete!");
-      }
-    } catch (error) {
-      throw error; // Re-throw to be handled by CLI
-    }
+    const log = (msg: string) => this.options.debug && console.log(msg);
+    
+    log("Parsing benchmark data...");
+    const parsedData = await this.dataParser.parse(this.options.inputFile!);
+    
+    log("Calculating rankings...");
+    const rankings = this.rankingEngine.generateRankings(parsedData);
+    
+    log("Detecting graphs...");
+    const graphs = await this.graphHandler.detectGraphs();
+    
+    log("Building comparison table...");
+    const comparisonTable = this.tableBuilder.buildComparisonTable(parsedData, { highlightBest: true });
+    
+    log("Preparing template data...");
+    const templateData = this.prepareTemplateData(parsedData, rankings, graphs, comparisonTable);
+    
+    if (this.options.backup) await this.createBackup();
+    
+    log("Rendering README...");
+    const readme = await this.templateEngine.render(templateData, this.options.template);
+    
+    await Deno.writeTextFile(this.options.outputFile!, readme);
+    log("README generation complete!");
   }
 
   private prepareTemplateData(
@@ -108,60 +63,31 @@ export class ReadmeGenerator {
     graphs: GraphInfo[],
     comparisonTable: string,
   ): TemplateData {
-    // Generate executive summary
-    const executiveSummary: ExecutiveSummary = {
-      executedAt: parsedData.timestamp.toISOString().split("T")[0],
-      environment: this.formatEnvironment(parsedData.environment),
-      keyFindings: this.generateKeyFindings(parsedData, rankings),
-    };
-
-    // Generate badges
-    const badges = [
-      {
-        name: "License",
-        url: "https://img.shields.io/badge/license-MIT-blue",
-      },
-    ];
-
-    // Prepare version info
-    const versionInfo: VersionInfo = {
-      managers: new Map(),
-      tools: new Map([
-        ["Deno", Deno.version.deno],
-        ["TypeScript", Deno.version.typescript],
-        ["V8", Deno.version.v8],
-      ]),
-      environment: parsedData.environment,
-    };
-
-    // Manager versions now handled by shields.io badges
-
     return {
-      executiveSummary,
+      executiveSummary: {
+        executedAt: parsedData.timestamp.toISOString().split("T")[0],
+        environment: this.formatEnvironment(parsedData.environment),
+        keyFindings: this.generateKeyFindings(parsedData, rankings),
+      },
       rankings,
       comparisonTable,
       graphs,
-      versionInfo,
-      badges,
+      versionInfo: {
+        managers: new Map(),
+        tools: new Map(Object.entries(Deno.version).filter(([k]) => ['deno', 'typescript', 'v8'].includes(k))),
+        environment: parsedData.environment,
+      },
+      badges: [{ name: "License", url: "https://img.shields.io/badge/license-MIT-blue" }],
     };
   }
 
   private formatEnvironment(env: ParsedData["environment"]): string {
-    const parts: string[] = [];
-
-    if (env.os) {
-      parts.push(`${env.os} ${env.osVersion || ""}`);
-    }
-
-    if (env.shell) {
-      parts.push(`${env.shell} ${env.shellVersion || ""}`);
-    }
-
-    if (env.denoVersion) {
-      parts.push(`Deno ${env.denoVersion}`);
-    }
-
-    return parts.join(", ").trim() || "Unknown environment";
+    const parts = [
+      env.os && `${env.os} ${env.osVersion || ""}`.trim(),
+      env.shell && `${env.shell} ${env.shellVersion || ""}`.trim(),
+      env.denoVersion && `Deno ${env.denoVersion}`,
+    ].filter(Boolean);
+    return parts.join(", ") || "Unknown environment";
   }
 
   private async createBackup(): Promise<void> {
@@ -180,45 +106,25 @@ export class ReadmeGenerator {
 
   private generateKeyFindings(data: ParsedData, rankings: Rankings): string[] {
     const findings: string[] = [];
-
-    // Finding 1: Fastest overall
-    if (rankings.overall.length > 0) {
-      const fastest = rankings.overall[0];
-      findings.push(
-        `${fastest.manager} が総合パフォーマンスで最高評価${
-          fastest.medal || ""
-        }`,
-      );
+    
+    const overall = rankings.overall;
+    if (overall.length > 0) {
+      findings.push(`${overall[0].manager} が総合パフォーマンスで最高評価${overall[0].medal || ""}`);
     }
 
-    // Finding 2: Best for large configs
-    const loadTime25 = rankings.loadTime.get(25);
-    if (loadTime25 && loadTime25.length > 0) {
-      const best25 = loadTime25[0];
-      findings.push(
-        `25プラグイン環境では ${best25.manager} が最速 (${
-          Math.round(best25.score)
-        }ms)`,
-      );
+    const loadTime25 = rankings.loadTime.get(25)?.[0];
+    if (loadTime25) {
+      findings.push(`25プラグイン環境では ${loadTime25.manager} が最速 (${Math.round(loadTime25.score)}ms)`);
     }
 
-    // Finding 3: Performance range
-    if (rankings.overall.length >= 3) {
-      const fastest = rankings.overall[0].score;
-      const slowest = rankings.overall[rankings.overall.length - 1].score;
-      const ratio = (slowest / fastest).toFixed(1);
+    if (overall.length >= 3) {
+      const ratio = (overall.at(-1)!.score / overall[0].score).toFixed(1);
       findings.push(`パフォーマンス差は最大 ${ratio}倍`);
     }
 
-    // Finding 4: Notable mention
-    const zim = data.managers.find((m) => m.name === "zim");
-    if (zim) {
-      const result0 = zim.results.get(0);
-      if (result0 && result0.loadTime && result0.loadTime < 40) {
-        findings.push(
-          `zim は最小構成で驚異的な速度 (${Math.round(result0.loadTime)}ms)`,
-        );
-      }
+    const zimResult = data.managers.find(m => m.name === "zim")?.results.get(0);
+    if (zimResult?.loadTime && zimResult.loadTime < 40) {
+      findings.push(`zim は最小構成で驚異的な速度 (${Math.round(zimResult.loadTime)}ms)`);
     }
 
     return findings;

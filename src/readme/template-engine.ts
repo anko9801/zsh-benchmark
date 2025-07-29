@@ -6,7 +6,6 @@ import {
   formatNumber,
   formatPercentage,
 } from "../utils.ts";
-// Badge generation handled by shields.io
 
 export class TemplateEngine {
   constructor() {
@@ -121,38 +120,20 @@ export class TemplateEngine {
     return result;
   }
 
-  private formatRankings(
-    data: TemplateData,
-    type: "loadTime" | "installTime",
-  ): string {
-    const sections: string[] = [];
-    const rankingsMap = data.rankings[type];
+  private formatRankings(data: TemplateData, type: "loadTime" | "installTime"): string {
+    const rankings = data.rankings[type].get(25);
+    if (!rankings?.length) return "No ranking data available";
 
-    // Focus on 25 plugins only
-    const rankings25 = rankingsMap.get(25);
-    if (!rankings25 || rankings25.length === 0) {
-      return "No ranking data available";
-    }
-
-    sections.push("| Rank | Plugin Manager | Time (ms) | vs Best |");
-    sections.push("|------|----------------|-----------|---------|");
-
-    const best = rankings25[0]?.score || 0;
-    for (const ranking of rankings25) {
-      const rank = ranking.medal || `#${ranking.rank}`;
-      const vsBest = ranking.rank === 1
-        ? "-"
-        : `+${
-          formatPercentage(calculatePercentageIncrease(best, ranking.score))
-        }`;
-      sections.push(
-        `| ${rank} | ${ranking.manager} | ${
-          formatNumber(ranking.score, 2)
-        } | ${vsBest} |`,
-      );
-    }
-
-    return sections.join("\n");
+    const best = rankings[0].score;
+    return [
+      "| Rank | Plugin Manager | Time (ms) | vs Best |",
+      "|------|----------------|-----------|---------|",
+      ...rankings.map(r => 
+        `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${formatNumber(r.score, 2)} | ${
+          r.rank === 1 ? "-" : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
+        } |`
+      )
+    ].join("\n");
   }
 
   private formatOverallRankings(data: TemplateData): string {

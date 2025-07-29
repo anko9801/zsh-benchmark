@@ -168,35 +168,22 @@ export class TableBuilder {
     return lines.join("\n");
   }
 
-  buildRankingTable(
-    rankings: RankingResult[],
-    metric: string,
-    pluginCount?: number,
-  ): string {
-    const lines: string[] = [];
-    const title = pluginCount !== undefined
-      ? `${metric} (${pluginCount} plugins)`
-      : metric;
-
-    lines.push(`| Rank | Plugin Manager | ${title} (ms) | vs Best |`);
-    lines.push("|------|----------------|-----------:|--------:|");
-
-    if (rankings.length === 0) return lines.join("\n");
-
+  buildRankingTable(rankings: RankingResult[], metric: string, pluginCount?: number): string {
+    const title = pluginCount !== undefined ? `${metric} (${pluginCount} plugins)` : metric;
+    const lines = [
+      `| Rank | Plugin Manager | ${title} (ms) | vs Best |`,
+      "|------|----------------|-----------:|--------:|"
+    ];
+    
+    if (!rankings.length) return lines.join("\n");
+    
     const best = rankings[0].score;
-
-    for (const ranking of rankings) {
-      const rank = ranking.medal || `#${ranking.rank}`;
-      const scoreStr = formatNumber(ranking.score, 2);
-      const vsBest = ranking.rank === 1
-        ? "-"
-        : `+${
-          formatPercentage(calculatePercentageIncrease(best, ranking.score))
-        }`;
-
-      lines.push(`| ${rank} | ${ranking.manager} | ${scoreStr} | ${vsBest} |`);
-    }
-
+    rankings.forEach(r => lines.push(
+      `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${formatNumber(r.score, 2)} | ${
+        r.rank === 1 ? "-" : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
+      } |`
+    ));
+    
     return lines.join("\n");
   }
 
