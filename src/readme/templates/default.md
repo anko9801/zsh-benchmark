@@ -18,9 +18,13 @@
 
 {{loadTimeRankings}}
 
+{{loadTimeGraph}}
+
 ### Installation Time Rankings
 
 {{installTimeRankings}}
+
+{{installTimeGraph}}
 
 ### Overall Performance
 
@@ -29,8 +33,6 @@
 ## 📈 Detailed Comparison
 
 {{comparisonTable}}
-
-{{graphs}}
 
 ## 📦 Version Information
 

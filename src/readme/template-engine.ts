@@ -79,11 +79,27 @@ export class TemplateEngine {
     // Replace comparison table
     result = result.replace("{{comparisonTable}}", data.comparisonTable);
 
-    // Replace graphs
-    const graphsMarkdown = data.graphs
-      .map((g) => `### ${g.title}\n![${g.title}](${g.path})\n_${g.caption}_`)
-      .join("\n\n");
-    result = result.replace("{{graphs}}", graphsMarkdown);
+    // Replace individual graphs
+    const loadTimeGraph = data.graphs.find(g => g.path.includes("load-time"));
+    const installTimeGraph = data.graphs.find(g => g.path.includes("install-time"));
+    
+    if (loadTimeGraph) {
+      result = result.replace(
+        "{{loadTimeGraph}}",
+        `![${loadTimeGraph.title}](${loadTimeGraph.path})\n_${loadTimeGraph.caption}_`
+      );
+    } else {
+      result = result.replace("{{loadTimeGraph}}", "");
+    }
+    
+    if (installTimeGraph) {
+      result = result.replace(
+        "{{installTimeGraph}}",
+        `![${installTimeGraph.title}](${installTimeGraph.path})\n_${installTimeGraph.caption}_`
+      );
+    } else {
+      result = result.replace("{{installTimeGraph}}", "");
+    }
 
     // Replace version info
     result = result.replace(
@@ -138,16 +154,17 @@ export class TemplateEngine {
     const rankings = data.rankings.overall;
     const sections: string[] = [];
 
-    sections.push("| Rank | Plugin Manager | Score | Medal |");
-    sections.push("|------|----------------|-------|-------|");
+    sections.push("| Rank | Plugin Manager | Score |");
+    sections.push("|------|----------------|-------|");
 
     for (const ranking of rankings) {
       const rank = `#${ranking.rank}`;
       const medal = ranking.medal || "-";
+      const displayRank = ranking.medal || rank;
       sections.push(
-        `| ${rank} | ${ranking.manager} | ${
+        `| ${displayRank} | ${ranking.manager} | ${
           formatNumber(ranking.score, 2)
-        } | ${medal} |`,
+        } |`,
       );
     }
 
