@@ -20,13 +20,12 @@ export class ChartGenerator {
     const timeKey = metric === 'install' ? 'installTime' : 'loadTime';
     const managers = [...new Set(data.results.map(r => r.manager))];
     
-    // Sort managers by their average performance
+    // Sort managers by their 25-plugin performance
     const managerAvgs = managers.map(m => {
-      const data0 = data.results.find(r => r.manager === m && r.pluginCount === minPlugins);
       const dataFull = data.results.find(r => r.manager === m && r.pluginCount === maxPlugins);
-      const avg = ((data0?.[timeKey] || 0) + (dataFull?.[timeKey] || 0)) / 2;
-      return { manager: m, avg };
-    }).sort((a, b) => a.avg - b.avg);
+      const value = dataFull?.[timeKey] || Infinity;
+      return { manager: m, value };
+    }).sort((a, b) => a.value - b.value);
     
     const sortedManagers = managerAvgs.map(m => m.manager);
     

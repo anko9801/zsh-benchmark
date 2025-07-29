@@ -16,15 +16,15 @@
 
 ### Load Time Rankings
 
-{{loadTimeRankings}}
-
 {{loadTimeGraph}}
+
+{{loadTimeRankings}}
 
 ### Installation Time Rankings
 
-{{installTimeRankings}}
-
 {{installTimeGraph}}
+
+{{installTimeRankings}}
 
 ### Overall Performance
 

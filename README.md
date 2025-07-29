@@ -22,6 +22,9 @@
 
 ### Load Time Rankings
 
+![Load Time Comparison](results/load-time-comparison-chart.svg)
+_Shell startup time comparison across different plugin managers_
+
 | Rank | Plugin Manager | Time (ms) | vs Best |
 |------|----------------|-----------|---------|
 | 🥇 | antigen | 35.16 | - |
@@ -41,10 +44,10 @@
 | #15 | zpm | 526.62 | +1397.6% |
 | #16 | zplug | 676.48 | +1823.7% |
 
-![Load Time Comparison](results/load-time-comparison-chart.svg)
-_Shell startup time comparison across different plugin managers_
-
 ### Installation Time Rankings
+
+![Installation Time Comparison](results/install-time-comparison-chart.svg)
+_Plugin installation time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Time (ms) | vs Best |
 |------|----------------|-----------|---------|
@@ -64,9 +67,6 @@ _Shell startup time comparison across different plugin managers_
 | #14 | zpm | 564.46 | +1635.5% |
 | #15 | sheldon | 569.00 | +1649.4% |
 | #16 | zplug | 665.32 | +1945.6% |
-
-![Installation Time Comparison](results/install-time-comparison-chart.svg)
-_Plugin installation time comparison across different plugin managers_
 
 ### Overall Performance
 
@@ -93,22 +93,22 @@ _Plugin installation time comparison across different plugin managers_
 
 | Plugin Manager | Stars | Install (25) | Load (25) | Install (0) | Load (0) |
 |---|---|---|---|---|---|
-| antigen | 8.2k | 395 | **35.16** | 394 | 34.88 |
-| antidote | 1.2k | **33** | 37.48 | 34 | 34.36 |
-| znap | 1.4k | 138 | 101.26 | 63 | 33.67 |
-| zim | 4.2k | 35 | 121.79 | 38 | 34.18 |
-| zgenom | 391 | 124 | 131.34 | **32** | 33.26 |
-| zcomet | 221 | 149 | 142.41 | 37 | 37.65 |
-| antigen-hs | 206 | 146 | 144.01 | 33 | **32.56** |
-| sheldon | 1.2k | 569 | 154.25 | 54 | 34.65 |
-| alf | 116 | 151 | 160.55 | 36 | 40.74 |
-| zr | 187 | 146 | 171.31 | 33 | 32.71 |
-| prezto | 14.3k | 203 | 198.09 | 150 | 116.57 |
-| oh-my-zsh | 180.3k | 352 | 236.00 | 153 | 193.51 |
-| antibody | 1.7k | 258 | 278.79 | 38 | 38.30 |
-| zinit | 3.8k | 541 | 485.30 | 82 | 50.41 |
-| zpm | 374 | 564 | 526.62 | 71 | 65.52 |
-| zplug | 5.9k | 665 | 676.48 | 133 | 138.25 |
+| antigen | 0 | 395 | **35.16** | 394 | 34.88 |
+| antidote | 0 | **33** | 37.48 | 34 | 34.36 |
+| znap | 0 | 138 | 101.26 | 63 | 33.67 |
+| zim | 0 | 35 | 121.79 | 38 | 34.18 |
+| zgenom | 0 | 124 | 131.34 | **32** | 33.26 |
+| zcomet | 0 | 149 | 142.41 | 37 | 37.65 |
+| antigen-hs | 0 | 146 | 144.01 | 33 | **32.56** |
+| sheldon | 0 | 569 | 154.25 | 54 | 34.65 |
+| alf | 0 | 151 | 160.55 | 36 | 40.74 |
+| zr | 0 | 146 | 171.31 | 33 | 32.71 |
+| prezto | 0 | 203 | 198.09 | 150 | 116.57 |
+| oh-my-zsh | 0 | 352 | 236.00 | 153 | 193.51 |
+| antibody | 0 | 258 | 278.79 | 38 | 38.30 |
+| zinit | 0 | 541 | 485.30 | 82 | 50.41 |
+| zpm | 0 | 564 | 526.62 | 71 | 65.52 |
+| zplug | 0 | 665 | 676.48 | 133 | 138.25 |
 
 ## 📦 Version Information
 
@@ -116,9 +116,6 @@ _Plugin installation time comparison across different plugin managers_
 
 ### Plugin Manager Versions
 
-![antidote](https://img.shields.io/badge/antidote-v1.9.10-blue) ![sheldon](https://img.shields.io/badge/sheldon-0.8.5-blue) ![zim](https://img.shields.io/badge/zim-v1.18.0-blue) ![znap](https://img.shields.io/badge/znap-22.06.22-blue)
-![zplug](https://img.shields.io/badge/zplug-2.4.2-blue) ![antigen](https://img.shields.io/badge/antigen-v2.2.3-blue) ![zr](https://img.shields.io/badge/zr-1.2.1-blue) ![alf](https://img.shields.io/badge/alf-1.2.6-blue)
-![antibody](https://img.shields.io/badge/antibody-v6.1.1-blue) ![zinit](https://img.shields.io/badge/zinit-v3.14.0-blue)
 
 ## 📝 Methodology
 
