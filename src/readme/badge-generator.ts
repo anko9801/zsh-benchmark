@@ -44,6 +44,26 @@ export class BadgeGenerator {
     ["zr", "1.0.0"],
     ["alf", "v0.2.0"],
   ]);
+  
+  // Predefined last release dates
+  private lastReleases: Map<string, string> = new Map([
+    ["oh-my-zsh", "2024-12"],
+    ["prezto", "2024-11"],
+    ["antigen", "2018-10"],
+    ["zplug", "2016-11"],
+    ["zim", "2024-10"],
+    ["zinit", "2024-01"],
+    ["antibody", "2020-02"],
+    ["znap", "2024-09"],
+    ["antidote", "2024-11"],
+    ["sheldon", "2024-10"],
+    ["zpm", "2019-11"],
+    ["zgenom", "2024-11"],
+    ["zcomet", "2024-08"],
+    ["antigen-hs", "2015-03"],
+    ["zr", "2016-11"],
+    ["alf", "2015-12"],
+  ]);
 
   constructor(repoMapping: Map<string, string>) {
     this.repoMapping = repoMapping;
@@ -90,5 +110,9 @@ export class BadgeGenerator {
   
   getVersion(manager: string): string | undefined {
     return this.versions.get(manager);
+  }
+  
+  getLastRelease(manager: string): string | undefined {
+    return this.lastReleases.get(manager);
   }
 }

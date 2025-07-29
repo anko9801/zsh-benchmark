@@ -281,27 +281,46 @@ export class TemplateEngine {
       // Pad manager name for alignment
       const paddedManager = manager.padEnd(maxNameLength);
       
+      // Get last release from predefined data
+      const lastRelease = this.badgeGenerator.getLastRelease(manager) || "N/A";
+      
       // Create a line for each manager with aligned formatting
       let managerLine = `| **${paddedManager}** | `;
       
-      // Version badge
+      // Stars badge - use GitHub social style (first)
+      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
+      
+      // Version badge (second)
       if (version !== "N/A") {
         // Clean version string (remove 'v' prefix for consistency)
         const cleanVersion = version.startsWith('v') ? version.substring(1) : version;
-        managerLine += `![version](https://img.shields.io/badge/v-${cleanVersion}-blue) `;
+        managerLine += `![version](https://img.shields.io/badge/v-${cleanVersion}-blue) | `;
       } else {
-        managerLine += `![version](https://img.shields.io/badge/v-N/A-gray) `;
+        managerLine += `![version](https://img.shields.io/badge/v-N/A-gray) | `;
       }
       
-      // Stars badge - use GitHub social style
-      managerLine += `![stars](https://img.shields.io/github/stars/${repo}?style=social) |`;
+      // Last release badge (third)
+      if (lastRelease !== "N/A") {
+        // Calculate color based on how recent the release is
+        const releaseYear = parseInt(lastRelease.split('-')[0]);
+        const currentYear = new Date().getFullYear();
+        const yearsDiff = currentYear - releaseYear;
+        let color = "brightgreen"; // < 1 year
+        if (yearsDiff >= 3) color = "red";
+        else if (yearsDiff >= 2) color = "orange";
+        else if (yearsDiff >= 1) color = "yellow";
+        
+        managerLine += `![last release](https://img.shields.io/badge/last%20release-${lastRelease}-${color}) |`;
+      } else {
+        managerLine += `![last release](https://img.shields.io/badge/last%20release-N/A-gray) |`;
+      }
       
       sections.push(managerLine);
     }
     
     // Add table header
-    sections.unshift("| Plugin Manager | Version & Stars |");
-    sections.splice(1, 0, "|" + "-".repeat(maxNameLength + 2) + "|-----------------|");
+    sections.unshift("| Plugin Manager | Stars | Version | Last Release |");
+    sections.splice(1, 0, "|" + "-".repeat(maxNameLength + 2) + "|-------|---------|--------------|");
     
     return sections.join("\n");
   }
