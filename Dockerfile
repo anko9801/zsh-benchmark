@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DENO_INSTALL="/root/.deno" \
     PATH="/root/.deno/bin:$PATH"
 
-# Install system dependencies and tools in one layer
+# Layer 1: System dependencies (changes rarely)
 RUN apt-get update && apt-get install -y \
     # Core utilities
     zsh git curl wget unzip time jq locales \
@@ -19,18 +19,21 @@ RUN apt-get update && apt-get install -y \
     python3 python3-pip \
     && locale-gen en_US.UTF-8 \
     && echo 'unset global_rcs' >> /etc/zshenv \
-    # Install hyperfine
-    && wget -qO hyperfine.deb https://github.com/sharkdp/hyperfine/releases/download/v1.18.0/hyperfine_1.18.0_amd64.deb \
-    && dpkg -i hyperfine.deb && rm hyperfine.deb \
-    # Install Deno
-    && curl -fsSL https://deno.land/x/install/install.sh | sh \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
 
-# Create working directory
+# Layer 2: Install external tools (changes occasionally)
+RUN wget -qO hyperfine.deb https://github.com/sharkdp/hyperfine/releases/download/v1.18.0/hyperfine_1.18.0_amd64.deb \
+    && dpkg -i hyperfine.deb && rm hyperfine.deb \
+    && curl -fsSL https://deno.land/x/install/install.sh | sh
+
+# Layer 3: Create working directory
 WORKDIR /benchmark
 
-# Setup all plugin managers in one layer
+# Layer 4: Copy project configuration (changes occasionally)
+COPY deno.json ./
+
+# Layer 5: Install Zsh plugin managers (changes rarely)
 RUN <<'SETUP_SCRIPT' bash
 set -e
 
@@ -57,7 +60,13 @@ install_manager "zgenom" 'git clone https://github.com/jandamm/zgenom.git "${HOM
 install_manager "zpm" 'git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm'
 install_manager "zcomet" 'git clone https://github.com/agkozak/zcomet.git ~/.zcomet'
 
-# Apply fixes for specific managers
+echo "All plugin managers installed!"
+SETUP_SCRIPT
+
+# Layer 6: Apply manager-specific fixes and custom managers (changes rarely)
+RUN <<'FIXES_SCRIPT' bash
+set -e
+
 echo "Applying manager-specific fixes..."
 
 # Fix zim
@@ -146,12 +155,11 @@ zr "$@"
 ZR_SCRIPT
 chmod +x ~/.zr/zr
 
-echo "All plugin managers installed and configured!"
-SETUP_SCRIPT
+echo "All fixes applied!"
+FIXES_SCRIPT
 
-# Copy source files
+# Layer 7: Copy source files (changes frequently)
 COPY src/ ./src/
-COPY deno.json ./
 
 # Default command
 CMD ["deno", "task", "benchmark"]
