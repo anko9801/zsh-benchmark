@@ -5,15 +5,15 @@
   <line x1="80" y1="480" x2="1080" y2="480" stroke="#e0e0e0" stroke-width="1"/>
   <text x="70" y="485" text-anchor="end" font-size="12" font-family="Arial, sans-serif">0</text>
   <line x1="80" y1="394" x2="1080" y2="394" stroke="#e0e0e0" stroke-width="1"/>
-  <text x="70" y="399" text-anchor="end" font-size="12" font-family="Arial, sans-serif">173</text>
+  <text x="70" y="399" text-anchor="end" font-size="12" font-family="Arial, sans-serif">167</text>
   <line x1="80" y1="308" x2="1080" y2="308" stroke="#e0e0e0" stroke-width="1"/>
-  <text x="70" y="313" text-anchor="end" font-size="12" font-family="Arial, sans-serif">345</text>
+  <text x="70" y="313" text-anchor="end" font-size="12" font-family="Arial, sans-serif">335</text>
   <line x1="80" y1="222" x2="1080" y2="222" stroke="#e0e0e0" stroke-width="1"/>
-  <text x="70" y="227" text-anchor="end" font-size="12" font-family="Arial, sans-serif">518</text>
+  <text x="70" y="227" text-anchor="end" font-size="12" font-family="Arial, sans-serif">502</text>
   <line x1="80" y1="136" x2="1080" y2="136" stroke="#e0e0e0" stroke-width="1"/>
-  <text x="70" y="141" text-anchor="end" font-size="12" font-family="Arial, sans-serif">691</text>
+  <text x="70" y="141" text-anchor="end" font-size="12" font-family="Arial, sans-serif">670</text>
   <line x1="80" y1="50" x2="1080" y2="50" stroke="#e0e0e0" stroke-width="1"/>
-  <text x="70" y="55" text-anchor="end" font-size="12" font-family="Arial, sans-serif">864</text>
+  <text x="70" y="55" text-anchor="end" font-size="12" font-family="Arial, sans-serif">837</text>
   
   <!-- Axes -->
   <line x1="80" y1="50" x2="80" y2="480" stroke="black" stroke-width="2"/>
@@ -21,182 +21,182 @@
   
   <!-- Y-axis label -->
   <text x="20" y="300" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" transform="rotate(-90 20 300)">Time (ms)</text>
-  <rect x="107.5" y="464.1401000629327" width="20" height="15.859899937067336" fill="#4ECDC4" opacity="0.8"/>
-  <text x="117.5" y="459.1401000629327" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.9</text>
-  <line x1="117.5" y1="463.7992311866177" x2="117.5" y2="464.48096893924765" stroke="black" stroke-width="1"/>
-  <line x1="114.5" y1="463.7992311866177" x2="120.5" y2="463.7992311866177" stroke="black" stroke-width="1"/>
-  <line x1="114.5" y1="464.48096893924765" x2="120.5" y2="464.48096893924765" stroke="black" stroke-width="1"/>
-  <rect x="132.5" y="464.12875603745584" width="20" height="15.871243962544137" fill="#98D8C8" opacity="0.8"/>
-  <text x="142.5" y="459.12875603745584" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.9</text>
-  <line x1="142.5" y1="463.8894556953987" x2="142.5" y2="464.368056379513" stroke="black" stroke-width="1"/>
-  <line x1="139.5" y1="463.8894556953987" x2="145.5" y2="463.8894556953987" stroke="black" stroke-width="1"/>
-  <line x1="139.5" y1="464.368056379513" x2="145.5" y2="464.368056379513" stroke="black" stroke-width="1"/>
-  <text x="130" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 130 500)">antidote</text>
-  <rect x="167.5" y="465.159775410553" width="20" height="14.840224589446999" fill="#4ECDC4" opacity="0.8"/>
-  <text x="177.5" y="460.159775410553" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">29.8</text>
-  <line x1="177.5" y1="465.0660653517539" x2="177.5" y2="465.2534854693521" stroke="black" stroke-width="1"/>
-  <line x1="174.5" y1="465.0660653517539" x2="180.5" y2="465.0660653517539" stroke="black" stroke-width="1"/>
-  <line x1="174.5" y1="465.2534854693521" x2="180.5" y2="465.2534854693521" stroke="black" stroke-width="1"/>
-  <rect x="192.5" y="458.7111282819097" width="20" height="21.28887171809034" fill="#98D8C8" opacity="0.8"/>
-  <text x="202.5" y="453.7111282819097" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">42.8</text>
-  <line x1="202.5" y1="458.52335328158455" x2="202.5" y2="458.8989032822348" stroke="black" stroke-width="1"/>
-  <line x1="199.5" y1="458.52335328158455" x2="205.5" y2="458.52335328158455" stroke="black" stroke-width="1"/>
-  <line x1="199.5" y1="458.8989032822348" x2="205.5" y2="458.8989032822348" stroke="black" stroke-width="1"/>
+  <rect x="107.5" y="464.55922254536625" width="20" height="15.440777454633771" fill="#4ECDC4" opacity="0.8"/>
+  <text x="117.5" y="459.55922254536625" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.1</text>
+  <line x1="117.5" y1="464.4756020101986" x2="117.5" y2="464.6428430805339" stroke="black" stroke-width="1"/>
+  <line x1="114.5" y1="464.4756020101986" x2="120.5" y2="464.4756020101986" stroke="black" stroke-width="1"/>
+  <line x1="114.5" y1="464.6428430805339" x2="120.5" y2="464.6428430805339" stroke="black" stroke-width="1"/>
+  <rect x="132.5" y="464.5874764382832" width="20" height="15.412523561716814" fill="#98D8C8" opacity="0.8"/>
+  <text x="142.5" y="459.5874764382832" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.0</text>
+  <line x1="142.5" y1="464.5520903978275" x2="142.5" y2="464.6228624787389" stroke="black" stroke-width="1"/>
+  <line x1="139.5" y1="464.5520903978275" x2="145.5" y2="464.5520903978275" stroke="black" stroke-width="1"/>
+  <line x1="139.5" y1="464.6228624787389" x2="145.5" y2="464.6228624787389" stroke="black" stroke-width="1"/>
+  <text x="130" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 130 500)">zim</text>
+  <rect x="167.5" y="464.5295916858375" width="20" height="15.470408314162489" fill="#4ECDC4" opacity="0.8"/>
+  <text x="177.5" y="459.5295916858375" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.1</text>
+  <line x1="177.5" y1="463.7929088453848" x2="177.5" y2="465.2662745262902" stroke="black" stroke-width="1"/>
+  <line x1="174.5" y1="463.7929088453848" x2="180.5" y2="463.7929088453848" stroke="black" stroke-width="1"/>
+  <line x1="174.5" y1="465.2662745262902" x2="180.5" y2="465.2662745262902" stroke="black" stroke-width="1"/>
+  <rect x="192.5" y="458.11395766144074" width="20" height="21.886042338559285" fill="#98D8C8" opacity="0.8"/>
+  <text x="202.5" y="453.11395766144074" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">42.6</text>
+  <line x1="202.5" y1="458.0321389686612" x2="202.5" y2="458.1957763542203" stroke="black" stroke-width="1"/>
+  <line x1="199.5" y1="458.0321389686612" x2="205.5" y2="458.0321389686612" stroke="black" stroke-width="1"/>
+  <line x1="199.5" y1="458.1957763542203" x2="205.5" y2="458.1957763542203" stroke="black" stroke-width="1"/>
   <text x="190" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 190 500)">znap</text>
-  <rect x="227.5" y="464.0079976800288" width="20" height="15.992002319971197" fill="#4ECDC4" opacity="0.8"/>
-  <text x="237.5" y="459.0079976800288" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">32.1</text>
-  <line x1="237.5" y1="463.8723540826448" x2="237.5" y2="464.14364127741277" stroke="black" stroke-width="1"/>
-  <line x1="234.5" y1="463.8723540826448" x2="240.5" y2="463.8723540826448" stroke="black" stroke-width="1"/>
-  <line x1="234.5" y1="464.14364127741277" x2="240.5" y2="464.14364127741277" stroke="black" stroke-width="1"/>
-  <rect x="252.5" y="457.56860696064786" width="20" height="22.431393039352166" fill="#98D8C8" opacity="0.8"/>
-  <text x="262.5" y="452.56860696064786" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">45.1</text>
-  <line x1="262.5" y1="457.4055399831337" x2="262.5" y2="457.73167393816203" stroke="black" stroke-width="1"/>
-  <line x1="259.5" y1="457.4055399831337" x2="265.5" y2="457.4055399831337" stroke="black" stroke-width="1"/>
-  <line x1="259.5" y1="457.73167393816203" x2="265.5" y2="457.73167393816203" stroke="black" stroke-width="1"/>
+  <rect x="227.5" y="464.31276897172296" width="20" height="15.687231028277044" fill="#4ECDC4" opacity="0.8"/>
+  <text x="237.5" y="459.31276897172296" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.5</text>
+  <line x1="237.5" y1="464.0162793472237" x2="237.5" y2="464.6092585962222" stroke="black" stroke-width="1"/>
+  <line x1="234.5" y1="464.0162793472237" x2="240.5" y2="464.0162793472237" stroke="black" stroke-width="1"/>
+  <line x1="234.5" y1="464.6092585962222" x2="240.5" y2="464.6092585962222" stroke="black" stroke-width="1"/>
+  <rect x="252.5" y="457.4186054519708" width="20" height="22.581394548029195" fill="#98D8C8" opacity="0.8"/>
+  <text x="262.5" y="452.4186054519708" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">44.0</text>
+  <line x1="262.5" y1="455.60681071717534" x2="262.5" y2="459.23040018676625" stroke="black" stroke-width="1"/>
+  <line x1="259.5" y1="455.60681071717534" x2="265.5" y2="455.60681071717534" stroke="black" stroke-width="1"/>
+  <line x1="259.5" y1="459.23040018676625" x2="265.5" y2="459.23040018676625" stroke="black" stroke-width="1"/>
   <text x="250" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 250 500)">zgenom</text>
-  <rect x="287.5" y="465.0222831697487" width="20" height="14.977716830251303" fill="#4ECDC4" opacity="0.8"/>
-  <text x="297.5" y="460.0222831697487" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.1</text>
-  <line x1="297.5" y1="464.932940076345" x2="297.5" y2="465.11162626315235" stroke="black" stroke-width="1"/>
-  <line x1="294.5" y1="464.932940076345" x2="300.5" y2="464.932940076345" stroke="black" stroke-width="1"/>
-  <line x1="294.5" y1="465.11162626315235" x2="300.5" y2="465.11162626315235" stroke="black" stroke-width="1"/>
-  <rect x="312.5" y="436.11169516641337" width="20" height="43.888304833586616" fill="#98D8C8" opacity="0.8"/>
-  <text x="322.5" y="431.11169516641337" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">88.2</text>
-  <line x1="322.5" y1="435.77311617770744" x2="322.5" y2="436.4502741551193" stroke="black" stroke-width="1"/>
-  <line x1="319.5" y1="435.77311617770744" x2="325.5" y2="435.77311617770744" stroke="black" stroke-width="1"/>
-  <line x1="319.5" y1="436.4502741551193" x2="325.5" y2="436.4502741551193" stroke="black" stroke-width="1"/>
-  <text x="310" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 310 500)">zim</text>
-  <rect x="347.5" y="463.72521197785375" width="20" height="16.274788022146225" fill="#4ECDC4" opacity="0.8"/>
-  <text x="357.5" y="458.72521197785375" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">32.7</text>
-  <line x1="357.5" y1="463.5805532168618" x2="357.5" y2="463.8698707388457" stroke="black" stroke-width="1"/>
-  <line x1="354.5" y1="463.5805532168618" x2="360.5" y2="463.5805532168618" stroke="black" stroke-width="1"/>
-  <line x1="354.5" y1="463.8698707388457" x2="360.5" y2="463.8698707388457" stroke="black" stroke-width="1"/>
-  <rect x="372.5" y="428.56707523989985" width="20" height="51.43292476010012" fill="#98D8C8" opacity="0.8"/>
-  <text x="382.5" y="423.56707523989985" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">103.3</text>
-  <line x1="382.5" y1="426.96510098059144" x2="382.5" y2="430.16904949920826" stroke="black" stroke-width="1"/>
-  <line x1="379.5" y1="426.96510098059144" x2="385.5" y2="426.96510098059144" stroke="black" stroke-width="1"/>
-  <line x1="379.5" y1="430.16904949920826" x2="385.5" y2="430.16904949920826" stroke="black" stroke-width="1"/>
-  <text x="370" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 370 500)">antigen</text>
-  <rect x="407.5" y="463.8619373178953" width="20" height="16.138062682104685" fill="#4ECDC4" opacity="0.8"/>
-  <text x="417.5" y="458.8619373178953" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">32.4</text>
-  <line x1="417.5" y1="463.64327044960316" x2="417.5" y2="464.08060418618743" stroke="black" stroke-width="1"/>
-  <line x1="414.5" y1="463.64327044960316" x2="420.5" y2="463.64327044960316" stroke="black" stroke-width="1"/>
-  <line x1="414.5" y1="464.08060418618743" x2="420.5" y2="464.08060418618743" stroke="black" stroke-width="1"/>
-  <rect x="432.5" y="427.6465163966106" width="20" height="52.35348360338943" fill="#98D8C8" opacity="0.8"/>
-  <text x="442.5" y="422.6465163966106" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">105.2</text>
-  <line x1="442.5" y1="426.7042350136595" x2="442.5" y2="428.5887977795617" stroke="black" stroke-width="1"/>
-  <line x1="439.5" y1="426.7042350136595" x2="445.5" y2="426.7042350136595" stroke="black" stroke-width="1"/>
-  <line x1="439.5" y1="428.5887977795617" x2="445.5" y2="428.5887977795617" stroke="black" stroke-width="1"/>
-  <text x="430" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 430 500)">zcomet</text>
-  <rect x="467.5" y="464.6244612678134" width="20" height="15.375538732186586" fill="#4ECDC4" opacity="0.8"/>
-  <text x="477.5" y="459.6244612678134" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">30.9</text>
-  <line x1="477.5" y1="464.46861277812536" x2="477.5" y2="464.7803097575014" stroke="black" stroke-width="1"/>
-  <line x1="474.5" y1="464.46861277812536" x2="480.5" y2="464.46861277812536" stroke="black" stroke-width="1"/>
-  <line x1="474.5" y1="464.7803097575014" x2="480.5" y2="464.7803097575014" stroke="black" stroke-width="1"/>
-  <rect x="492.5" y="425.17365611888994" width="20" height="54.82634388111004" fill="#98D8C8" opacity="0.8"/>
-  <text x="502.5" y="420.17365611888994" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">110.1</text>
-  <line x1="502.5" y1="424.8264564402091" x2="502.5" y2="425.5208557975708" stroke="black" stroke-width="1"/>
-  <line x1="499.5" y1="424.8264564402091" x2="505.5" y2="424.8264564402091" stroke="black" stroke-width="1"/>
-  <line x1="499.5" y1="425.5208557975708" x2="505.5" y2="425.5208557975708" stroke="black" stroke-width="1"/>
-  <text x="490" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 490 500)">zr</text>
-  <rect x="527.5" y="464.5805523481618" width="20" height="15.41944765183822" fill="#4ECDC4" opacity="0.8"/>
-  <text x="537.5" y="459.5805523481618" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.0</text>
-  <line x1="537.5" y1="464.4448982676826" x2="537.5" y2="464.716206428641" stroke="black" stroke-width="1"/>
-  <line x1="534.5" y1="464.4448982676826" x2="540.5" y2="464.4448982676826" stroke="black" stroke-width="1"/>
-  <line x1="534.5" y1="464.716206428641" x2="540.5" y2="464.716206428641" stroke="black" stroke-width="1"/>
-  <rect x="552.5" y="424.82004101898883" width="20" height="55.17995898101117" fill="#98D8C8" opacity="0.8"/>
-  <text x="562.5" y="419.82004101898883" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">110.8</text>
-  <line x1="562.5" y1="424.681729350774" x2="562.5" y2="424.95835268720367" stroke="black" stroke-width="1"/>
-  <line x1="559.5" y1="424.681729350774" x2="565.5" y2="424.681729350774" stroke="black" stroke-width="1"/>
-  <line x1="559.5" y1="424.95835268720367" x2="565.5" y2="424.95835268720367" stroke="black" stroke-width="1"/>
-  <text x="550" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 550 500)">antigen-hs</text>
-  <rect x="587.5" y="464.45575485956755" width="20" height="15.544245140432437" fill="#4ECDC4" opacity="0.8"/>
-  <text x="597.5" y="459.45575485956755" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.2</text>
-  <line x1="597.5" y1="464.28686585160256" x2="597.5" y2="464.62464386753254" stroke="black" stroke-width="1"/>
-  <line x1="594.5" y1="464.28686585160256" x2="600.5" y2="464.28686585160256" stroke="black" stroke-width="1"/>
-  <line x1="594.5" y1="464.62464386753254" x2="600.5" y2="464.62464386753254" stroke="black" stroke-width="1"/>
-  <rect x="612.5" y="424.09388200984637" width="20" height="55.90611799015363" fill="#98D8C8" opacity="0.8"/>
-  <text x="622.5" y="419.09388200984637" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">112.3</text>
-  <line x1="622.5" y1="422.81125020167406" x2="622.5" y2="425.3765138180187" stroke="black" stroke-width="1"/>
-  <line x1="619.5" y1="422.81125020167406" x2="625.5" y2="422.81125020167406" stroke="black" stroke-width="1"/>
-  <line x1="619.5" y1="425.3765138180187" x2="625.5" y2="425.3765138180187" stroke="black" stroke-width="1"/>
-  <text x="610" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 610 500)">alf</text>
-  <rect x="647.5" y="463.31495026526414" width="20" height="16.685049734735877" fill="#4ECDC4" opacity="0.8"/>
-  <text x="657.5" y="458.31495026526414" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">33.5</text>
-  <line x1="657.5" y1="463.164799111003" x2="657.5" y2="463.4651014195253" stroke="black" stroke-width="1"/>
-  <line x1="654.5" y1="463.164799111003" x2="660.5" y2="463.164799111003" stroke="black" stroke-width="1"/>
-  <line x1="654.5" y1="463.4651014195253" x2="660.5" y2="463.4651014195253" stroke="black" stroke-width="1"/>
-  <rect x="672.5" y="422.0507371477865" width="20" height="57.949262852213494" fill="#98D8C8" opacity="0.8"/>
-  <text x="682.5" y="417.0507371477865" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">116.4</text>
-  <line x1="682.5" y1="419.00288978473503" x2="682.5" y2="425.09858451083795" stroke="black" stroke-width="1"/>
-  <line x1="679.5" y1="419.00288978473503" x2="685.5" y2="419.00288978473503" stroke="black" stroke-width="1"/>
-  <line x1="679.5" y1="425.09858451083795" x2="685.5" y2="425.09858451083795" stroke="black" stroke-width="1"/>
-  <text x="670" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 670 500)">sheldon</text>
-  <rect x="707.5" y="445.1526200910632" width="20" height="34.84737990893678" fill="#4ECDC4" opacity="0.8"/>
-  <text x="717.5" y="440.1526200910632" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">70.0</text>
-  <line x1="717.5" y1="444.80011113411126" x2="717.5" y2="445.5051290480152" stroke="black" stroke-width="1"/>
-  <line x1="714.5" y1="444.80011113411126" x2="720.5" y2="444.80011113411126" stroke="black" stroke-width="1"/>
-  <line x1="714.5" y1="445.5051290480152" x2="720.5" y2="445.5051290480152" stroke="black" stroke-width="1"/>
-  <rect x="732.5" y="412.02941238287247" width="20" height="67.97058761712756" fill="#98D8C8" opacity="0.8"/>
-  <text x="742.5" y="407.02941238287247" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">136.5</text>
-  <line x1="742.5" y1="411.31505830654737" x2="742.5" y2="412.74376645919756" stroke="black" stroke-width="1"/>
-  <line x1="739.5" y1="411.31505830654737" x2="745.5" y2="411.31505830654737" stroke="black" stroke-width="1"/>
-  <line x1="739.5" y1="412.74376645919756" x2="745.5" y2="412.74376645919756" stroke="black" stroke-width="1"/>
+  <rect x="287.5" y="463.7546320257714" width="20" height="16.245367974228586" fill="#4ECDC4" opacity="0.8"/>
+  <text x="297.5" y="458.7546320257714" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.6</text>
+  <line x1="297.5" y1="463.6603917059242" x2="297.5" y2="463.8488723456186" stroke="black" stroke-width="1"/>
+  <line x1="294.5" y1="463.6603917059242" x2="300.5" y2="463.6603917059242" stroke="black" stroke-width="1"/>
+  <line x1="294.5" y1="463.8488723456186" x2="300.5" y2="463.8488723456186" stroke="black" stroke-width="1"/>
+  <rect x="312.5" y="428.30691718749983" width="20" height="51.69308281250015" fill="#98D8C8" opacity="0.8"/>
+  <text x="322.5" y="423.30691718749983" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">100.6</text>
+  <line x1="322.5" y1="427.9743968877785" x2="322.5" y2="428.6394374872212" stroke="black" stroke-width="1"/>
+  <line x1="319.5" y1="427.9743968877785" x2="325.5" y2="427.9743968877785" stroke="black" stroke-width="1"/>
+  <line x1="319.5" y1="428.6394374872212" x2="325.5" y2="428.6394374872212" stroke="black" stroke-width="1"/>
+  <text x="310" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 310 500)">antigen</text>
+  <rect x="347.5" y="464.7901524032634" width="20" height="15.209847596736635" fill="#4ECDC4" opacity="0.8"/>
+  <text x="357.5" y="459.7901524032634" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">29.6</text>
+  <line x1="357.5" y1="464.72213321971634" x2="357.5" y2="464.85817158681044" stroke="black" stroke-width="1"/>
+  <line x1="354.5" y1="464.72213321971634" x2="360.5" y2="464.72213321971634" stroke="black" stroke-width="1"/>
+  <line x1="354.5" y1="464.85817158681044" x2="360.5" y2="464.85817158681044" stroke="black" stroke-width="1"/>
+  <rect x="372.5" y="424.8009591569937" width="20" height="55.199040843006316" fill="#98D8C8" opacity="0.8"/>
+  <text x="382.5" y="419.8009591569937" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">107.5</text>
+  <line x1="382.5" y1="423.76754839994993" x2="382.5" y2="425.8343699140375" stroke="black" stroke-width="1"/>
+  <line x1="379.5" y1="423.76754839994993" x2="385.5" y2="423.76754839994993" stroke="black" stroke-width="1"/>
+  <line x1="379.5" y1="425.8343699140375" x2="385.5" y2="425.8343699140375" stroke="black" stroke-width="1"/>
+  <text x="370" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 370 500)">alf</text>
+  <rect x="407.5" y="464.912821730632" width="20" height="15.087178269368001" fill="#4ECDC4" opacity="0.8"/>
+  <text x="417.5" y="459.912821730632" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">29.4</text>
+  <line x1="417.5" y1="464.8304096590914" x2="417.5" y2="464.9952338021726" stroke="black" stroke-width="1"/>
+  <line x1="414.5" y1="464.8304096590914" x2="420.5" y2="464.8304096590914" stroke="black" stroke-width="1"/>
+  <line x1="414.5" y1="464.9952338021726" x2="420.5" y2="464.9952338021726" stroke="black" stroke-width="1"/>
+  <rect x="432.5" y="424.4321934746801" width="20" height="55.56780652531988" fill="#98D8C8" opacity="0.8"/>
+  <text x="442.5" y="419.4321934746801" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">108.2</text>
+  <line x1="442.5" y1="423.97837651254076" x2="442.5" y2="424.88601043681945" stroke="black" stroke-width="1"/>
+  <line x1="439.5" y1="423.97837651254076" x2="445.5" y2="423.97837651254076" stroke="black" stroke-width="1"/>
+  <line x1="439.5" y1="424.88601043681945" x2="445.5" y2="424.88601043681945" stroke="black" stroke-width="1"/>
+  <text x="430" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 430 500)">zr</text>
+  <rect x="467.5" y="464.8804736049357" width="20" height="15.119526395064318" fill="#4ECDC4" opacity="0.8"/>
+  <text x="477.5" y="459.8804736049357" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">29.4</text>
+  <line x1="477.5" y1="464.7941820352885" x2="477.5" y2="464.96676517458286" stroke="black" stroke-width="1"/>
+  <line x1="474.5" y1="464.7941820352885" x2="480.5" y2="464.7941820352885" stroke="black" stroke-width="1"/>
+  <line x1="474.5" y1="464.96676517458286" x2="480.5" y2="464.96676517458286" stroke="black" stroke-width="1"/>
+  <rect x="492.5" y="424.19349001600017" width="20" height="55.80650998399983" fill="#98D8C8" opacity="0.8"/>
+  <text x="502.5" y="419.19349001600017" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">108.6</text>
+  <line x1="502.5" y1="423.92512149604914" x2="502.5" y2="424.4618585359512" stroke="black" stroke-width="1"/>
+  <line x1="499.5" y1="423.92512149604914" x2="505.5" y2="423.92512149604914" stroke="black" stroke-width="1"/>
+  <line x1="499.5" y1="424.4618585359512" x2="505.5" y2="424.4618585359512" stroke="black" stroke-width="1"/>
+  <text x="490" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 490 500)">antigen-hs</text>
+  <rect x="527.5" y="463.8404241987906" width="20" height="16.159575801209424" fill="#4ECDC4" opacity="0.8"/>
+  <text x="537.5" y="458.8404241987906" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.5</text>
+  <line x1="537.5" y1="463.209886858697" x2="537.5" y2="464.4709615388841" stroke="black" stroke-width="1"/>
+  <line x1="534.5" y1="463.209886858697" x2="540.5" y2="463.209886858697" stroke="black" stroke-width="1"/>
+  <line x1="534.5" y1="464.4709615388841" x2="540.5" y2="464.4709615388841" stroke="black" stroke-width="1"/>
+  <rect x="552.5" y="423.46219304743437" width="20" height="56.53780695256564" fill="#98D8C8" opacity="0.8"/>
+  <text x="562.5" y="418.46219304743437" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">110.1</text>
+  <line x1="562.5" y1="401.9464215747093" x2="562.5" y2="444.97796452015945" stroke="black" stroke-width="1"/>
+  <line x1="559.5" y1="401.9464215747093" x2="565.5" y2="401.9464215747093" stroke="black" stroke-width="1"/>
+  <line x1="559.5" y1="444.97796452015945" x2="565.5" y2="444.97796452015945" stroke="black" stroke-width="1"/>
+  <text x="550" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 550 500)">zcomet</text>
+  <rect x="587.5" y="463.7944962763688" width="20" height="16.205503723631193" fill="#4ECDC4" opacity="0.8"/>
+  <text x="597.5" y="458.7944962763688" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.5</text>
+  <line x1="597.5" y1="463.694301515247" x2="597.5" y2="463.89469103749065" stroke="black" stroke-width="1"/>
+  <line x1="594.5" y1="463.694301515247" x2="600.5" y2="463.694301515247" stroke="black" stroke-width="1"/>
+  <line x1="594.5" y1="463.89469103749065" x2="600.5" y2="463.89469103749065" stroke="black" stroke-width="1"/>
+  <rect x="612.5" y="422.6398037697294" width="20" height="57.3601962302706" fill="#98D8C8" opacity="0.8"/>
+  <text x="622.5" y="417.6398037697294" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">111.7</text>
+  <line x1="622.5" y1="422.447050749981" x2="622.5" y2="422.8325567894778" stroke="black" stroke-width="1"/>
+  <line x1="619.5" y1="422.447050749981" x2="625.5" y2="422.447050749981" stroke="black" stroke-width="1"/>
+  <line x1="619.5" y1="422.8325567894778" x2="625.5" y2="422.8325567894778" stroke="black" stroke-width="1"/>
+  <text x="610" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 610 500)">sheldon</text>
+  <rect x="647.5" y="462.6626474540169" width="20" height="17.33735254598308" fill="#4ECDC4" opacity="0.8"/>
+  <text x="657.5" y="457.6626474540169" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">33.8</text>
+  <line x1="657.5" y1="462.46772724812723" x2="657.5" y2="462.8575676599066" stroke="black" stroke-width="1"/>
+  <line x1="654.5" y1="462.46772724812723" x2="660.5" y2="462.46772724812723" stroke="black" stroke-width="1"/>
+  <line x1="654.5" y1="462.8575676599066" x2="660.5" y2="462.8575676599066" stroke="black" stroke-width="1"/>
+  <rect x="672.5" y="419.8925780849653" width="20" height="60.10742191503473" fill="#98D8C8" opacity="0.8"/>
+  <text x="682.5" y="414.8925780849653" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">117.0</text>
+  <line x1="682.5" y1="419.6656049550251" x2="682.5" y2="420.11955121490547" stroke="black" stroke-width="1"/>
+  <line x1="679.5" y1="419.6656049550251" x2="685.5" y2="419.6656049550251" stroke="black" stroke-width="1"/>
+  <line x1="679.5" y1="420.11955121490547" x2="685.5" y2="420.11955121490547" stroke="black" stroke-width="1"/>
+  <text x="670" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 670 500)">antidote</text>
+  <rect x="707.5" y="444.00660365200923" width="20" height="35.99339634799076" fill="#4ECDC4" opacity="0.8"/>
+  <text x="717.5" y="439.00660365200923" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">70.1</text>
+  <line x1="717.5" y1="443.75299804673824" x2="717.5" y2="444.2602092572802" stroke="black" stroke-width="1"/>
+  <line x1="714.5" y1="443.75299804673824" x2="720.5" y2="443.75299804673824" stroke="black" stroke-width="1"/>
+  <line x1="714.5" y1="444.2602092572802" x2="720.5" y2="444.2602092572802" stroke="black" stroke-width="1"/>
+  <rect x="732.5" y="410.4482941703393" width="20" height="69.55170582966073" fill="#98D8C8" opacity="0.8"/>
+  <text x="742.5" y="405.4482941703393" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">135.4</text>
+  <line x1="742.5" y1="409.942380108853" x2="742.5" y2="410.9542082318256" stroke="black" stroke-width="1"/>
+  <line x1="739.5" y1="409.942380108853" x2="745.5" y2="409.942380108853" stroke="black" stroke-width="1"/>
+  <line x1="739.5" y1="410.9542082318256" x2="745.5" y2="410.9542082318256" stroke="black" stroke-width="1"/>
   <text x="730" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 730 500)">prezto</text>
-  <rect x="767.5" y="436.21948606128495" width="20" height="43.780513938715046" fill="#4ECDC4" opacity="0.8"/>
-  <text x="777.5" y="431.21948606128495" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">87.9</text>
-  <line x1="777.5" y1="435.75446372148633" x2="777.5" y2="436.6845084010836" stroke="black" stroke-width="1"/>
-  <line x1="774.5" y1="435.75446372148633" x2="780.5" y2="435.75446372148633" stroke="black" stroke-width="1"/>
-  <line x1="774.5" y1="436.6845084010836" x2="780.5" y2="436.6845084010836" stroke="black" stroke-width="1"/>
-  <rect x="792.5" y="401.60804230224437" width="20" height="78.39195769775564" fill="#98D8C8" opacity="0.8"/>
-  <text x="802.5" y="396.60804230224437" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">157.5</text>
-  <line x1="802.5" y1="400.9618255236284" x2="802.5" y2="402.2542590808603" stroke="black" stroke-width="1"/>
-  <line x1="799.5" y1="400.9618255236284" x2="805.5" y2="400.9618255236284" stroke="black" stroke-width="1"/>
-  <line x1="799.5" y1="402.2542590808603" x2="805.5" y2="402.2542590808603" stroke="black" stroke-width="1"/>
+  <rect x="767.5" y="434.8076075780946" width="20" height="45.19239242190544" fill="#4ECDC4" opacity="0.8"/>
+  <text x="777.5" y="429.8076075780946" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">88.0</text>
+  <line x1="777.5" y1="433.40482461476324" x2="777.5" y2="436.2103905414259" stroke="black" stroke-width="1"/>
+  <line x1="774.5" y1="433.40482461476324" x2="780.5" y2="433.40482461476324" stroke="black" stroke-width="1"/>
+  <line x1="774.5" y1="436.2103905414259" x2="780.5" y2="436.2103905414259" stroke="black" stroke-width="1"/>
+  <rect x="792.5" y="399.7935880933976" width="20" height="80.20641190660238" fill="#98D8C8" opacity="0.8"/>
+  <text x="802.5" y="394.7935880933976" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">156.1</text>
+  <line x1="802.5" y1="399.3048117548724" x2="802.5" y2="400.2823644319228" stroke="black" stroke-width="1"/>
+  <line x1="799.5" y1="399.3048117548724" x2="805.5" y2="399.3048117548724" stroke="black" stroke-width="1"/>
+  <line x1="799.5" y1="400.2823644319228" x2="805.5" y2="400.2823644319228" stroke="black" stroke-width="1"/>
   <text x="790" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 790 500)">oh-my-zsh</text>
-  <rect x="827.5" y="463.8024031250376" width="20" height="16.197596874962393" fill="#4ECDC4" opacity="0.8"/>
-  <text x="837.5" y="458.8024031250376" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">32.5</text>
-  <line x1="837.5" y1="463.67224503695394" x2="837.5" y2="463.93256121312123" stroke="black" stroke-width="1"/>
-  <line x1="834.5" y1="463.67224503695394" x2="840.5" y2="463.67224503695394" stroke="black" stroke-width="1"/>
-  <line x1="834.5" y1="463.93256121312123" x2="840.5" y2="463.93256121312123" stroke="black" stroke-width="1"/>
-  <rect x="852.5" y="397.4280513526635" width="20" height="82.5719486473365" fill="#98D8C8" opacity="0.8"/>
-  <text x="862.5" y="392.4280513526635" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">165.9</text>
-  <line x1="862.5" y1="396.96069451696303" x2="862.5" y2="397.89540818836394" stroke="black" stroke-width="1"/>
-  <line x1="859.5" y1="396.96069451696303" x2="865.5" y2="396.96069451696303" stroke="black" stroke-width="1"/>
-  <line x1="859.5" y1="397.89540818836394" x2="865.5" y2="397.89540818836394" stroke="black" stroke-width="1"/>
+  <rect x="827.5" y="463.82377011240067" width="20" height="16.176229887599337" fill="#4ECDC4" opacity="0.8"/>
+  <text x="837.5" y="458.82377011240067" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">31.5</text>
+  <line x1="837.5" y1="463.73049819965337" x2="837.5" y2="463.91704202514796" stroke="black" stroke-width="1"/>
+  <line x1="834.5" y1="463.73049819965337" x2="840.5" y2="463.73049819965337" stroke="black" stroke-width="1"/>
+  <line x1="834.5" y1="463.91704202514796" x2="840.5" y2="463.91704202514796" stroke="black" stroke-width="1"/>
+  <rect x="852.5" y="394.8182712594179" width="20" height="85.18172874058214" fill="#98D8C8" opacity="0.8"/>
+  <text x="862.5" y="389.8182712594179" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">165.8</text>
+  <line x1="862.5" y1="388.708537321292" x2="862.5" y2="400.92800519754377" stroke="black" stroke-width="1"/>
+  <line x1="859.5" y1="388.708537321292" x2="865.5" y2="388.708537321292" stroke="black" stroke-width="1"/>
+  <line x1="859.5" y1="400.92800519754377" x2="865.5" y2="400.92800519754377" stroke="black" stroke-width="1"/>
   <text x="850" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 850 500)">antibody</text>
-  <rect x="887.5" y="452.5440394945918" width="20" height="27.455960505408182" fill="#4ECDC4" opacity="0.8"/>
-  <text x="897.5" y="447.5440394945918" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">55.1</text>
-  <line x1="897.5" y1="451.9016933488119" x2="897.5" y2="453.1863856403717" stroke="black" stroke-width="1"/>
-  <line x1="894.5" y1="451.9016933488119" x2="900.5" y2="451.9016933488119" stroke="black" stroke-width="1"/>
-  <line x1="894.5" y1="453.1863856403717" x2="900.5" y2="453.1863856403717" stroke="black" stroke-width="1"/>
-  <rect x="912.5" y="312.5705053171075" width="20" height="167.42949468289248" fill="#98D8C8" opacity="0.8"/>
-  <text x="922.5" y="307.5705053171075" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">336.3</text>
-  <line x1="922.5" y1="310.9992451546334" x2="922.5" y2="314.14176547958164" stroke="black" stroke-width="1"/>
-  <line x1="919.5" y1="310.9992451546334" x2="925.5" y2="310.9992451546334" stroke="black" stroke-width="1"/>
-  <line x1="919.5" y1="314.14176547958164" x2="925.5" y2="314.14176547958164" stroke="black" stroke-width="1"/>
-  <text x="910" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 910 500)">zpm</text>
-  <rect x="947.5" y="455.7859218417969" width="20" height="24.214078158203098" fill="#4ECDC4" opacity="0.8"/>
-  <text x="957.5" y="450.7859218417969" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">48.6</text>
-  <line x1="957.5" y1="455.4748772061285" x2="957.5" y2="456.0969664774653" stroke="black" stroke-width="1"/>
-  <line x1="954.5" y1="455.4748772061285" x2="960.5" y2="455.4748772061285" stroke="black" stroke-width="1"/>
-  <line x1="954.5" y1="456.0969664774653" x2="960.5" y2="456.0969664774653" stroke="black" stroke-width="1"/>
-  <rect x="972.5" y="302.867333817895" width="20" height="177.13266618210503" fill="#98D8C8" opacity="0.8"/>
-  <text x="982.5" y="297.867333817895" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">355.8</text>
-  <line x1="982.5" y1="301.377466902842" x2="982.5" y2="304.35720073294794" stroke="black" stroke-width="1"/>
-  <line x1="979.5" y1="301.377466902842" x2="985.5" y2="301.377466902842" stroke="black" stroke-width="1"/>
-  <line x1="979.5" y1="304.35720073294794" x2="985.5" y2="304.35720073294794" stroke="black" stroke-width="1"/>
-  <text x="970" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 970 500)">zinit</text>
-  <rect x="1007.5" y="425.8701632698467" width="20" height="54.12983673015326" fill="#4ECDC4" opacity="0.8"/>
-  <text x="1017.5" y="420.8701632698467" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">108.7</text>
-  <line x1="1017.5" y1="424.81308061468553" x2="1017.5" y2="426.9272459250079" stroke="black" stroke-width="1"/>
-  <line x1="1014.5" y1="424.81308061468553" x2="1020.5" y2="424.81308061468553" stroke="black" stroke-width="1"/>
-  <line x1="1014.5" y1="426.9272459250079" x2="1020.5" y2="426.9272459250079" stroke="black" stroke-width="1"/>
-  <rect x="1032.5" y="57.041922039104804" width="20" height="422.9580779608952" fill="#98D8C8" opacity="0.8"/>
-  <text x="1042.5" y="52.041922039104804" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">849.5</text>
-  <line x1="1042.5" y1="50.00000000000004" x2="1042.5" y2="64.08384407820957" stroke="black" stroke-width="1"/>
-  <line x1="1039.5" y1="50.00000000000004" x2="1045.5" y2="50.00000000000004" stroke="black" stroke-width="1"/>
-  <line x1="1039.5" y1="64.08384407820957" x2="1045.5" y2="64.08384407820957" stroke="black" stroke-width="1"/>
-  <text x="1030" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 1030 500)">zplug</text>
+  <rect x="887.5" y="416.35996789751493" width="20" height="63.64003210248508" fill="#4ECDC4" opacity="0.8"/>
+  <text x="897.5" y="411.35996789751493" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">123.9</text>
+  <line x1="897.5" y1="415.82261114891435" x2="897.5" y2="416.8973246461155" stroke="black" stroke-width="1"/>
+  <line x1="894.5" y1="415.82261114891435" x2="900.5" y2="415.82261114891435" stroke="black" stroke-width="1"/>
+  <line x1="894.5" y1="416.8973246461155" x2="900.5" y2="416.8973246461155" stroke="black" stroke-width="1"/>
+  <rect x="912.5" y="310.3213231866405" width="20" height="169.6786768133595" fill="#98D8C8" opacity="0.8"/>
+  <text x="922.5" y="305.3213231866405" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">330.3</text>
+  <line x1="922.5" y1="307.78405114634876" x2="922.5" y2="312.8585952269322" stroke="black" stroke-width="1"/>
+  <line x1="919.5" y1="307.78405114634876" x2="925.5" y2="307.78405114634876" stroke="black" stroke-width="1"/>
+  <line x1="919.5" y1="312.8585952269322" x2="925.5" y2="312.8585952269322" stroke="black" stroke-width="1"/>
+  <text x="910" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 910 500)">zplug</text>
+  <rect x="947.5" y="453.04716189098025" width="20" height="26.952838109019773" fill="#4ECDC4" opacity="0.8"/>
+  <text x="957.5" y="448.04716189098025" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">52.5</text>
+  <line x1="957.5" y1="452.89570498252164" x2="957.5" y2="453.19861879943886" stroke="black" stroke-width="1"/>
+  <line x1="954.5" y1="452.89570498252164" x2="960.5" y2="452.89570498252164" stroke="black" stroke-width="1"/>
+  <line x1="954.5" y1="453.19861879943886" x2="960.5" y2="453.19861879943886" stroke="black" stroke-width="1"/>
+  <rect x="972.5" y="309.41320736470686" width="20" height="170.5867926352931" fill="#98D8C8" opacity="0.8"/>
+  <text x="982.5" y="304.41320736470686" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">332.1</text>
+  <line x1="982.5" y1="307.7428859568289" x2="982.5" y2="311.0835287725848" stroke="black" stroke-width="1"/>
+  <line x1="979.5" y1="307.7428859568289" x2="985.5" y2="307.7428859568289" stroke="black" stroke-width="1"/>
+  <line x1="979.5" y1="311.0835287725848" x2="985.5" y2="311.0835287725848" stroke="black" stroke-width="1"/>
+  <text x="970" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 970 500)">zpm</text>
+  <rect x="1007.5" y="442.3568018537709" width="20" height="37.64319814622909" fill="#4ECDC4" opacity="0.8"/>
+  <text x="1017.5" y="437.3568018537709" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">73.3</text>
+  <line x1="1017.5" y1="381.6959934345018" x2="1017.5" y2="503.01761027303996" stroke="black" stroke-width="1"/>
+  <line x1="1014.5" y1="381.6959934345018" x2="1020.5" y2="381.6959934345018" stroke="black" stroke-width="1"/>
+  <line x1="1014.5" y1="503.01761027303996" x2="1020.5" y2="503.01761027303996" stroke="black" stroke-width="1"/>
+  <rect x="1032.5" y="242.1997030980692" width="20" height="237.8002969019308" fill="#98D8C8" opacity="0.8"/>
+  <text x="1042.5" y="237.1997030980692" text-anchor="middle" font-size="10" font-family="Arial, sans-serif">462.9</text>
+  <line x1="1042.5" y1="50.00000000000003" x2="1042.5" y2="434.39940619613833" stroke="black" stroke-width="1"/>
+  <line x1="1039.5" y1="50.00000000000003" x2="1045.5" y2="50.00000000000003" stroke="black" stroke-width="1"/>
+  <line x1="1039.5" y1="434.39940619613833" x2="1045.5" y2="434.39940619613833" stroke="black" stroke-width="1"/>
+  <text x="1030" y="500" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" transform="rotate(-45 1030 500)">zinit</text>
   <!-- Legend -->
   <rect x="1090" y="60" width="15" height="15" fill="#4ECDC4" opacity="0.8"/>
   <text x="1110" y="72" font-size="12" font-family="Arial, sans-serif">0 plugins</text>
