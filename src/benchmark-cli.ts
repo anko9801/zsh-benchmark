@@ -152,7 +152,9 @@ async function runBenchmark(
     // Install benchmark
     // Skip install benchmark for prezto and oh-my-zsh with 25 plugins
     // because they pre-install all plugins
-    const skipInstall = (manager.name === "prezto" || manager.name === "oh-my-zsh") && pluginCount === 25;
+    // Also skip for managers with skipInstall flag
+    const skipInstall = ((manager.name === "prezto" || manager.name === "oh-my-zsh") && pluginCount === 25) || 
+                        (manager.skipInstall && pluginCount > 0);
     
     let hyperfineCmd: string; // Declare here so it's available for load benchmark
     
@@ -171,17 +173,32 @@ async function runBenchmark(
         await runCommand(preInstallCmd, { silent: true });
       }
       
-      // Measure first load time (which includes plugin installation)
-      // This is more reliable than trying to measure install commands directly
-      // Increase timeout for 25 plugins as installation can take a while
-      // zplug needs extra time for parallel installations
-      const installTimeout = manager.name === 'zplug' && pluginCount >= 25 ? 300 : pluginCount >= 25 ? 120 : 60;
+      // Special handling for zgenom which doesn't install on first run
+      let installCommand: string;
+      let runs: number;
       
-      // Measure first load time (which includes plugin installation)
-      const installCommand = `timeout ${installTimeout} zsh -ic exit`;
-      
-      // Reduce runs for zplug with many plugins to avoid timeouts
-      const runs = manager.name === 'zplug' && pluginCount >= 25 ? 3 : DEFAULT_CONFIG.hyperfine.installRuns;
+      if (manager.customInstallCommand && pluginCount > 0) {
+        // Use custom install command for special managers
+        installCommand = manager.customInstallCommand;
+        runs = DEFAULT_CONFIG.hyperfine.installRuns;
+      } else if (manager.specialInstallMeasure && pluginCount > 0) {
+        // For zgenom, measure the update command directly
+        installCommand = `zsh -c 'source ~/.zshrc && zgenom update'`;
+        runs = DEFAULT_CONFIG.hyperfine.installRuns;
+      } else {
+        // Normal install measurement
+        // Measure first load time (which includes plugin installation)
+        // This is more reliable than trying to measure install commands directly
+        // Increase timeout for 25 plugins as installation can take a while
+        // zplug needs extra time for parallel installations
+        const installTimeout = manager.name === 'zplug' && pluginCount >= 25 ? 300 : pluginCount >= 25 ? 120 : 60;
+        
+        // Measure first load time (which includes plugin installation)
+        installCommand = `timeout ${installTimeout} zsh -ic exit`;
+        
+        // Reduce runs for zplug with many plugins to avoid timeouts
+        runs = manager.name === 'zplug' && pluginCount >= 25 ? 3 : DEFAULT_CONFIG.hyperfine.installRuns;
+      }
       
       hyperfineCmd =
         `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;

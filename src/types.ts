@@ -10,6 +10,9 @@ export interface PluginManager {
   preInstallCommand?: string | ((plugins: string[]) => Promise<void>);
   postInstallCommand?: string;
   versionCommand?: string;
+  specialInstallMeasure?: boolean;
+  skipInstall?: boolean;
+  customInstallCommand?: string;
 }
 
 export interface ConfigFile {
