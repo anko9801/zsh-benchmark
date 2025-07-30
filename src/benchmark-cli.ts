@@ -193,17 +193,21 @@ async function runBenchmark(
       result.installStddev = null;
     } else {
       logger.progress("Running install benchmark");
-      // Create prepare command that cleans cache and runs pre-install if needed
+      // Create prepare command that cleans cache
       let prepareCmd = manager.cacheCleanCommand;
+      
+      // For managers that need special pre-install (oh-my-zsh, prezto, zim)
+      // We need to run it before the benchmark
       if (preInstallCmd) {
-        prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
+        await runCommand(preInstallCmd, { silent: true });
       }
       
-      // Measure actual plugin installation time
-      const installCommand = manager.postInstallCommand || 'echo "No install command"';
-      // Wrap the entire install command in quotes
+      // Measure first load time (which includes plugin installation)
+      // This is more reliable than trying to measure install commands directly
+      // Increase timeout for 25 plugins as installation can take a while
+      const installTimeout = pluginCount >= 25 ? 120 : 60;
       hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' "${installCommand}"`;
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout ${installTimeout} zsh -ic exit'`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,
