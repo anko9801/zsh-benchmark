@@ -4,7 +4,12 @@ import { ensureDir } from "https://deno.land/std@0.220.0/fs/mod.ts";
 import { dirname, join } from "https://deno.land/std@0.220.0/path/mod.ts";
 import { blue, bold } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { BenchmarkResult, PluginManager } from "./types.ts";
-import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
+import {
+  getSlowManagerSettings,
+  getSpecialInstallCommand,
+  hasNoInstallSupport,
+  PLUGIN_MANAGERS,
+} from "./plugin-managers.ts";
 import {
   ALL_PLUGINS,
   createTimestamp,
@@ -109,25 +114,19 @@ async function runBenchmark(
 
     // Install benchmark
     const skipInstall =
-      ((manager.name === "prezto" || manager.name === "oh-my-zsh") &&
-        pluginCount === 25) ||
+      (hasNoInstallSupport(manager.name) && pluginCount === 25) ||
       (manager.skipInstall && pluginCount > 0);
 
     if (!skipInstall) {
       logProgress("Running install benchmark");
-      const runs = manager.name === "zplug" && pluginCount >= 25
-        ? 3
-        : DEFAULT_CONFIG.hyperfine.installRuns;
-      const timeout = manager.name === "zplug" && pluginCount >= 25
-        ? 300
-        : pluginCount >= 25
-        ? 120
-        : 60;
-      const installCmd =
-        manager.customInstallCommand || manager.specialInstallMeasure
-          ? (manager.customInstallCommand ||
-            `zsh -c 'source ~/.zshrc && zgenom update'`)
-          : `timeout ${timeout} zsh -ic exit`;
+      const slowSettings = getSlowManagerSettings(manager.name, pluginCount);
+      const runs = slowSettings?.runs ||
+        DEFAULT_CONFIG.hyperfine.installRuns;
+      const timeout = slowSettings?.timeout ||
+        (pluginCount >= 25 ? 120 : 60);
+      const specialInstallCmd = getSpecialInstallCommand(manager.name);
+      const installCmd = manager.customInstallCommand || specialInstallCmd ||
+        `timeout ${timeout} zsh -ic exit`;
 
       const cmd =
         `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} ` +

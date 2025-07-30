@@ -13,7 +13,10 @@ import {
   logger,
   setupLogging,
 } from "./utils.ts";
-import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
+import {
+  PLUGIN_MANAGERS,
+  requiresSpecialTableHandling,
+} from "./plugin-managers.ts";
 
 // Options type
 interface GenerateReadmeOptions {
@@ -158,13 +161,13 @@ const buildRankingTable = (
     ),
   );
 
-  // Add N/A entries for oh-my-zsh and prezto if requested
+  // Add N/A entries for special managers if requested
   if (includeNAEntries) {
-    // Filter out oh-my-zsh and prezto from regular results first
+    // Filter out special managers from regular results first
     const filteredResults = results.filter((result) =>
-      result.manager !== "oh-my-zsh" && result.manager !== "prezto"
+      !requiresSpecialTableHandling(result.manager)
     );
-    
+
     // Replace regular results with filtered results
     const filteredTableRows = filteredResults.map((result) =>
       `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
@@ -179,12 +182,20 @@ const buildRankingTable = (
           : "-"
       } |`
     );
-    
+
     // Replace the regular result rows with filtered ones
-    tableRows.splice(includeVanilla ? 1 : 0, results.length, ...filteredTableRows);
-    
-    tableRows.push("| - | oh-my-zsh | N/A | - |");
-    tableRows.push("| - | prezto | N/A | - |");
+    tableRows.splice(
+      includeVanilla ? 1 : 0,
+      results.length,
+      ...filteredTableRows,
+    );
+
+    // Add N/A entries for managers that require special handling
+    for (const manager of ["oh-my-zsh", "prezto"]) {
+      if (requiresSpecialTableHandling(manager)) {
+        tableRows.push(`| - | ${manager} | N/A | - |`);
+      }
+    }
   }
 
   return [
@@ -195,9 +206,9 @@ const buildRankingTable = (
 };
 
 const buildOverallTable = (results: RankingResult[]) => {
-  // Filter out oh-my-zsh and prezto from rankings first
+  // Filter out special managers from rankings first
   const filteredResults = results.filter((result) =>
-    result.manager !== "oh-my-zsh" && result.manager !== "prezto"
+    !requiresSpecialTableHandling(result.manager)
   );
 
   const tableRows = filteredResults.map((result) =>
@@ -206,9 +217,12 @@ const buildOverallTable = (results: RankingResult[]) => {
     } |`
   );
 
-  // Add N/A entries for oh-my-zsh and prezto
-  tableRows.push("| - | oh-my-zsh | N/A |");
-  tableRows.push("| - | prezto | N/A |");
+  // Add N/A entries for managers that require special handling
+  for (const manager of ["oh-my-zsh", "prezto"]) {
+    if (requiresSpecialTableHandling(manager)) {
+      tableRows.push(`| - | ${manager} | N/A |`);
+    }
+  }
 
   return [
     "| Rank | Plugin Manager | Score |",

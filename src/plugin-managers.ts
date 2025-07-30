@@ -31,6 +31,59 @@ const createConfigFiles = (
     }]
     : [{ path: "~/.zshrc", template }];
 
+// Plugin managers that don't support installation metrics
+export const NO_INSTALL_MANAGERS = ["oh-my-zsh", "prezto"] as const;
+
+// Plugin managers that require special handling in tables
+export const SPECIAL_TABLE_MANAGERS = ["oh-my-zsh", "prezto"] as const;
+
+// Plugin managers that require special benchmark settings
+export const SLOW_INSTALL_MANAGERS = ["zplug"] as const;
+
+// Plugin managers with special install measure
+export const SPECIAL_INSTALL_MEASURE_MANAGERS = ["zgenom"] as const;
+
+// Check if a manager should show N/A for installation time
+export const hasNoInstallSupport = (manager: string): boolean =>
+  NO_INSTALL_MANAGERS.includes(manager as typeof NO_INSTALL_MANAGERS[number]);
+
+// Check if a manager requires special table handling
+export const requiresSpecialTableHandling = (manager: string): boolean =>
+  SPECIAL_TABLE_MANAGERS.includes(
+    manager as typeof SPECIAL_TABLE_MANAGERS[number],
+  );
+
+// Check if a manager is slow and needs special settings
+export const isSlowInstallManager = (manager: string): boolean =>
+  SLOW_INSTALL_MANAGERS.includes(
+    manager as typeof SLOW_INSTALL_MANAGERS[number],
+  );
+
+// Check if a manager has special install measure
+export const hasSpecialInstallMeasure = (manager: string): boolean =>
+  SPECIAL_INSTALL_MEASURE_MANAGERS.includes(
+    manager as typeof SPECIAL_INSTALL_MEASURE_MANAGERS[number],
+  );
+
+// Get benchmark settings for slow managers
+export const getSlowManagerSettings = (
+  manager: string,
+  pluginCount: number,
+) => {
+  if (isSlowInstallManager(manager) && pluginCount >= 25) {
+    return { runs: 3, timeout: 300 };
+  }
+  return null;
+};
+
+// Get special install command for managers that need it
+export const getSpecialInstallCommand = (manager: string): string | null => {
+  if (manager === "zgenom") {
+    return `zsh -c 'source ~/.zshrc && zgenom update'`;
+  }
+  return null;
+};
+
 export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
   vanilla: {
     name: "vanilla",
@@ -237,6 +290,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       );
     },
     skipInstall: false,
+    specialInstallMeasure: true,
     versionCommand: getGitVersion("~/.zgenom"),
   } as PluginManager,
 
