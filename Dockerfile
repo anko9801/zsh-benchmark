@@ -37,28 +37,45 @@ COPY deno.json ./
 RUN <<'SETUP_SCRIPT' bash
 set -e
 
-# Helper function for consistent installation
-install_manager() {
-    local name=$1
-    echo "Installing $name..."
-    shift
-    eval "$@" || echo "Warning: $name installation might have failed"
-}
-
 # Install standard plugin managers
-install_manager "oh-my-zsh" 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
-install_manager "prezto" 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"'
-install_manager "zim" 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh || true'
-install_manager "znap" 'git clone --depth 1 https://github.com/marlonrichert/zsh-snap.git ~/Git/zsh-snap'
-install_manager "zinit" 'mkdir -p ~/.local/share/zinit && git clone https://github.com/zdharma-continuum/zinit.git ~/.local/share/zinit/zinit.git'
-install_manager "zplug" 'git clone https://github.com/zplug/zplug ~/.zplug'
-install_manager "antigen" 'curl -L git.io/antigen > ~/antigen.zsh'
-install_manager "antibody" 'curl -sfL git.io/antibody | sh -s - -b /usr/local/bin'
-install_manager "antidote" 'git clone --depth=1 https://github.com/mattmc3/antidote.git /usr/local/share/antidote'
-install_manager "sheldon" 'curl --proto "=https" -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to /usr/local/bin'
-install_manager "zgenom" 'git clone https://github.com/jandamm/zgenom.git "${HOME}/.zgenom"'
-install_manager "zpm" 'git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm'
-install_manager "zcomet" 'git clone https://github.com/agkozak/zcomet.git ~/.zcomet'
+echo "Installing oh-my-zsh..."
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || true
+
+echo "Installing prezto..."
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" || true
+
+echo "Installing zim..."
+curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh || true
+
+echo "Installing znap..."
+git clone --depth 1 https://github.com/marlonrichert/zsh-snap.git ~/Git/zsh-snap || true
+
+echo "Installing zinit..."
+mkdir -p ~/.local/share/zinit && git clone https://github.com/zdharma-continuum/zinit.git ~/.local/share/zinit/zinit.git || true
+
+echo "Installing zplug..."
+git clone https://github.com/zplug/zplug ~/.zplug || true
+
+echo "Installing antigen..."
+curl -L git.io/antigen > ~/antigen.zsh || true
+
+echo "Installing antibody..."
+curl -sfL git.io/antibody | sh -s - -b /usr/local/bin || true
+
+echo "Installing antidote..."
+git clone --depth=1 https://github.com/mattmc3/antidote.git /usr/local/share/antidote || true
+
+echo "Installing sheldon..."
+curl --proto "=https" -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to /usr/local/bin || true
+
+echo "Installing zgenom..."
+git clone https://github.com/jandamm/zgenom.git "${HOME}/.zgenom" || true
+
+echo "Installing zpm..."
+git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm || true
+
+echo "Installing zcomet..."
+git clone https://github.com/agkozak/zcomet.git ~/.zcomet || true
 
 echo "All plugin managers installed!"
 SETUP_SCRIPT
