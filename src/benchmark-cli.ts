@@ -100,40 +100,9 @@ async function restoreConfigs() {
   }
 }
 
-async function getManagerVersion(managerName: string): Promise<string> {
-  const versionCommands: Record<string, string> = {
-    "oh-my-zsh":
-      "cd ~/.oh-my-zsh && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "prezto":
-      "cd ~/.zprezto && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zim":
-      "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
-    "znap":
-      "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zinit":
-      "cd ~/.local/share/zinit/zinit.git && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zplug":
-      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "antigen":
-      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "antibody": "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
-    "antidote": "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "sheldon":
-      "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
-    "zgenom":
-      "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zpm":
-      "cd ~/.zpm && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zr": "echo 'custom implementation'",
-    "antigen-hs": "echo 'custom implementation'",
-    "zcomet":
-      "cd ~/.zcomet && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "alf": "echo 'custom implementation'",
-  };
-  
-  const cmd = versionCommands[managerName];
-  if (cmd) {
-    const { output } = await runCommand(cmd, { silent: true });
+async function getManagerVersion(manager: PluginManager): Promise<string> {
+  if (manager.versionCommand) {
+    const { output } = await runCommand(manager.versionCommand, { silent: true });
     return output.trim();
   }
   return "unknown";
@@ -156,7 +125,7 @@ async function runBenchmark(
     );
     
     // Get version information
-    result.version = await getManagerVersion(manager.name);
+    result.version = await getManagerVersion(manager);
     logger.debug(`${manager.name} version: ${result.version}`);
 
     // Prepare configuration
@@ -190,7 +159,7 @@ async function runBenchmark(
     if (skipInstall) {
       logger.info("Skipping install benchmark (plugins pre-installed)");
       result.installTime = null;
-      result.installStddev = null;
+      result.installStddev = undefined;
     } else {
       logger.progress("Running install benchmark");
       // Create prepare command that cleans cache
@@ -205,13 +174,17 @@ async function runBenchmark(
       // Measure first load time (which includes plugin installation)
       // This is more reliable than trying to measure install commands directly
       // Increase timeout for 25 plugins as installation can take a while
-      const installTimeout = pluginCount >= 25 ? 120 : 60;
+      // zplug needs extra time for parallel installations
+      const installTimeout = manager.name === 'zplug' && pluginCount >= 25 ? 300 : pluginCount >= 25 ? 120 : 60;
       
       // Measure first load time (which includes plugin installation)
       const installCommand = `timeout ${installTimeout} zsh -ic exit`;
       
+      // Add hyperfine-specific timeout for zplug
+      const hyperfineTimeout = manager.name === 'zplug' && pluginCount >= 25 ? '--max-runs 3 ' : '';
+      
       hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
+        `hyperfine ${hyperfineTimeout}--ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,
@@ -287,8 +260,8 @@ async function runBenchmark(
     // Clean up temp files
     await runCommand(`rm -f /tmp/${manager.name}-*.json`);
   } catch (error) {
-    logger.error(`Benchmark failed for ${manager.name}`, error);
-    result.error = error.message;
+    logger.error(`Benchmark failed for ${manager.name}`, error as Error);
+    result.error = error instanceof Error ? error.message : String(error);
   }
 
   return result;
@@ -406,41 +379,11 @@ async function test(managers: string[]) {
 async function versions(managers: string[]) {
   console.log(blue(bold("📋 Plugin Manager Versions")));
 
-  const versionCommands: Record<string, string> = {
-    "oh-my-zsh":
-      "cd ~/.oh-my-zsh && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "prezto":
-      "cd ~/.zprezto && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zim":
-      "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
-    "znap":
-      "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zinit":
-      "cd ~/.local/share/zinit/zinit.git && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zplug":
-      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "antigen":
-      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "antibody": "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
-    "antidote": "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-    "sheldon":
-      "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
-    "zgenom":
-      "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zpm":
-      "cd ~/.zpm && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "zr": "echo 'custom implementation'",
-    "antigen-hs": "echo 'custom implementation'",
-    "zcomet":
-      "cd ~/.zcomet && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
-    "alf": "echo 'custom implementation'",
-  };
-
   for (const managerName of managers) {
-    const cmd = versionCommands[managerName];
-    if (cmd) {
-      const { output } = await runCommand(cmd, { silent: true });
-      console.log(`${managerName}: ${output.trim()}`);
+    const manager = PLUGIN_MANAGERS[managerName];
+    if (manager) {
+      const version = await getManagerVersion(manager);
+      console.log(`${managerName}: ${version}`);
     }
   }
 }
@@ -477,8 +420,7 @@ ${bold("EXAMPLES:")}
 // Main CLI
 async function main() {
   const args = parse(Deno.args, {
-    string: ["managers", "counts"],
-    number: ["runs", "warmup"],
+    string: ["managers", "counts", "runs", "warmup"],
     boolean: ["help", "version", "debug"],
     alias: { h: "help", v: "version", d: "debug", r: "runs", w: "warmup" },
   });
@@ -498,11 +440,17 @@ async function main() {
 
     // Override hyperfine runs if specified
     if (args.runs) {
-      DEFAULT_CONFIG.hyperfine.installRuns = args.runs;
-      DEFAULT_CONFIG.hyperfine.loadRuns = args.runs;
+      const runs = parseInt(args.runs, 10);
+      if (!isNaN(runs)) {
+        DEFAULT_CONFIG.hyperfine.installRuns = runs;
+        DEFAULT_CONFIG.hyperfine.loadRuns = runs;
+      }
     }
     if (args.warmup) {
-      DEFAULT_CONFIG.hyperfine.warmupRuns = args.warmup;
+      const warmup = parseInt(args.warmup, 10);
+      if (!isNaN(warmup)) {
+        DEFAULT_CONFIG.hyperfine.warmupRuns = warmup;
+      }
     }
 
     const options = parseOptions(args);
@@ -522,7 +470,7 @@ async function main() {
         break;
     }
   } catch (error) {
-    logger.error("Command failed", error);
+    logger.error("Command failed", error as Error);
     Deno.exit(1);
   }
 }

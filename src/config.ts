@@ -69,15 +69,15 @@ export function validatePluginCounts(counts: number[]): number[] {
 export function parseOptions(args: Record<string, unknown>): BenchmarkOptions {
   // Parse managers
   let managers = DEFAULT_CONFIG.defaults.managers;
-  if (args.managers) {
+  if (args.managers && typeof args.managers === 'string') {
     managers = args.managers.split(/[\s,]+/).filter(Boolean);
     managers = validateManagers(managers);
   }
 
   // Parse plugin counts
   let pluginCounts = DEFAULT_CONFIG.defaults.pluginCounts;
-  if (args.counts) {
-    pluginCounts = args.counts.split(/[\s,]+/).map(Number).filter((n) =>
+  if (args.counts && typeof args.counts === 'string') {
+    pluginCounts = args.counts.split(/[\s,]+/).map(Number).filter((n: number) =>
       !isNaN(n)
     );
     pluginCounts = validatePluginCounts(pluginCounts);

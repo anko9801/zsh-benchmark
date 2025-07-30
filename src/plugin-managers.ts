@@ -24,6 +24,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
         );
       }
     },
+    versionCommand:
+      "cd ~/.oh-my-zsh && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "prezto": {
@@ -48,6 +50,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
         );
       }
     },
+    versionCommand:
+      "cd ~/.zprezto && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "zim": {
@@ -74,6 +78,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
         );
       }
     },
+    versionCommand:
+      "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
   },
 
   "znap": {
@@ -84,6 +90,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "znap.zshrc" },
     ],
     generatePluginLoad: (plugin) => `znap clone ${plugin}`,
+    versionCommand:
+      "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "zinit": {
@@ -94,6 +102,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zinit.zshrc" },
     ],
     generatePluginLoad: (plugin) => `zinit light ${plugin}`,
+    versionCommand:
+      "cd ~/.local/share/zinit/zinit.git && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "zplug": {
@@ -104,6 +114,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zplug.zshrc" },
     ],
     generatePluginLoad: (plugin) => `zplug "${plugin}"`,
+    versionCommand:
+      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
   },
 
   "antigen": {
@@ -113,6 +125,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "antigen.zshrc" },
     ],
     generatePluginLoad: (plugin) => `antigen bundle ${plugin}`,
+    versionCommand:
+      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
   },
 
   "antibody": {
@@ -129,6 +143,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     generatePluginLoad: (plugin) => `antibody bundle ${plugin}`,
     preInstallCommand:
       "antibody bundle < ~/.antibody_plugins.txt > ~/.antibody_plugins.sh",
+    versionCommand: "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
   },
 
   "antidote": {
@@ -146,6 +161,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     generatePluginLoad: (plugin) => plugin,
     postInstallCommand:
       "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote load ~/.zsh_plugins.txt'",
+    versionCommand: "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
   },
 
   "sheldon": {
@@ -164,6 +180,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       return `[plugins.${repo}]\ngithub = "${plugin}"`;
     },
     preInstallCommand: "sheldon lock",
+    versionCommand:
+      "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
   },
 
   "zgenom": {
@@ -174,6 +192,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zgenom.zshrc" },
     ],
     generatePluginLoad: (plugin) => `  zgenom load ${plugin}`,
+    versionCommand:
+      "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "zpm": {
@@ -183,6 +203,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zpm.zshrc" },
     ],
     generatePluginLoad: (plugin) => `zpm load ${plugin}`,
+    versionCommand:
+      "cd ~/.zpm && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "zr": {
@@ -192,6 +214,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zr.zshrc" },
     ],
     generatePluginLoad: (plugin) => `zr load ${plugin}`,
+    versionCommand: "echo 'custom implementation'",
   },
 
   "antigen-hs": {
@@ -201,6 +224,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "antigen-hs.zshrc" },
     ],
     generatePluginLoad: (plugin) => `antigen-hs bundle ${plugin}`,
+    versionCommand: "echo 'custom implementation'",
   },
 
   "zcomet": {
@@ -212,6 +236,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc.zcomet", template: "zcomet.zshrc.zcomet" },
     ],
     generatePluginLoad: (plugin) => `zcomet load ${plugin}`,
+    versionCommand:
+      "cd ~/.zcomet && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
 
   "alf": {
@@ -221,5 +247,6 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "alf.zshrc" },
     ],
     generatePluginLoad: (plugin) => `alf load ${plugin}`,
+    versionCommand: "echo 'custom implementation'",
   },
 };

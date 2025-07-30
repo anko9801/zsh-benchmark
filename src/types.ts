@@ -8,6 +8,7 @@ export interface PluginManager {
   generatePluginLoad: (plugin: string) => string;
   preInstallCommand?: string | ((plugins: string[]) => Promise<void>);
   postInstallCommand?: string;
+  versionCommand?: string;
 }
 
 export interface ConfigFile {
