@@ -93,6 +93,7 @@ echo "Applying manager-specific fixes..."
 # Fix zim
 mkdir -p ~/.zim/modules
 [ ! -f ~/.zim/init.zsh ] && echo "# Empty init.zsh for benchmarking" > ~/.zim/init.zsh
+[ ! -f ~/.zimrc ] && echo "# Empty zimrc for benchmarking" > ~/.zimrc
 
 # Fix antidote
 [ ! -f ~/.zsh_plugins.txt ] && echo "# Empty plugin list" > ~/.zsh_plugins.txt
