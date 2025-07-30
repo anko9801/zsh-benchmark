@@ -100,7 +100,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     name: "znap",
     repo: "marlonrichert/zsh-snap",
     cacheCleanCommand:
-      'rm -rf ~/.cache/znap ~/Git/zsh-* 2>/dev/null || true',
+      'find ~/Git -maxdepth 1 -name "zsh-*" ! -name "zsh-snap" -type d -exec rm -rf {} \\; 2>/dev/null || true; rm -rf ~/.cache/znap 2>/dev/null || true',
     configFiles: [
       { path: "~/.zshrc", template: "znap.zshrc" },
     ],
