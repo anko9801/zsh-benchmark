@@ -34,7 +34,7 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/benchmark \
             --entrypoint deno \
-            zsh-benchmark run --allow-all src/generate-comparison-chart.ts
+            zsh-benchmark run --allow-all src/chart-generator.ts
 
       - name: Generate README
         run: |
