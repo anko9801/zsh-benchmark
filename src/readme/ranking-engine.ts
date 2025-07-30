@@ -45,6 +45,26 @@ export class RankingEngine {
   }
 
   calculateOverallRanking(data: ParsedData): RankingResult[] {
+    // First, collect all valid load times and install times to calculate statistics
+    const allLoadTimes: number[] = [];
+    const allInstallTimes: number[] = [];
+    
+    for (const manager of data.managers) {
+      for (const result of manager.results.values()) {
+        if (result.loadTime !== null) {
+          allLoadTimes.push(result.loadTime);
+        }
+        if (result.installTime !== null && 
+            !(manager.name === "oh-my-zsh" || manager.name === "prezto")) {
+          allInstallTimes.push(result.installTime);
+        }
+      }
+    }
+    
+    // Calculate median values for normalization
+    const medianLoadTime = this.calculateMedian(allLoadTimes);
+    const medianInstallTime = this.calculateMedian(allInstallTimes);
+    
     const rankings = data.managers
       .map((manager) => {
         // Skip oh-my-zsh and prezto for overall ranking
@@ -52,18 +72,20 @@ export class RankingEngine {
           return null;
         }
         
-        // Calculate score using: Load Time * 0.8 + 0.002 * Install Time
+        // Calculate normalized score
         let totalScore = 0;
         let validResults = 0;
         
         for (const result of manager.results.values()) {
           if (result.loadTime !== null) {
-            let score = result.loadTime * 0.8;
+            // Normalize both times by their median values
+            const normalizedLoadTime = result.loadTime / medianLoadTime;
+            const normalizedInstallTime = result.installTime !== null 
+              ? result.installTime / medianInstallTime 
+              : normalizedLoadTime; // Use load time if install time is missing
             
-            // Add install time component if available
-            if (result.installTime !== null) {
-              score += 0.002 * result.installTime;
-            }
+            // Apply weights: 80% load time, 20% install time
+            const score = normalizedLoadTime * 0.8 + normalizedInstallTime * 0.2;
             
             totalScore += score;
             validResults++;
@@ -80,6 +102,19 @@ export class RankingEngine {
     this.assignRanks(rankings);
     this.assignMedals(rankings);
     return rankings;
+  }
+
+  private calculateMedian(values: number[]): number {
+    if (values.length === 0) return 1; // Avoid division by zero
+    
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    
+    if (sorted.length % 2 === 0) {
+      return (sorted[mid - 1] + sorted[mid]) / 2;
+    } else {
+      return sorted[mid];
+    }
   }
 
   generateRankings(data: ParsedData): Rankings {
