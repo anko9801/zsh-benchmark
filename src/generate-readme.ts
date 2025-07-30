@@ -4,10 +4,20 @@
 
 import { parse } from "https://deno.land/std@0.220.0/flags/mod.ts";
 import { bold, yellow } from "https://deno.land/std@0.220.0/fmt/colors.ts";
-import { ReadmeGenerator } from "./readme/readme-generator.ts";
-import { GenerateReadmeOptions } from "./readme/types.ts";
-import { handleError } from "./readme/errors.ts";
-import { logger, setupLogging } from "./log-config.ts";
+import { generateReadme } from "./readme-generator.ts";
+import { BenchmarkData } from "./types.ts";
+import { logger, setupLogging, exists } from "./utils.ts";
+
+// Options type
+interface GenerateReadmeOptions {
+  inputFile: string;
+  outputFile: string;
+  template?: string;
+  language: "ja" | "en";
+  backup: boolean;
+  debug: boolean;
+  sections?: string[];
+}
 
 // Default options
 const DEFAULT_OPTIONS: GenerateReadmeOptions = {
@@ -101,21 +111,21 @@ async function main(): Promise<void> {
   logger.info(bold("🚀 Generating README from benchmark results..."));
 
   try {
-    const generator = new ReadmeGenerator(options);
-
-    // Show progress
-    logger.progress(`Reading benchmark data from ${options.inputFile}`);
-
-    // Generate README
-    await generator.generate();
-
-    logger.success(`✅ README successfully generated at ${options.outputFile}`);
-
-    if (options.backup && await fileExists(options.outputFile + ".bak")) {
+    // Create backup if requested
+    if (options.backup && await exists(options.outputFile)) {
+      await Deno.copyFile(options.outputFile, `${options.outputFile}.bak`);
       logger.info(yellow(`📁 Backup saved as ${options.outputFile}.bak`));
     }
+
+    // Generate README
+    await generateReadme(options.inputFile, options.outputFile);
+
+    logger.info(`✅ README successfully generated at ${options.outputFile}`);
   } catch (error) {
-    handleError(error, options.debug);
+    logger.error(`❌ Error: ${error.message}`);
+    if (options.debug) {
+      console.error(error.stack);
+    }
     Deno.exit(1);
   }
 }
