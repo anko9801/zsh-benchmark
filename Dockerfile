@@ -46,6 +46,8 @@ git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$H
 
 echo "Installing zim..."
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh || true
+# Clean up zim's pre-installed modules and default config
+rm -rf ~/.zim/modules/* ~/.zimrc
 
 echo "Installing znap..."
 git clone --depth 1 https://github.com/marlonrichert/zsh-snap.git ~/Git/zsh-snap || true

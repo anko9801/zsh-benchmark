@@ -206,8 +206,15 @@ async function runBenchmark(
       // This is more reliable than trying to measure install commands directly
       // Increase timeout for 25 plugins as installation can take a while
       const installTimeout = pluginCount >= 25 ? 120 : 60;
+      
+      // For zim, we need to explicitly run install on first load
+      let installCommand = `timeout ${installTimeout} zsh -ic exit`;
+      if (manager.name === "zim") {
+        installCommand = `timeout ${installTimeout} zsh -ic 'source \\${ZIM_HOME}/zimfw.zsh install && exit'`;
+      }
+      
       hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout ${installTimeout} zsh -ic exit'`;
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,
