@@ -9,6 +9,8 @@ import {
   getSlowManagerSettings,
   getSpecialInstallCommand,
   hasNoInstallSupport,
+  MANAGER_NAMES,
+  type ManagerName,
   PLUGIN_MANAGERS,
   usesPluginConfigs,
 } from "./plugin-managers.ts";
@@ -35,6 +37,10 @@ const loadTemplate = async (name: string) =>
   await Deno.readTextFile(
     join(dirname(new URL(import.meta.url).pathname), "templates", name),
   );
+
+// Type guard for ManagerName
+const isManagerName = (name: string): name is ManagerName =>
+  MANAGER_NAMES.includes(name as ManagerName);
 
 async function prepareConfig(manager: PluginManager, pluginCount: number) {
   const plugins = ALL_PLUGINS.slice(0, pluginCount);
@@ -210,6 +216,10 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
   const results: BenchmarkResult[] = [];
 
   for (const name of managers) {
+    if (!isManagerName(name)) {
+      logger.warn(`Unknown manager: ${name}`);
+      continue;
+    }
     const manager = PLUGIN_MANAGERS[name];
     if (!manager) {
       logger.error(`Unknown manager: ${name}`);
@@ -275,6 +285,10 @@ async function test(managers: string[]) {
   logger.info(blue(bold("🧪 Testing Zsh Plugin Managers")));
 
   for (const name of managers) {
+    if (!isManagerName(name)) {
+      logger.warn(`Unknown manager: ${name}`);
+      continue;
+    }
     const manager = PLUGIN_MANAGERS[name];
     if (!manager) {
       logger.error(`Unknown manager: ${name}`);
@@ -301,6 +315,10 @@ async function test(managers: string[]) {
 async function versions(managers: string[]) {
   logger.info(blue(bold("📋 Plugin Manager Versions")));
   for (const name of managers) {
+    if (!isManagerName(name)) {
+      logger.warn(`Unknown manager: ${name}`);
+      continue;
+    }
     const manager = PLUGIN_MANAGERS[name];
     if (manager) {
       const version = manager.versionCommand

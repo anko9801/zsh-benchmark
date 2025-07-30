@@ -1,13 +1,22 @@
 import { PluginManager } from "./types.ts";
 import { runCommand } from "./utils.ts";
 
-const getGitVersion = (path: string) =>
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+const getPluginName = (plugin: string): string => plugin.split("/")[1];
+
+const getGitVersion = (path: string): string =>
   `cd ${path} && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')`;
-const cleanCacheDirs = (...paths: string[]) =>
+
+const cleanCacheDirs = (...paths: string[]): string =>
   paths.map((path) => `rm -rf ${path} 2>/dev/null`).join(" || ") + " || true";
-const getPluginName = (plugin: string) => plugin.split("/")[1];
-const createCommand = (prefix: string, suffix = "") => (plugin: string) =>
-  `${prefix} ${plugin}${suffix}`;
+
+const createCommand =
+  (prefix: string, suffix = ""): (plugin: string) => string =>
+  (plugin: string) => `${prefix} ${plugin}${suffix}`;
+
 const gitClonePlugins = (dir: string) => async (plugins: string[]) => {
   await runCommand(`mkdir -p ${dir}`);
   for (const plugin of plugins) {
@@ -18,6 +27,7 @@ const gitClonePlugins = (dir: string) => async (plugins: string[]) => {
     );
   }
 };
+
 const createConfigFiles = (
   template: string,
   listPath?: string,
@@ -31,69 +41,96 @@ const createConfigFiles = (
     }]
     : [{ path: "~/.zshrc", template }];
 
-// Plugin managers that don't support installation metrics
-export const NO_INSTALL_MANAGERS = ["oh-my-zsh", "prezto"] as const;
+// ============================================================================
+// Exported Helper Functions (for backward compatibility)
+// ============================================================================
 
-// Plugin managers that require special handling in tables
-export const SPECIAL_TABLE_MANAGERS = ["oh-my-zsh", "prezto"] as const;
+export const hasNoInstallSupport = (manager: string): boolean => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
+  return mgr?.noInstallSupport || false;
+};
 
-// Plugin managers that require special benchmark settings
-export const SLOW_INSTALL_MANAGERS = ["zplug"] as const;
+export const requiresSpecialTableHandling = (manager: string): boolean => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
+  return mgr?.requiresSpecialTableHandling || false;
+};
 
-// Plugin managers with special install measure
-export const SPECIAL_INSTALL_MEASURE_MANAGERS = ["zgenom"] as const;
+export const isSlowInstallManager = (manager: string): boolean => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
+  return !!mgr?.slowInstallSettings;
+};
 
-// Check if a manager should show N/A for installation time
-export const hasNoInstallSupport = (manager: string): boolean =>
-  NO_INSTALL_MANAGERS.includes(manager as typeof NO_INSTALL_MANAGERS[number]);
+export const hasSpecialInstallMeasure = (manager: string): boolean => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
+  return mgr?.specialInstallMeasure || false;
+};
 
-// Check if a manager requires special table handling
-export const requiresSpecialTableHandling = (manager: string): boolean =>
-  SPECIAL_TABLE_MANAGERS.includes(
-    manager as typeof SPECIAL_TABLE_MANAGERS[number],
-  );
-
-// Check if a manager is slow and needs special settings
-export const isSlowInstallManager = (manager: string): boolean =>
-  SLOW_INSTALL_MANAGERS.includes(
-    manager as typeof SLOW_INSTALL_MANAGERS[number],
-  );
-
-// Check if a manager has special install measure
-export const hasSpecialInstallMeasure = (manager: string): boolean =>
-  SPECIAL_INSTALL_MEASURE_MANAGERS.includes(
-    manager as typeof SPECIAL_INSTALL_MEASURE_MANAGERS[number],
-  );
-
-// Get benchmark settings for slow managers
 export const getSlowManagerSettings = (
   manager: string,
   pluginCount: number,
-) => {
-  if (isSlowInstallManager(manager) && pluginCount >= 25) {
-    return { runs: 3, timeout: 300 };
+): { runs: number; timeout: number } | null => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
+  if (
+    mgr?.slowInstallSettings &&
+    pluginCount >= mgr.slowInstallSettings.minPluginCount
+  ) {
+    return {
+      runs: mgr.slowInstallSettings.runs,
+      timeout: mgr.slowInstallSettings.timeout,
+    };
   }
   return null;
 };
 
-// Get special install command for managers that need it
 export const getSpecialInstallCommand = (manager: string): string | null => {
+  const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
   if (manager === "zgenom") {
     return `zsh -c 'source ~/.zshrc && zgenom update'`;
   }
-  return null;
+  return mgr?.customInstallCommand || null;
 };
-// Get plugin load separator for different managers
+
 export const getPluginLoadSeparator = (templateName: string): string => {
+  // Special case for sheldon TOML format
   return templateName === "sheldon.plugins.toml" ? "\n\n" : "\n";
 };
 
-// Check if template uses plugin configs instead of loads
 export const usesPluginConfigs = (templateName: string): boolean => {
+  // Special case for sheldon TOML format
   return templateName === "sheldon.plugins.toml";
 };
 
-export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
+export const MANAGER_NAMES = [
+  "vanilla",
+  "oh-my-zsh",
+  "prezto",
+  "zim",
+  "znap",
+  "zinit",
+  "zplug",
+  "antigen",
+  "antibody",
+  "antidote",
+  "sheldon",
+  "zgenom",
+  "zpm",
+  "zr",
+  "antigen-hs",
+  "zcomet",
+  "alf",
+] as const;
+
+export type ManagerName = typeof MANAGER_NAMES[number];
+
+// ============================================================================
+// Plugin Manager Definitions
+// ============================================================================
+
+export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
   vanilla: {
     name: "vanilla",
     repo: "zsh-users/zsh",
@@ -101,7 +138,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("vanilla.zshrc"),
     generatePluginLoad: () => "",
     versionCommand: "zsh --version | awk '{print $2}'",
-  } as PluginManager,
+  },
 
   "oh-my-zsh": {
     name: "oh-my-zsh",
@@ -117,7 +154,9 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       }.plugin.zsh 2>/dev/null || true`,
     preInstallCommand: gitClonePlugins("~/.oh-my-zsh/custom/plugins"),
     versionCommand: getGitVersion("~/.oh-my-zsh"),
-  } as PluginManager,
+    noInstallSupport: true,
+    requiresSpecialTableHandling: true,
+  },
 
   prezto: {
     name: "prezto",
@@ -127,10 +166,10 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       "~/.zprezto/cache",
       "~/.cache/prezto",
     ),
-    configFiles: [{ path: "~/.zpreztorc", template: "prezto.zpreztorc" }, {
-      path: "~/.zshrc",
-      template: "prezto.zshrc",
-    }],
+    configFiles: [
+      { path: "~/.zpreztorc", template: "prezto.zpreztorc" },
+      { path: "~/.zshrc", template: "prezto.zshrc" },
+    ],
     generatePluginLoad: (plugin) =>
       `# External plugin: ${plugin}\n[[ -d ~/.zprezto-contrib/${
         getPluginName(plugin)
@@ -139,7 +178,9 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       }.plugin.zsh 2>/dev/null || true`,
     preInstallCommand: gitClonePlugins("~/.zprezto-contrib"),
     versionCommand: getGitVersion("~/.zprezto"),
-  } as PluginManager,
+    noInstallSupport: true,
+    requiresSpecialTableHandling: true,
+  },
 
   zim: {
     name: "zim",
@@ -149,11 +190,10 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       "~/.cache/zim",
       "~/.zimrc.bak-default",
     ),
-    configFiles: [{
-      path: "~/.zimrc",
-      template: "zim.zimrc",
-      isPluginList: true,
-    }, { path: "~/.zshrc", template: "zim.zshrc" }],
+    configFiles: [
+      { path: "~/.zimrc", template: "zim.zimrc", isPluginList: true },
+      { path: "~/.zshrc", template: "zim.zshrc" },
+    ],
     generatePluginLoad: createCommand("zmodule"),
     specialInit: async () => {
       await runCommand(
@@ -171,7 +211,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     },
     versionCommand:
       "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
-  } as PluginManager,
+  },
 
   znap: {
     name: "znap",
@@ -191,7 +231,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       }
     },
     versionCommand: getGitVersion("~/Git/zsh-snap"),
-  } as PluginManager,
+  },
 
   zinit: {
     name: "zinit",
@@ -201,7 +241,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("zinit.zshrc"),
     generatePluginLoad: createCommand("zinit light"),
     versionCommand: getGitVersion("~/.local/share/zinit/zinit.git"),
-  } as PluginManager,
+  },
 
   zplug: {
     name: "zplug",
@@ -216,7 +256,12 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     generatePluginLoad: (plugin) => `zplug "${plugin}"`,
     versionCommand:
       "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-  } as PluginManager,
+    slowInstallSettings: {
+      minPluginCount: 25,
+      runs: 3,
+      timeout: 300,
+    },
+  },
 
   antigen: {
     name: "antigen",
@@ -226,7 +271,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     generatePluginLoad: createCommand("antigen bundle"),
     versionCommand:
       "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-  } as PluginManager,
+  },
 
   antibody: {
     name: "antibody",
@@ -242,7 +287,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       "antibody bundle < ~/.antibody_plugins.txt > ~/.antibody_plugins.sh",
     versionCommand:
       "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
-  } as PluginManager,
+  },
 
   antidote: {
     name: "antidote",
@@ -261,7 +306,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote load ~/.zsh_plugins.txt'",
     versionCommand:
       "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
-  } as PluginManager,
+  },
 
   sheldon: {
     name: "sheldon",
@@ -270,16 +315,23 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       "~/.local/share/sheldon",
       "~/.cache/sheldon",
     ),
-    configFiles: [{
-      path: "~/.config/sheldon/plugins.toml",
-      template: "sheldon.plugins.toml",
-    }, { path: "~/.zshrc", template: "sheldon.zshrc" }],
+    configFiles: [
+      {
+        path: "~/.config/sheldon/plugins.toml",
+        template: "sheldon.plugins.toml",
+      },
+      { path: "~/.zshrc", template: "sheldon.zshrc" },
+    ],
     generatePluginLoad: (plugin) =>
       `[plugins.${getPluginName(plugin)}]\ngithub = "${plugin}"`,
     preInstallCommand: "sheldon lock",
     versionCommand:
       "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
-  } as PluginManager,
+    templateConfig: {
+      separator: "\n\n",
+      usesPluginConfigs: true,
+    },
+  },
 
   zgenom: {
     name: "zgenom",
@@ -301,7 +353,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     skipInstall: false,
     specialInstallMeasure: true,
     versionCommand: getGitVersion("~/.zgenom"),
-  } as PluginManager,
+  },
 
   zpm: {
     name: "zpm",
@@ -310,7 +362,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("zpm.zshrc"),
     generatePluginLoad: createCommand("zpm load"),
     versionCommand: getGitVersion("~/.zpm"),
-  } as PluginManager,
+  },
 
   zr: {
     name: "zr",
@@ -319,7 +371,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("zr.zshrc"),
     generatePluginLoad: createCommand("zr load"),
     versionCommand: "echo 'custom implementation'",
-  } as PluginManager,
+  },
 
   "antigen-hs": {
     name: "antigen-hs",
@@ -328,19 +380,19 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("antigen-hs.zshrc"),
     generatePluginLoad: createCommand("antigen-hs bundle"),
     versionCommand: "echo 'custom implementation'",
-  } as PluginManager,
+  },
 
   zcomet: {
     name: "zcomet",
     repo: "agkozak/zcomet",
     cacheCleanCommand: cleanCacheDirs("~/.zcomet/downloads", "~/.zcomet/repos"),
-    configFiles: [{ path: "~/.zshrc", template: "zcomet.zshrc" }, {
-      path: "~/.zshrc.zcomet",
-      template: "zcomet.zshrc.zcomet",
-    }],
+    configFiles: [
+      { path: "~/.zshrc", template: "zcomet.zshrc" },
+      { path: "~/.zshrc.zcomet", template: "zcomet.zshrc.zcomet" },
+    ],
     generatePluginLoad: createCommand("zcomet load"),
     versionCommand: getGitVersion("~/.zcomet"),
-  } as PluginManager,
+  },
 
   alf: {
     name: "alf",
@@ -349,5 +401,5 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: createConfigFiles("alf.zshrc"),
     generatePluginLoad: createCommand("alf load"),
     versionCommand: "echo 'custom implementation'",
-  } as PluginManager,
+  },
 };
