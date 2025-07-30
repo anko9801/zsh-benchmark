@@ -7,11 +7,11 @@
 ## 📊 Executive Summary
 
 - **Benchmark Date:** 2025-07-30
-- **Test Environment:** Ubuntu 24.04 (Docker on macOS 15.5), MacBook Pro (2020), Intel Core i5 2GHz (4 cores), 16GB RAM
+- **Test Environment:** Ubuntu 24.04 (Docker on GitHub Actions), 4 vCPUs, 16GB RAM
 - **Key Findings:**
   - vanilla が総合パフォーマンスで最高評価🥇
-  - 25プラグイン環境では zim が最速 (93ms)
-  - パフォーマンス差は最大 37.1倍
+  - 25プラグイン環境では zgenom が最速 (92ms)
+  - パフォーマンス差は最大 41.5倍
 
 ## 🏆 Performance Rankings (25 Plugins)
 
@@ -22,22 +22,23 @@ _Shell startup time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Time (ms) | vs Best |
 | --- | --- | ---: | ---: |
-| 🥇 | zim | 92.90ms | - |
-| 🥈 | zgenom | 99.50ms | +7.1% |
-| 🥉 | antigen | 100.81ms | +8.5% |
-| #4 | zr | 110.09ms | +18.5% |
-| #5 | zcomet | 110.37ms | +18.8% |
-| #6 | antigen-hs | 110.38ms | +18.8% |
-| #7 | sheldon | 111.38ms | +19.9% |
-| #8 | alf | 113.72ms | +22.4% |
-| #9 | antidote | 123.67ms | +33.1% |
-| #10 | prezto | 136.52ms | +47.0% |
-| #11 | znap | 139.05ms | +49.7% |
-| #12 | oh-my-zsh | 159.02ms | +71.2% |
-| #13 | antibody | 160.85ms | +73.1% |
-| #14 | zpm | 350.36ms | +277.1% |
-| #15 | zinit | 355.77ms | +283.0% |
-| #16 | zplug | 3442.41ms | +3605.6% |
+| - | vanilla (no plugins) | 31.2ms | - |
+| 🥇 | zgenom | 92.1ms | - |
+| 🥈 | zim | 95.2ms | +3.3% |
+| 🥉 | zcomet | 104.3ms | +13.2% |
+| #4 | antigen | 106.0ms | +15.1% |
+| #5 | alf | 111.5ms | +21.0% |
+| #6 | antigen-hs | 111.7ms | +21.2% |
+| #7 | zr | 113.7ms | +23.5% |
+| #8 | sheldon | 115.6ms | +25.5% |
+| #9 | antidote | 122.7ms | +33.2% |
+| #10 | prezto | 137.4ms | +49.2% |
+| #11 | znap | 142.5ms | +54.7% |
+| #12 | oh-my-zsh | 162.4ms | +76.3% |
+| #13 | antibody | 169.9ms | +84.5% |
+| #14 | zpm | 349.2ms | +279.1% |
+| #15 | zinit | 364.4ms | +295.5% |
+| #16 | zplug | 3821.7ms | +4048.6% |
 
 ### Installation Time Rankings
 
@@ -46,20 +47,21 @@ _Plugin installation time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Time (ms) | vs Best |
 | --- | --- | ---: | ---: |
-| 🥇 | zcomet | 102.30ms | - |
-| 🥈 | znap | 1554.80ms | +1419.8% |
-| 🥉 | antigen | 4939.95ms | +4728.8% |
-| #4 | alf | 5351.14ms | +5130.8% |
-| #5 | antigen-hs | 5480.03ms | +5256.8% |
-| #6 | zr | 5486.45ms | +5263.0% |
-| #7 | antibody | 5871.39ms | +5639.3% |
-| #8 | zpm | 7357.12ms | +7091.6% |
-| #9 | zim | 7807.27ms | +7531.7% |
-| #10 | zgenom | 7807.49ms | +7531.9% |
-| #11 | antidote | 8183.01ms | +7899.0% |
-| #12 | sheldon | 11504.31ms | +11145.5% |
-| #13 | zplug | 11593.68ms | +11232.9% |
-| #14 | zinit | 30497.48ms | +29711.5% |
+| 🥇 | zcomet | 104.0ms | - |
+| 🥈 | znap | 3341.4ms | +3114.3% |
+| 🥉 | antigen | 5904.1ms | +5579.6% |
+| #4 | zim | 8041.8ms | +7636.0% |
+| #5 | antidote | 8816.9ms | +8381.7% |
+| #6 | zplug | 12141.1ms | +11579.5% |
+| #7 | zr | 14563.5ms | +13909.7% |
+| #8 | alf | 14572.4ms | +13918.3% |
+| #9 | antigen-hs | 14599.8ms | +13944.7% |
+| #10 | antibody | 15144.8ms | +14468.9% |
+| #11 | zpm | 16414.8ms | +15690.7% |
+| #12 | sheldon | 18406.9ms | +17607.1% |
+| #13 | zinit | 41436.7ms | +39761.2% |
+| - | oh-my-zsh | N/A | - |
+| - | prezto | N/A | - |
 
 ### Overall Performance
 
@@ -67,23 +69,23 @@ _Plugin installation time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Score |
 | --- | --- | ---: |
-| 🥇 | vanilla | 0.30 |
-| 🥈 | zcomet | 1.41 |
-| 🥉 | prezto | 1.81 |
-| #4 | oh-my-zsh | 2.17 |
-| #5 | znap | 4.65 |
-| #6 | alf | 11.92 |
-| #7 | antigen-hs | 12.15 |
-| #8 | zr | 12.16 |
-| #9 | antigen | 12.18 |
-| #10 | antibody | 13.34 |
-| #11 | zim | 16.71 |
-| #12 | zgenom | 16.72 |
-| #13 | antidote | 17.70 |
-| #14 | zpm | 18.46 |
-| #15 | sheldon | 24.22 |
-| #16 | zplug | 51.96 |
-| #17 | zinit | 66.70 |
+| 🥇 | vanilla | 0.32 |
+| 🥈 | zgenom | 0.99 |
+| 🥉 | zcomet | 1.37 |
+| #6 | znap | 8.26 |
+| #7 | antigen | 14.19 |
+| #8 | zim | 17.19 |
+| #9 | antidote | 19.03 |
+| #10 | zr | 30.35 |
+| #11 | alf | 30.35 |
+| #12 | antigen-hs | 30.41 |
+| #13 | antibody | 31.99 |
+| #14 | zpm | 37.20 |
+| #15 | sheldon | 38.08 |
+| #16 | zplug | 56.13 |
+| #17 | zinit | 88.69 |
+| - | oh-my-zsh | N/A |
+| - | prezto | N/A |
 
 ## 📦 Plugin Managers
 
