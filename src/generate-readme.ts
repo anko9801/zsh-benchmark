@@ -136,21 +136,27 @@ const buildRankingTable = (
 
   // Add vanilla at the top if requested
   if (includeVanilla && vanillaTime !== undefined) {
-    tableRows.push(`| - | vanilla (no plugins) | ${formatDuration(vanillaTime)} | - |`);
+    tableRows.push(
+      `| - | vanilla (no plugins) | ${formatDuration(vanillaTime)} | - |`,
+    );
   }
 
   // Add regular results
-  tableRows.push(...results.map((result) =>
-    `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
-      formatDuration(result.score)
-    } | ${
-      bestValue && result.score !== bestValue
-        ? `+${
-          formatPercentage(calculatePercentageIncrease(bestValue, result.score))
-        }`
-        : "-"
-    } |`
-  ));
+  tableRows.push(
+    ...results.map((result) =>
+      `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
+        formatDuration(result.score)
+      } | ${
+        bestValue && result.score !== bestValue
+          ? `+${
+            formatPercentage(
+              calculatePercentageIncrease(bestValue, result.score),
+            )
+          }`
+          : "-"
+      } |`
+    ),
+  );
 
   // Add N/A entries for oh-my-zsh and prezto if requested
   if (includeNAEntries) {
@@ -197,7 +203,7 @@ async function generateReadme(
   const best = rankings.loadTime.get(25)?.[0];
   const worst = rankings.loadTime.get(25)?.slice(-1)[0];
   const diff = best && worst ? (worst.score / best.score).toFixed(1) : "N/A";
-  
+
   // Get vanilla (0 plugins) load time
   const vanillaTime = rankings.loadTime.get(0)?.[0]?.score;
 
@@ -231,7 +237,7 @@ async function generateReadme(
       "Time (ms)",
       best?.score,
       false, // Don't include N/A entries for load time table
-      true,  // Include vanilla at the top
+      true, // Include vanilla at the top
       vanillaTime, // Pass the actual vanilla load time
     ),
     "",
