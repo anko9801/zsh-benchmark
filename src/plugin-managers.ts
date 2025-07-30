@@ -224,7 +224,19 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zgenom.zshrc" },
     ],
     generatePluginLoad: (plugin) => `  zgenom load ${plugin}`,
-    preInstallCommand: "zsh -c 'source ~/.zshrc' 2>/dev/null || true",
+    preInstallCommand: async (plugins: string[]) => {
+      if (plugins.length > 0) {
+        // Force zgenom to compile/install plugins by clearing saved state and running compile
+        await runCommand(
+          "rm -f ~/.zgenom/init.zsh ~/.zgenom/.zcompdump* 2>/dev/null || true",
+          { silent: true }
+        );
+        await runCommand(
+          "zsh -c 'source ~/.zgenom/zgenom.zsh && zgenom reset && source ~/.zshrc'",
+          { silent: true }
+        );
+      }
+    },
     versionCommand:
       "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },

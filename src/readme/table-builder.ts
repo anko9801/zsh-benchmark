@@ -82,7 +82,7 @@ export class TableBuilder {
       { 
         header: "Score", 
         accessor: r => r.score,
-        formatter: v => Math.round(v as number).toString(),
+        formatter: v => (v as number).toFixed(2),
         align: "right"
       },
     ];
