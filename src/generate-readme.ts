@@ -129,8 +129,17 @@ const buildRankingTable = (
   metric: string,
   bestValue?: number,
   includeNAEntries = false,
+  includeVanilla = false,
 ) => {
-  const tableRows = results.map((result) =>
+  const tableRows: string[] = [];
+
+  // Add vanilla at the top if requested
+  if (includeVanilla) {
+    tableRows.push("| - | vanilla (no plugins) | 0ms | - |");
+  }
+
+  // Add regular results
+  tableRows.push(...results.map((result) =>
     `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
       formatDuration(result.score)
     } | ${
@@ -140,7 +149,7 @@ const buildRankingTable = (
         }`
         : "-"
     } |`
-  );
+  ));
 
   // Add N/A entries for oh-my-zsh and prezto if requested
   if (includeNAEntries) {
@@ -217,6 +226,8 @@ async function generateReadme(
       rankings.loadTime.get(25) || [],
       "Time (ms)",
       best?.score,
+      false, // Don't include N/A entries for load time table
+      true,  // Include vanilla at the top
     ),
     "",
     "### Installation Time Rankings",
