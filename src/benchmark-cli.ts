@@ -201,9 +201,9 @@ async function runBenchmark(
       
       // Measure actual plugin installation time
       const installCommand = manager.postInstallCommand || 'echo "No install command"';
-      // Use -- to avoid shell escaping issues
+      // Wrap the entire install command in quotes
       hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' -- ${installCommand}`;
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' "${installCommand}"`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,

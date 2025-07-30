@@ -66,17 +66,17 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       if (!await exists(initPath)) {
         console.log("     Creating init.zsh...");
         await runCommand(
-          "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh init -q'",
+          "zsh -c 'export ZIM_HOME=~/.zim; source \${ZIM_HOME}/zimfw.zsh init -q'",
         );
       }
     },
     postInstallCommand:
-      "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh install'",
+      "zsh -c 'export ZIM_HOME=~/.zim; source \\${ZIM_HOME}/zimfw.zsh install'",
     preInstallCommand: async (plugins: string[]) => {
       // For 0 plugins, run init to avoid repeated init during benchmark
       if (plugins.length === 0) {
         await runCommand(
-          "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh init -q'",
+          "zsh -c 'export ZIM_HOME=~/.zim; source \${ZIM_HOME}/zimfw.zsh init -q'",
         );
       }
     },
@@ -150,6 +150,8 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       },
     ],
     generatePluginLoad: (plugin) => plugin,
+    postInstallCommand:
+      "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote load ~/.zsh_plugins.txt'",
   },
 
   "sheldon": {
