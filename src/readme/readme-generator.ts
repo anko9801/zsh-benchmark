@@ -94,7 +94,7 @@ export class ReadmeGenerator {
   }
 
   private formatEnvironment(env: ParsedData["environment"]): string {
-    return "2 GHz Quad-Core Intel Core i5, 16GB RAM, macOS 15.5";
+    return "Ubuntu 24.04 (Docker on macOS 15.5), MacBook Pro (2020), Intel Core i5 2GHz (4 cores), 16GB RAM";
   }
 
   private async createBackup(): Promise<void> {
