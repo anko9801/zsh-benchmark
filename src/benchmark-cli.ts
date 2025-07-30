@@ -199,8 +199,12 @@ async function runBenchmark(
         prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
       }
       
+      // Measure actual plugin installation time
+      const installCommand = manager.postInstallCommand || 'echo "No install command"';
+      // Escape the install command properly for shell
+      const escapedInstallCmd = installCommand.replace(/"/g, '\\"').replace(/'/g, "'\\''");
       hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' "${escapedInstallCmd}"`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,
@@ -217,7 +221,8 @@ async function runBenchmark(
 
         // Retry once with longer timeout
         logger.info("  Retrying with longer timeout...");
-        const retryCmd = hyperfineCmd.replace("timeout 30", "timeout 60");
+        // For retry, we don't need to change the command since it no longer has timeout
+        const retryCmd = hyperfineCmd;
         const retry = await runCommand(retryCmd, { silent: true });
         if (
           retry.success &&
@@ -233,8 +238,8 @@ async function runBenchmark(
       }
     }
 
-    // Post-install command if needed
-    if (manager.postInstallCommand) {
+    // Post-install command if needed (only if we skipped install benchmark)
+    if (skipInstall && manager.postInstallCommand) {
       await runCommand(manager.postInstallCommand);
     }
 

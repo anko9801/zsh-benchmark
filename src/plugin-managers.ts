@@ -72,6 +72,14 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     },
     postInstallCommand:
       "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh install' 2>&1",
+    preInstallCommand: async (plugins: string[]) => {
+      // For 0 plugins, run init to avoid repeated init during benchmark
+      if (plugins.length === 0) {
+        await runCommand(
+          "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh init -q' 2>&1",
+        );
+      }
+    },
   },
 
   "znap": {
