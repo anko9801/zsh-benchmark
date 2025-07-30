@@ -226,17 +226,14 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     generatePluginLoad: (plugin) => `  zgenom load ${plugin}`,
     preInstallCommand: async (plugins: string[]) => {
       if (plugins.length > 0) {
-        // Force zgenom to compile/install plugins by clearing saved state and running compile
+        // Clear zgenom saved state to force reinstall
         await runCommand(
-          "rm -f ~/.zgenom/init.zsh ~/.zgenom/.zcompdump* 2>/dev/null || true",
-          { silent: true }
-        );
-        await runCommand(
-          "zsh -c 'source ~/.zgenom/zgenom.zsh && zgenom reset && source ~/.zshrc'",
+          "rm -rf ~/.zgenom/sources ~/.zgenom/init.zsh ~/.zgenom/.zcompdump* 2>/dev/null || true",
           { silent: true }
         );
       }
     },
+    postInstallCommand: "zsh -c 'source ~/.zshrc'",
     versionCommand:
       "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },

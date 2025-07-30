@@ -227,9 +227,9 @@ async function main() {
     const data: BenchmarkData = JSON.parse(await Deno.readTextFile(dataPath));
 
     const chartOptions: ChartOptions = {
-      width: 1200,
+      width: 1100,
       height: 600,
-      margin: { top: 50, right: 120, bottom: 120, left: 80 },
+      margin: { top: 50, right: 80, bottom: 120, left: 80 },
     };
 
     const generator = new ChartGenerator(chartOptions);
