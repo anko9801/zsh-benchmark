@@ -59,16 +59,10 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     ],
     generatePluginLoad: (plugin) => `zmodule ${plugin}`,
     specialInit: async () => {
-      // Initialize zim if needed
-      const { exists } = await import("./utils.ts");
-      const { expandPath } = await import("./utils.ts");
-      const initPath = expandPath("~/.zim/init.zsh");
-      if (!await exists(initPath)) {
-        console.log("     Creating init.zsh...");
-        await runCommand(
-          "zsh -c 'export ZIM_HOME=~/.zim; source \${ZIM_HOME}/zimfw.zsh init -q'",
-        );
-      }
+      // Initialize zim if needed - always run init to ensure it's up to date with zimrc
+      await runCommand(
+        "zsh -c 'export ZIM_HOME=~/.zim; source \\${ZIM_HOME}/zimfw.zsh init -q' >/dev/null 2>&1 || true",
+      );
     },
     postInstallCommand:
       "zsh -c 'export ZIM_HOME=~/.zim; source \\${ZIM_HOME}/zimfw.zsh install'",
