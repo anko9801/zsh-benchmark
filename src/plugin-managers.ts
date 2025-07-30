@@ -77,7 +77,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
   "znap": {
     name: "znap",
     cacheCleanCommand:
-      'rm -rf ~/.cache/znap 2>/dev/null || true; find ~/Git -maxdepth 1 -name "zsh-*" ! -name "zsh-snap" -exec rm -rf {} + 2>/dev/null || true',
+      'rm -rf ~/.cache/znap ~/Git/zsh-* 2>/dev/null || true',
     configFiles: [
       { path: "~/.zshrc", template: "znap.zshrc" },
     ],
@@ -87,7 +87,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
   "zinit": {
     name: "zinit",
     cacheCleanCommand:
-      'find ~/.local/share/zinit -mindepth 1 -maxdepth 1 ! -name "zinit.git" -exec rm -rf {} + 2>/dev/null || true',
+      'rm -rf ~/.local/share/zinit/plugins ~/.local/share/zinit/snippets ~/.local/share/zinit/completions ~/.local/share/zinit/services ~/.cache/zinit 2>/dev/null || true',
     configFiles: [
       { path: "~/.zshrc", template: "zinit.zshrc" },
     ],
