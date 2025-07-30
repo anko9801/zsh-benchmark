@@ -1,111 +1,79 @@
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-run --allow-env
 import { parse } from "https://deno.land/std@0.220.0/flags/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.220.0/fs/mod.ts";
 import { dirname, join } from "https://deno.land/std@0.220.0/path/mod.ts";
-import { blue, bold } from "https://deno.land/std@0.220.0/fmt/colors.ts";
-
+import { blue, bold, green } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { BenchmarkResult, PluginManager } from "./types.ts";
 import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
-import { ALL_PLUGINS } from "./plugins.ts";
 import {
+  ALL_PLUGINS,
   createTimestamp,
+  DEFAULT_CONFIG,
   exists,
   expandPath,
   formatDuration,
+  logError,
+  logger,
+  logHeader,
+  logProgress,
+  logResult,
+  logSubheader,
+  logSuccess,
+  parseOptions,
   runCommand,
+  setupLogging,
 } from "./utils.ts";
-import { logger, LogLevel } from "./logger.ts";
-import { DEFAULT_CONFIG, parseOptions } from "./config.ts";
 
-async function loadTemplate(templateName: string): Promise<string> {
-  const templatePath = join(
-    dirname(new URL(import.meta.url).pathname),
-    "templates",
-    templateName,
+const loadTemplate = async (name: string) =>
+  await Deno.readTextFile(
+    join(dirname(new URL(import.meta.url).pathname), "templates", name),
   );
-  return await Deno.readTextFile(templatePath);
-}
 
-async function prepareConfig(
-  manager: PluginManager,
-  pluginCount: number,
-): Promise<void> {
+async function prepareConfig(manager: PluginManager, pluginCount: number) {
   const plugins = ALL_PLUGINS.slice(0, pluginCount);
+  for (const cfg of manager.configFiles) {
+    const path = expandPath(cfg.path);
+    if (await exists(path)) await Deno.copyFile(path, `${path}.bak`);
 
-  for (const config of manager.configFiles) {
-    const configPath = expandPath(config.path);
-    
-    // Create backup of existing config if it exists
-    if (await exists(configPath)) {
-      const backupPath = `${configPath}.bak`;
-      logger.debug(`Creating backup: ${backupPath}`);
-      await Deno.copyFile(configPath, backupPath);
-    }
-    let template: string;
+    let tpl = cfg.isPluginList
+      ? "{{PLUGIN_LIST}}"
+      : "# Minimal config\n{{PLUGIN_LOADS}}";
     try {
-      template = await loadTemplate(config.template);
-    } catch (_error) {
-      logger.warn(
-        `Template ${config.template} not found, creating minimal config`,
-      );
-      // Create minimal configs for missing templates
-      if (config.isPluginList) {
-        template = "{{PLUGIN_LIST}}";
-      } else {
-        template = "# Minimal config\n{{PLUGIN_LOADS}}";
-      }
-    }
-    let content = template;
+      tpl = await loadTemplate(cfg.template);
+    } catch {}
 
-    if (config.isPluginList) {
-      // For plugin list files (like .zimrc)
-      const pluginList = plugins.map((p) => manager.generatePluginLoad(p)).join(
-        "\n",
+    const loads = plugins.map((plugin) => manager.generatePluginLoad(plugin))
+      .join(
+        cfg.template === "sheldon.plugins.toml" ? "\n\n" : "\n",
       );
-      content = content.replace("{{PLUGIN_LOADS}}", pluginList);
-      content = content.replace("{{PLUGIN_LIST}}", plugins.join("\n"));
-    } else if (config.template === "sheldon.plugins.toml") {
-      // Special handling for sheldon TOML
-      const pluginConfigs = plugins.map((p) => manager.generatePluginLoad(p))
-        .join("\n\n");
-      content = content.replace("{{PLUGIN_CONFIGS}}", pluginConfigs);
-    } else {
-      // For regular zshrc files
-      const pluginLoads = plugins.map((p) => manager.generatePluginLoad(p))
-        .join("\n");
-      content = content.replace("{{PLUGIN_LOADS}}", pluginLoads);
+    let content = tpl.replace("{{PLUGIN_LOADS}}", loads).replace(
+      "{{PLUGIN_LIST}}",
+      plugins.join("\n"),
+    );
+    if (cfg.template === "sheldon.plugins.toml") {
+      content = tpl.replace("{{PLUGIN_CONFIGS}}", loads);
     }
 
-    await ensureDir(dirname(configPath));
-    await Deno.writeTextFile(configPath, content);
+    await ensureDir(dirname(path));
+    await Deno.writeTextFile(path, content);
   }
 }
 
 async function restoreConfigs() {
-  const configPaths = [
-    "~/.zshrc",
-    "~/.zimrc",
-    "~/.zplugrc",
-    "~/.config/sheldon/plugins.toml",
-  ];
-  
-  for (const path of configPaths) {
-    const expandedPath = expandPath(path);
-    const backupPath = `${expandedPath}.bak`;
-    
-    if (await exists(backupPath)) {
-      logger.debug(`Restoring ${expandedPath} from backup`);
-      await Deno.copyFile(backupPath, expandedPath);
-      await Deno.remove(backupPath);
+  for (
+    const configPath of [
+      "~/.zshrc",
+      "~/.zimrc",
+      "~/.zplugrc",
+      "~/.config/sheldon/plugins.toml",
+    ]
+  ) {
+    const path = expandPath(configPath), bak = `${path}.bak`;
+    if (await exists(bak)) {
+      await Deno.copyFile(bak, path);
+      await Deno.remove(bak);
     }
   }
-}
-
-async function getManagerVersion(manager: PluginManager): Promise<string> {
-  if (manager.versionCommand) {
-    const { output } = await runCommand(manager.versionCommand, { silent: true });
-    return output.trim();
-  }
-  return "unknown";
 }
 
 async function runBenchmark(
@@ -114,227 +82,164 @@ async function runBenchmark(
 ): Promise<BenchmarkResult> {
   const result: BenchmarkResult = {
     manager: manager.name,
-    pluginCount,
+    pluginCount: pluginCount,
     installTime: null,
     loadTime: null,
   };
 
   try {
-    logger.debug(
-      `Starting benchmark for ${manager.name} with ${pluginCount} plugins`,
-    );
-    
-    // Get version information
-    result.version = await getManagerVersion(manager);
-    logger.debug(`${manager.name} version: ${result.version}`);
+    // Get version
+    result.version = manager.versionCommand
+      ? (await runCommand(manager.versionCommand, { silent: true })).output
+        .trim()
+      : "unknown";
 
-    // Prepare configuration
-    logger.debug(`Preparing configuration files...`);
+    // Prepare config
     await prepareConfig(manager, pluginCount);
+    if (manager.specialInit) await manager.specialInit();
 
-    // Special initialization if needed
-    if (manager.specialInit) {
-      await manager.specialInit();
-    }
-
-    // Pre-install command if needed
-    let preInstallCmd = "";
+    // Pre-install
     if (manager.preInstallCommand) {
       if (typeof manager.preInstallCommand === "string") {
-        preInstallCmd = manager.preInstallCommand;
-      } else {
-        // It's a function, call it with the plugins
-        const plugins = ALL_PLUGINS.slice(0, pluginCount);
-        await manager.preInstallCommand(plugins);
-      }
+        await runCommand(manager.preInstallCommand, { silent: true });
+      } else await manager.preInstallCommand(ALL_PLUGINS.slice(0, pluginCount));
     }
 
     // Install benchmark
-    // Skip install benchmark for prezto and oh-my-zsh with 25 plugins
-    // because they pre-install all plugins
-    // Also skip for managers with skipInstall flag
-    const skipInstall = ((manager.name === "prezto" || manager.name === "oh-my-zsh") && pluginCount === 25) || 
-                        (manager.skipInstall && pluginCount > 0);
-    
-    let hyperfineCmd: string; // Declare here so it's available for load benchmark
-    
-    if (skipInstall) {
-      logger.info("Skipping install benchmark (plugins pre-installed)");
-      result.installTime = null;
-      result.installStddev = undefined;
-    } else {
-      logger.progress("Running install benchmark");
-      // Create prepare command that cleans cache
-      let prepareCmd = manager.cacheCleanCommand;
-      
-      // For managers that need special pre-install (oh-my-zsh, prezto, zim)
-      // We need to run it before the benchmark
-      if (preInstallCmd) {
-        await runCommand(preInstallCmd, { silent: true });
-      }
-      
-      // Special handling for zgenom which doesn't install on first run
-      let installCommand: string;
-      let runs: number;
-      
-      if (manager.customInstallCommand && pluginCount > 0) {
-        // Use custom install command for special managers
-        installCommand = manager.customInstallCommand;
-        runs = DEFAULT_CONFIG.hyperfine.installRuns;
-      } else if (manager.specialInstallMeasure && pluginCount > 0) {
-        // For zgenom, measure the update command directly
-        installCommand = `zsh -c 'source ~/.zshrc && zgenom update'`;
-        runs = DEFAULT_CONFIG.hyperfine.installRuns;
-      } else {
-        // Normal install measurement
-        // Measure first load time (which includes plugin installation)
-        // This is more reliable than trying to measure install commands directly
-        // Increase timeout for 25 plugins as installation can take a while
-        // zplug needs extra time for parallel installations
-        const installTimeout = manager.name === 'zplug' && pluginCount >= 25 ? 300 : pluginCount >= 25 ? 120 : 60;
-        
-        // Measure first load time (which includes plugin installation)
-        installCommand = `timeout ${installTimeout} zsh -ic exit`;
-        
-        // Reduce runs for zplug with many plugins to avoid timeouts
-        runs = manager.name === 'zplug' && pluginCount >= 25 ? 3 : DEFAULT_CONFIG.hyperfine.installRuns;
-      }
-      
-      hyperfineCmd =
-        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
+    const skipInstall =
+      ((manager.name === "prezto" || manager.name === "oh-my-zsh") &&
+        pluginCount === 25) ||
+      (manager.skipInstall && pluginCount > 0);
 
-      const { success, output, error } = await runCommand(hyperfineCmd, {
-        silent: true,
-      });
-      if (success && await exists("/tmp/" + manager.name + "-install.json")) {
+    if (!skipInstall) {
+      logProgress("Running install benchmark");
+      const runs = manager.name === "zplug" && pluginCount >= 25
+        ? 3
+        : DEFAULT_CONFIG.hyperfine.installRuns;
+      const timeout = manager.name === "zplug" && pluginCount >= 25
+        ? 300
+        : pluginCount >= 25
+        ? 120
+        : 60;
+      const installCmd =
+        manager.customInstallCommand || manager.specialInstallMeasure
+          ? (manager.customInstallCommand ||
+            `zsh -c 'source ~/.zshrc && zgenom update'`)
+          : `timeout ${timeout} zsh -ic exit`;
+
+      const cmd =
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} ` +
+        `--prepare "${
+          manager.cacheCleanCommand.replace(/"/g, '"')
+        }" --export-json /tmp/${manager.name}-install.json ` +
+        `--command-name '${manager.name}-install' '${installCmd}'`;
+
+      const res = await runCommand(cmd, { silent: true });
+      if (res.success && await exists(`/tmp/${manager.name}-install.json`)) {
         const data = JSON.parse(
-          await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
+          await Deno.readTextFile(`/tmp/${manager.name}-install.json`),
         );
         result.installTime = data.results[0].mean * 1000;
         result.installStddev = data.results[0].stddev * 1000;
       } else {
-        logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
-        logger.debug(`Hyperfine output: ${output}`);
-
-        // Retry once with longer timeout
-        logger.info("  Retrying with longer timeout...");
-        // For retry, we don't need to change the command since it no longer has timeout
-        const retryCmd = hyperfineCmd;
-        const retry = await runCommand(retryCmd, { silent: true });
+        logger.warn(`Install benchmark failed for ${manager.name}`);
+        // Retry once
+        const retry = await runCommand(cmd, { silent: true });
         if (
-          retry.success &&
-          await exists("/tmp/" + manager.name + "-install.json")
+          retry.success && await exists(`/tmp/${manager.name}-install.json`)
         ) {
           const data = JSON.parse(
-            await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
+            await Deno.readTextFile(`/tmp/${manager.name}-install.json`),
           );
           result.installTime = data.results[0].mean * 1000;
           result.installStddev = data.results[0].stddev * 1000;
-          logger.success("  Retry successful!");
         }
       }
     }
 
-    // Post-install command if needed (only if we skipped install benchmark)
+    // Post-install
     if (skipInstall && manager.postInstallCommand) {
       await runCommand(manager.postInstallCommand);
     }
 
-    // Load benchmark (warm cache)
-    logger.progress("Running load benchmark");
-    hyperfineCmd =
-      `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.loadRuns} --export-json /tmp/${manager.name}-load.json --command-name '${manager.name}-load' 'timeout 10 zsh -ic exit'`;
+    // Load benchmark
+    logProgress("Running load benchmark");
+    const loadCmd =
+      `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} ` +
+      `--runs ${DEFAULT_CONFIG.hyperfine.loadRuns} --export-json /tmp/${manager.name}-load.json ` +
+      `--command-name '${manager.name}-load' 'timeout 10 zsh -ic exit'`;
 
-    const loadResult = await runCommand(hyperfineCmd, {
-      silent: true,
-    });
-    if (loadResult.success && await exists("/tmp/" + manager.name + "-load.json")) {
+    const loadRes = await runCommand(loadCmd, { silent: true });
+    if (loadRes.success && await exists(`/tmp/${manager.name}-load.json`)) {
       const data = JSON.parse(
-        await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
+        await Deno.readTextFile(`/tmp/${manager.name}-load.json`),
       );
       result.loadTime = data.results[0].mean * 1000;
       result.loadStddev = data.results[0].stddev * 1000;
     } else {
-      logger.warn(`Load benchmark failed for ${manager.name}: ${loadResult.error}`);
-      logger.debug(`Hyperfine output: ${loadResult.output}`);
-
-      // Retry once with longer timeout
-      logger.info("  Retrying with longer timeout...");
-      const retryCmd = hyperfineCmd.replace("timeout 10", "timeout 20");
-      const retry = await runCommand(retryCmd, { silent: true });
-      if (
-        retry.success && await exists("/tmp/" + manager.name + "-load.json")
-      ) {
+      // Retry with longer timeout
+      const retry = await runCommand(
+        loadCmd.replace("timeout 10", "timeout 20"),
+        { silent: true },
+      );
+      if (retry.success && await exists(`/tmp/${manager.name}-load.json`)) {
         const data = JSON.parse(
-          await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
+          await Deno.readTextFile(`/tmp/${manager.name}-load.json`),
         );
         result.loadTime = data.results[0].mean * 1000;
         result.loadStddev = data.results[0].stddev * 1000;
-        logger.success("  Retry successful!");
       }
     }
 
-    // Clean up temp files
     await runCommand(`rm -f /tmp/${manager.name}-*.json`);
   } catch (error) {
-    logger.error(`Benchmark failed for ${manager.name}`, error as Error);
+    logError(`Benchmark failed for ${manager.name}`, error as Error);
     result.error = error instanceof Error ? error.message : String(error);
   }
 
   return result;
 }
 
-// Command implementations
 async function benchmark(managers: string[], pluginCounts: number[]) {
-  console.log(blue(bold("🚀 Zsh Plugin Manager Scalability Benchmark")));
-  console.log(
+  logger.info(blue(bold("🚀 Zsh Plugin Manager Scalability Benchmark")));
+  logger.info(
     blue(`📊 Testing with plugin counts: ${pluginCounts.join(", ")}`),
   );
 
   const results: BenchmarkResult[] = [];
 
-  for (const managerName of managers) {
-    const manager = PLUGIN_MANAGERS[managerName];
+  for (const name of managers) {
+    const manager = PLUGIN_MANAGERS[name];
     if (!manager) {
-      logger.error(`Unknown manager: ${managerName}`);
+      logger.error(`Unknown manager: ${name}`);
       continue;
     }
 
-    logger.header(`Testing: ${managerName}`);
+    logHeader(`Testing: ${name}`);
 
     for (const count of pluginCounts) {
-      // Skip vanilla for non-zero plugin counts
-      if (managerName === "vanilla" && count > 0) {
-        logger.info(`Skipping vanilla with ${count} plugins (not applicable)`);
-        continue;
-      }
-      
-      logger.subheader(`Testing with ${count} plugins`);
+      if (name === "vanilla" && count > 0) continue;
+
+      logSubheader(`Testing with ${count} plugins`);
       const result = await runBenchmark(manager, count);
       results.push(result);
 
-      // Display results
-      // Display version
-      logger.info(`Version: ${result.version || 'unknown'}`);
-      
+      logger.info(`Version: ${result.version || "unknown"}`);
+
       if (result.installTime !== null) {
-        logger.result(
+        logResult(
           "Install time",
           formatDuration(result.installTime),
           ` ± ${formatDuration(result.installStddev || 0)}`,
         );
+      } else if ((name === "oh-my-zsh" || name === "prezto") && count === 25) {
+        logger.info("Install benchmark skipped (plugins pre-installed)");
       } else {
-        // Check if it was skipped for oh-my-zsh/prezto with 25 plugins
-        const wasSkipped = (managerName === "oh-my-zsh" || managerName === "prezto") && count === 25;
-        if (wasSkipped) {
-          logger.info("Install benchmark skipped (plugins pre-installed)");
-        } else {
-          logger.error("Install benchmark failed");
-        }
+        logger.error("Install benchmark failed");
       }
 
       if (result.loadTime !== null) {
-        logger.result(
+        logResult(
           "Load time",
           formatDuration(result.loadTime),
           ` ± ${formatDuration(result.loadStddev || 0)}`,
@@ -349,74 +254,81 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
   const timestamp = createTimestamp();
   const resultsPath =
     `${DEFAULT_CONFIG.paths.results}/benchmark-results-latest.json`;
-  const backupPath =
-    `${DEFAULT_CONFIG.paths.results}/benchmark-results-${timestamp}.json`;
-
   await ensureDir(DEFAULT_CONFIG.paths.results);
 
-  // Backup existing results if they exist
   if (await exists(resultsPath)) {
-    const existingData = await Deno.readTextFile(resultsPath);
-    await Deno.writeTextFile(backupPath, existingData);
+    await Deno.writeTextFile(
+      `${DEFAULT_CONFIG.paths.results}/benchmark-results-${timestamp}.json`,
+      await Deno.readTextFile(resultsPath),
+    );
   }
 
   await Deno.writeTextFile(resultsPath, JSON.stringify({ results }, null, 2));
-  logger.success(`\n✅ Results saved to: ${resultsPath}`);
-  
-  // Restore original config files from backups
-  logger.info("\nRestoring original configuration files...");
+  logSuccess(`\n✅ Results saved to: ${resultsPath}`);
+
   await restoreConfigs();
-  logger.success("✅ Original configurations restored");
+  logSuccess("✅ Original configurations restored");
 }
 
 async function test(managers: string[]) {
-  console.log(blue(bold("🧪 Testing Zsh Plugin Managers")));
+  logger.info(blue(bold("🧪 Testing Zsh Plugin Managers")));
 
-  for (const managerName of managers) {
-    const manager = PLUGIN_MANAGERS[managerName];
+  for (const name of managers) {
+    const manager = PLUGIN_MANAGERS[name];
     if (!manager) {
-      logger.error(`Unknown manager: ${managerName}`);
+      logger.error(`Unknown manager: ${name}`);
       continue;
     }
 
-    logger.info(`\nTesting ${managerName}...`);
-    await prepareConfig(manager, 3); // Test with 3 plugins
+    logger.info(`\nTesting ${name}...`);
+    await prepareConfig(manager, 3);
 
-    const { success, output, error } = await runCommand(
+    const { success, output } = await runCommand(
       "timeout 10 zsh -ic 'echo TEST_OK'",
     );
     if (success && output.includes("TEST_OK")) {
-      logger.success(`  ✅ ${managerName} works correctly`);
+      logSuccess(`  ✅ ${name} works correctly`);
     } else {
-      logger.error(`  ${managerName} failed`);
-      if (error) logger.error(`     Error: ${error}`);
+      logger.error(`  ${name} failed`);
     }
   }
-  
-  // Restore original config files after testing
-  logger.info("\nRestoring original configuration files...");
+
   await restoreConfigs();
-  logger.success("✅ Original configurations restored");
+  logSuccess("✅ Original configurations restored");
 }
 
 async function versions(managers: string[]) {
-  console.log(blue(bold("📋 Plugin Manager Versions")));
-
-  for (const managerName of managers) {
-    const manager = PLUGIN_MANAGERS[managerName];
+  logger.info(blue(bold("📋 Plugin Manager Versions")));
+  for (const name of managers) {
+    const manager = PLUGIN_MANAGERS[name];
     if (manager) {
-      const version = await getManagerVersion(manager);
-      console.log(`${managerName}: ${version}`);
+      const version = manager.versionCommand
+        ? (await runCommand(manager.versionCommand, { silent: true })).output
+          .trim()
+        : "unknown";
+      logger.info(`${name}: ${version}`);
     }
   }
 }
 
-function showHelp() {
-  console.log(`
+// Main CLI
+if (import.meta.main) {
+  await setupLogging("INFO");
+
+  const args = parse(Deno.args, {
+    string: ["managers", "counts", "runs", "warmup"],
+    boolean: ["help", "version", "debug"],
+    alias: { h: "help", v: "version", d: "debug", r: "runs", w: "warmup" },
+  });
+
+  const command = args._[0]?.toString() || "benchmark";
+
+  if (args.help || command === "help") {
+    console.log(`
 ${bold("Zsh Plugin Manager Benchmark")}
 
 ${bold("USAGE:")}
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts [COMMAND] [OPTIONS]
+    deno run --allow-all benchmark-cli.ts [COMMAND] [OPTIONS]
 
 ${bold("COMMANDS:")}
     benchmark    Run scalability benchmark (default)
@@ -432,73 +344,45 @@ ${bold("OPTIONS:")}
     --debug, -d    Enable debug logging
 
 ${bold("EXAMPLES:")}
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts test
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts versions
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts benchmark --managers "zinit zplug"
-    deno run --allow-read --allow-write --allow-run=bash --allow-env=HOME benchmark-cli.ts benchmark --counts "0 10 25"
+    deno run --allow-all benchmark-cli.ts
+    deno run --allow-all benchmark-cli.ts test
+    deno run --allow-all benchmark-cli.ts versions
+    deno run --allow-all benchmark-cli.ts benchmark --managers "zinit zplug"
+    deno run --allow-all benchmark-cli.ts benchmark --counts "0 10 25"
   `);
-}
-
-// Main CLI
-async function main() {
-  const args = parse(Deno.args, {
-    string: ["managers", "counts", "runs", "warmup"],
-    boolean: ["help", "version", "debug"],
-    alias: { h: "help", v: "version", d: "debug", r: "runs", w: "warmup" },
-  });
-
-  const command = args._[0]?.toString() || "benchmark";
-
-  if (args.help || command === "help") {
-    showHelp();
-    return;
+    Deno.exit(0);
   }
 
   try {
-    // Set debug mode if requested
-    if (args.debug) {
-      logger.level = LogLevel.DEBUG;
-    }
-
-    // Override hyperfine runs if specified
+    if (args.debug) await setupLogging("DEBUG");
     if (args.runs) {
       const runs = parseInt(args.runs, 10);
       if (!isNaN(runs)) {
-        DEFAULT_CONFIG.hyperfine.installRuns = runs;
-        DEFAULT_CONFIG.hyperfine.loadRuns = runs;
+        DEFAULT_CONFIG.hyperfine.installRuns =
+          DEFAULT_CONFIG.hyperfine
+            .loadRuns =
+            runs;
       }
     }
     if (args.warmup) {
       const warmup = parseInt(args.warmup, 10);
-      if (!isNaN(warmup)) {
-        DEFAULT_CONFIG.hyperfine.warmupRuns = warmup;
-      }
+      if (!isNaN(warmup)) DEFAULT_CONFIG.hyperfine.warmupRuns = warmup;
     }
 
-    const options = parseOptions(args);
+    const opts = parseOptions(args, Object.keys(PLUGIN_MANAGERS));
 
     switch (command) {
       case "test":
-        await test(options.managers);
+        await test(opts.managers);
         break;
-
       case "versions":
-        await versions(options.managers);
+        await versions(opts.managers);
         break;
-
-      case "benchmark":
       default:
-        await benchmark(options.managers, options.pluginCounts);
-        break;
+        await benchmark(opts.managers, opts.pluginCounts);
     }
   } catch (error) {
-    logger.error("Command failed", error as Error);
+    logError("Command failed", error as Error);
     Deno.exit(1);
   }
-}
-
-// Run the CLI
-if (import.meta.main) {
-  await main();
 }

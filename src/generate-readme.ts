@@ -7,7 +7,7 @@ import { bold, yellow } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { ReadmeGenerator } from "./readme/readme-generator.ts";
 import { GenerateReadmeOptions } from "./readme/types.ts";
 import { handleError } from "./readme/errors.ts";
-import { logger, LogLevel } from "./logger.ts";
+import { logger, setupLogging } from "./log-config.ts";
 
 // Default options
 const DEFAULT_OPTIONS: GenerateReadmeOptions = {
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   const options = parseArgs(Deno.args);
 
   if (options.debug) {
-    logger.level = LogLevel.DEBUG;
+    await setupLogging("DEBUG");
     logger.debug("Debug mode enabled");
     logger.debug(`Options: ${JSON.stringify(options)}`);
   }

@@ -1,12 +1,13 @@
-// Shared type definitions for the benchmark project
+// All type definitions for the benchmark project
 
+// Plugin Manager Types
 export interface PluginManager {
   name: string;
   repo: string;
   cacheCleanCommand: string;
-  configFiles: ConfigFile[];
-  specialInit?: () => Promise<void>;
+  configFiles: { path: string; template: string; isPluginList?: boolean }[];
   generatePluginLoad: (plugin: string) => string;
+  specialInit?: () => Promise<void>;
   preInstallCommand?: string | ((plugins: string[]) => Promise<void>);
   postInstallCommand?: string;
   versionCommand?: string;
@@ -15,12 +16,7 @@ export interface PluginManager {
   customInstallCommand?: string;
 }
 
-export interface ConfigFile {
-  path: string;
-  template: string;
-  isPluginList?: boolean;
-}
-
+// Benchmark Types
 export interface BenchmarkResult {
   manager: string;
   pluginCount: number;
@@ -29,21 +25,15 @@ export interface BenchmarkResult {
   installStddev?: number;
   loadStddev?: number;
   error?: string;
-  version?: string;  // Version or commit hash of the plugin manager
+  version?: string;
 }
 
 export interface BenchmarkData {
   results: BenchmarkResult[];
-  metadata?: {
-    executedAt?: string;
-    environment?: EnvironmentInfo;
-  };
+  metadata?: { executedAt?: string; environment?: any };
 }
 
-export interface EnvironmentInfo {
-  // Empty for now, can be extended later if needed
-}
-
+// Common Types
 export interface CommandResult {
   success: boolean;
   output: string;
@@ -55,13 +45,52 @@ export interface BenchmarkOptions {
   pluginCounts: number[];
 }
 
+// Chart Types
 export interface ChartOptions {
   width: number;
   height: number;
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
+  margin: { top: number; right: number; bottom: number; left: number };
+}
+
+// README Types
+export interface GenerateReadmeOptions {
+  inputFile?: string;
+  outputFile?: string;
+  template?: string;
+  language?: "ja" | "en";
+  backup?: boolean;
+  debug?: boolean;
+  sections?: string[];
+}
+
+export interface ParsedData {
+  managers: { name: string; results: Map<number, BenchmarkResult> }[];
+  pluginCounts: number[];
+  timestamp: Date;
+  environment: any;
+}
+
+export interface RankingResult {
+  manager: string;
+  score: number;
+  rank: number;
+  medal?: "🥇" | "🥈" | "🥉";
+}
+
+export interface Rankings {
+  loadTime: Map<number, RankingResult[]>;
+  installTime: Map<number, RankingResult[]>;
+  overall: RankingResult[];
+}
+
+export interface TemplateData {
+  executiveSummary: {
+    executedAt: string;
+    environment: string;
+    keyFindings: string[];
   };
+  rankings: Rankings;
+  graphs: { title: string; path: string; caption: string }[];
+  versionInfo: { managers: Map<string, string>; environment: any };
+  badges: { name: string; url: string }[];
 }
