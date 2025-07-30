@@ -1,40 +1,40 @@
 # Zsh plugin manager benchmarking Docker image
 FROM ubuntu:24.04
 
-# Prevent interactive prompts during installation
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-ENV TERM=xterm-256color
+# Environment configuration
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    TERM=xterm-256color \
+    DENO_INSTALL="/root/.deno" \
+    PATH="/root/.deno/bin:$PATH"
 
-# Install system dependencies in one layer
+# Install system dependencies and tools in one layer
 RUN apt-get update && apt-get install -y \
-    zsh git curl wget unzip time build-essential libssl-dev \
-    python3 python3-pip locales jq \
+    # Core utilities
+    zsh git curl wget unzip time jq locales \
+    # Build tools (needed by some plugins)
+    build-essential libssl-dev \
+    # Python (required by some installers)
+    python3 python3-pip \
     && locale-gen en_US.UTF-8 \
     && echo 'unset global_rcs' >> /etc/zshenv \
+    # Install hyperfine
+    && wget -qO hyperfine.deb https://github.com/sharkdp/hyperfine/releases/download/v1.18.0/hyperfine_1.18.0_amd64.deb \
+    && dpkg -i hyperfine.deb && rm hyperfine.deb \
+    # Install Deno
+    && curl -fsSL https://deno.land/x/install/install.sh | sh \
+    # Cleanup
     && rm -rf /var/lib/apt/lists/*
-
-# Install hyperfine
-RUN wget -qO- https://github.com/sharkdp/hyperfine/releases/download/v1.18.0/hyperfine_1.18.0_amd64.deb \
-    > hyperfine.deb && dpkg -i hyperfine.deb && rm hyperfine.deb
-
-# Install Deno
-RUN curl -fsSL https://deno.land/x/install/install.sh | sh
-ENV DENO_INSTALL="/root/.deno"
-ENV PATH="$DENO_INSTALL/bin:$PATH"
 
 # Create working directory
 WORKDIR /benchmark
 
-# Copy installation scripts
-COPY <<'EOF' /tmp/install-managers.sh
-#!/bin/bash
+# Setup all plugin managers in one layer
+RUN <<'SETUP_SCRIPT' bash
 set -e
 
-echo "Installing Zsh plugin managers..."
-
-# Define installation functions
+# Helper function for consistent installation
 install_manager() {
     local name=$1
     echo "Installing $name..."
@@ -42,7 +42,7 @@ install_manager() {
     eval "$@" || echo "Warning: $name installation might have failed"
 }
 
-# Install managers
+# Install standard plugin managers
 install_manager "oh-my-zsh" 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
 install_manager "prezto" 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"'
 install_manager "zim" 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh || true'
@@ -57,30 +57,18 @@ install_manager "zgenom" 'git clone https://github.com/jandamm/zgenom.git "${HOM
 install_manager "zpm" 'git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm'
 install_manager "zcomet" 'git clone https://github.com/agkozak/zcomet.git ~/.zcomet'
 
-echo "All plugin managers installed!"
-EOF
-
-# Install all managers
-RUN chmod +x /tmp/install-managers.sh && /tmp/install-managers.sh && rm /tmp/install-managers.sh
-
-# Apply fixes for plugin managers
-COPY <<'EOF' /tmp/fix-managers.sh
-#!/bin/bash
-set -e
-
-echo "Applying fixes for plugin managers..."
+# Apply fixes for specific managers
+echo "Applying manager-specific fixes..."
 
 # Fix zim
 mkdir -p ~/.zim/modules
 [ ! -f ~/.zim/init.zsh ] && echo "# Empty init.zsh for benchmarking" > ~/.zim/init.zsh
 
-# Fix antigen (already downloaded in install step)
-
 # Fix antidote
 [ ! -f ~/.zsh_plugins.txt ] && echo "# Empty plugin list" > ~/.zsh_plugins.txt
 if [ ! -f /usr/local/share/antidote/antidote.zsh ]; then
     mkdir -p /usr/local/share/antidote
-    cat > /usr/local/share/antidote/antidote.zsh << 'SCRIPT'
+    cat > /usr/local/share/antidote/antidote.zsh << 'ANTIDOTE_SCRIPT'
 #!/usr/bin/env zsh
 # Minimal antidote implementation for benchmarking
 antidote() {
@@ -97,32 +85,24 @@ antidote() {
       ;;
   esac
 }
-SCRIPT
+ANTIDOTE_SCRIPT
 fi
 
 # Fix zcomet
 [ ! -f ~/.zshrc.zcomet ] && echo "# Empty zcomet config" > ~/.zshrc.zcomet
 
-echo "All fixes applied!"
-EOF
+# Setup custom managers (zr, antigen-hs, alf)
+echo "Setting up custom managers..."
 
-# Apply fixes
-RUN chmod +x /tmp/fix-managers.sh && /tmp/fix-managers.sh && rm /tmp/fix-managers.sh
-
-# Setup custom managers (zr, antigen-hs, alf) with shared implementation
-COPY <<'EOF' /tmp/setup-custom-managers.sh
-#!/bin/bash
-set -e
-
-# Create directories
+# Create necessary directories
 mkdir -p ~/.zr/plugins ~/.antigen-hs/{repos,cache} ~/.alf/plugins ~/.local/share ~/.config/sheldon ~/Git
 
-# Shared plugin loader function
+# Shared plugin loader template
 create_plugin_loader() {
     local manager=$1
     local plugin_dir=$2
     
-    cat > ~/.$manager/init.zsh << SCRIPT
+    cat > ~/.$manager/init.zsh << LOADER_SCRIPT
 #!/usr/bin/env zsh
 # Simple $manager implementation for benchmarking
 $manager() {
@@ -150,7 +130,7 @@ $manager() {
             ;;
     esac
 }
-SCRIPT
+LOADER_SCRIPT
 }
 
 # Create loaders for custom managers
@@ -158,19 +138,16 @@ create_plugin_loader "zr" "\$HOME/.zr/plugins"
 create_plugin_loader "antigen-hs" "\$HOME/.antigen-hs/repos"
 create_plugin_loader "alf" "\$HOME/.alf/plugins"
 
-# Special handling for zr
-cat > ~/.zr/zr << 'SCRIPT'
+# Special handling for zr executable
+cat > ~/.zr/zr << 'ZR_SCRIPT'
 #!/usr/bin/env zsh
 source ~/.zr/init.zsh
 zr "$@"
-SCRIPT
+ZR_SCRIPT
 chmod +x ~/.zr/zr
 
-echo "Custom managers setup complete!"
-EOF
-
-# Setup custom managers
-RUN chmod +x /tmp/setup-custom-managers.sh && /tmp/setup-custom-managers.sh && rm /tmp/setup-custom-managers.sh
+echo "All plugin managers installed and configured!"
+SETUP_SCRIPT
 
 # Copy source files
 COPY src/ ./src/
