@@ -8,8 +8,6 @@ export ZPLUG_PROTOCOL=HTTPS
 
 {{PLUGIN_LOADS}}
 
-# Install only if needed, with non-interactive mode
-if ! zplug check >/dev/null 2>&1; then
-    zplug install --verbose < /dev/null
-fi
-zplug load --verbose
+# Force installation for benchmarking
+zplug install < /dev/null
+zplug load

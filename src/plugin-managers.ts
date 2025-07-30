@@ -136,7 +136,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     name: "zplug",
     repo: "zplug/zplug",
     cacheCleanCommand:
-      "if [[ -d ~/.zplug/.git ]]; then git -C ~/.zplug clean -dffx; else rm -rf ~/.zplug/repos ~/.zplug/cache; fi 2>/dev/null || true",
+      "rm -rf ~/.zplug/repos ~/.zplug/cache ~/.zplug/log ~/.zplug/.zcompdump* 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "zplug.zshrc" },
     ],
