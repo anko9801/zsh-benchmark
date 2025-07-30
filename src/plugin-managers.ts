@@ -73,9 +73,6 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     postInstallCommand:
       "zsh -c 'export ZIM_HOME=~/.zim; source \\${ZIM_HOME}/zimfw.zsh install'",
     preInstallCommand: async (plugins: string[]) => {
-      // Remove default zimrc created by installer
-      await runCommand("if [ -f ~/.zimrc ] && grep -q 'Start configuration added by Zim install' ~/.zimrc; then mv ~/.zimrc ~/.zimrc.bak-default; fi");
-      
       // For 0 plugins, run init to avoid repeated init during benchmark
       if (plugins.length === 0) {
         await runCommand(
