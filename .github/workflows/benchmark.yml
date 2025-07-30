@@ -182,13 +182,25 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # Check if there are changes to commit
+          # First, fetch the latest changes
+          git fetch origin main
+          
+          # Stash our changes
           git add README.md results/
+          git stash
+          
+          # Pull latest changes
+          git pull origin main
+          
+          # Apply our changes back
+          git stash pop || true
+          
+          # Add files again after stash pop
+          git add README.md results/
+          
+          # Check if there are changes to commit
           if ! git diff --staged --quiet; then
             git commit -m "Update benchmark results [skip ci]"
-            
-            # Pull latest changes and rebase
-            git pull --rebase origin main
             
             # Push with retry logic
             max_attempts=3
@@ -203,8 +215,7 @@ jobs:
                   echo "Failed to push after $max_attempts attempts"
                   exit 1
                 fi
-                echo "Push failed, retrying in 5 seconds..."
-                sleep 5
+                echo "Push failed, pulling latest and retrying..."
                 git pull --rebase origin main
                 attempt=$((attempt + 1))
               fi
