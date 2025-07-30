@@ -128,10 +128,9 @@ const buildRankingTable = (
   results: RankingResult[],
   metric: string,
   bestValue?: number,
-) => [
-  `| Rank | Plugin Manager | ${metric} | vs Best |`,
-  "| --- | --- | ---: | ---: |",
-  ...results.map((result) =>
+  includeNAEntries = false,
+) => {
+  const tableRows = results.map((result) =>
     `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
       formatDuration(result.score)
     } | ${
@@ -141,18 +140,38 @@ const buildRankingTable = (
         }`
         : "-"
     } |`
-  ),
-];
+  );
 
-const buildOverallTable = (results: RankingResult[]) => [
-  "| Rank | Plugin Manager | Score |",
-  "| --- | --- | ---: |",
-  ...results.map((result) =>
+  // Add N/A entries for oh-my-zsh and prezto if requested
+  if (includeNAEntries) {
+    tableRows.push("| - | oh-my-zsh | N/A | - |");
+    tableRows.push("| - | prezto | N/A | - |");
+  }
+
+  return [
+    `| Rank | Plugin Manager | ${metric} | vs Best |`,
+    "| --- | --- | ---: | ---: |",
+    ...tableRows,
+  ];
+};
+
+const buildOverallTable = (results: RankingResult[]) => {
+  const tableRows = results.map((result) =>
     `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
       result.score.toFixed(2)
     } |`
-  ),
-];
+  );
+
+  // Add N/A entries for oh-my-zsh and prezto
+  tableRows.push("| - | oh-my-zsh | N/A |");
+  tableRows.push("| - | prezto | N/A |");
+
+  return [
+    "| Rank | Plugin Manager | Score |",
+    "| --- | --- | ---: |",
+    ...tableRows,
+  ];
+};
 
 // Core README generation function
 async function generateReadme(
@@ -209,6 +228,7 @@ async function generateReadme(
       rankings.installTime.get(25) || [],
       "Time (ms)",
       rankings.installTime.get(25)?.[0]?.score,
+      true, // Include N/A entries for oh-my-zsh and prezto
     ),
     "",
     "### Overall Performance",
