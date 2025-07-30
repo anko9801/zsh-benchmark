@@ -11,6 +11,11 @@ export class RankingEngine {
   ): RankingResult[] {
     const rankings = data.managers
       .map((manager) => {
+        // Skip oh-my-zsh and prezto for install time rankings
+        if (metric === "installTime" && pluginCount === 25 && 
+            (manager.name === "oh-my-zsh" || manager.name === "prezto")) {
+          return null;
+        }
         const result = manager.results.get(pluginCount);
         const score = result?.[metric];
         return score !== null && score !== undefined
@@ -42,11 +47,16 @@ export class RankingEngine {
   calculateOverallRanking(data: ParsedData): RankingResult[] {
     const rankings = data.managers
       .map((manager) => {
+        // Skip oh-my-zsh and prezto for overall ranking
+        if (manager.name === "oh-my-zsh" || manager.name === "prezto") {
+          return null;
+        }
+        
         const scores = Array.from(manager.results.values())
           .flatMap((r) => [
-            r.loadTime !== null ? { score: r.loadTime, weight: 0.7 } : null,
+            r.loadTime !== null ? { score: r.loadTime, weight: 0.8 } : null,
             r.installTime !== null
-              ? { score: r.installTime, weight: 0.3 }
+              ? { score: r.installTime, weight: 0.2 }
               : null,
           ])
           .filter((s): s is { score: number; weight: number } => s !== null);

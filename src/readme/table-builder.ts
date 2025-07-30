@@ -11,7 +11,7 @@ import {
 interface TableColumn<T> {
   header: string;
   accessor: (item: T) => string | number | null;
-  formatter?: (value: any) => string;
+  formatter?: (value: any, item?: T) => string;
   align?: "left" | "center" | "right";
 }
 
@@ -30,7 +30,7 @@ export class TableBuilder {
     const rows = data.map(item => 
       columns.map(col => {
         const value = col.accessor(item);
-        return col.formatter ? col.formatter(value) : String(value ?? "N/A");
+        return col.formatter ? col.formatter(value, item) : String(value ?? "N/A");
       })
     );
     
@@ -68,7 +68,11 @@ export class TableBuilder {
       load0: getBestValues(0, "loadTime"),
     };
     
-    const formatTime = (value: number | null | undefined, decimals: number, bestValue: number | null) => {
+    const formatTime = (value: number | null | undefined, decimals: number, bestValue: number | null, managerName?: string, metric?: string) => {
+      // Show "-" for oh-my-zsh and prezto install time with 25 plugins
+      if (metric === "install25" && (managerName === "oh-my-zsh" || managerName === "prezto")) {
+        return "-";
+      }
       if (value === null || value === undefined) return "N/A";
       const formatted = formatDuration(value, decimals).replace("ms", "");
       return highlightBest && value === bestValue ? `**${formatted}**` : formatted;
@@ -79,7 +83,7 @@ export class TableBuilder {
       { 
         header: "Install (25)", 
         accessor: m => m.results.get(25)?.installTime ?? null,
-        formatter: v => formatTime(v, 0, best.install25),
+        formatter: (v, m) => formatTime(v, 0, best.install25, m?.name, "install25"),
         align: "right"
       },
       { 
