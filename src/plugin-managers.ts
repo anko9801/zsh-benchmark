@@ -83,6 +83,15 @@ export const getSpecialInstallCommand = (manager: string): string | null => {
   }
   return null;
 };
+// Get plugin load separator for different managers
+export const getPluginLoadSeparator = (templateName: string): string => {
+  return templateName === "sheldon.plugins.toml" ? "\n\n" : "\n";
+};
+
+// Check if template uses plugin configs instead of loads
+export const usesPluginConfigs = (templateName: string): boolean => {
+  return templateName === "sheldon.plugins.toml";
+};
 
 export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
   vanilla: {

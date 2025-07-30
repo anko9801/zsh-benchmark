@@ -5,10 +5,12 @@ import { dirname, join } from "https://deno.land/std@0.220.0/path/mod.ts";
 import { blue, bold } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { BenchmarkResult, PluginManager } from "./types.ts";
 import {
+  getPluginLoadSeparator,
   getSlowManagerSettings,
   getSpecialInstallCommand,
   hasNoInstallSupport,
   PLUGIN_MANAGERS,
+  usesPluginConfigs,
 } from "./plugin-managers.ts";
 import {
   ALL_PLUGINS,
@@ -50,14 +52,12 @@ async function prepareConfig(manager: PluginManager, pluginCount: number) {
     }
 
     const loads = plugins.map((plugin) => manager.generatePluginLoad(plugin))
-      .join(
-        cfg.template === "sheldon.plugins.toml" ? "\n\n" : "\n",
-      );
+      .join(getPluginLoadSeparator(cfg.template));
     let content = tpl.replace("{{PLUGIN_LOADS}}", loads).replace(
       "{{PLUGIN_LIST}}",
       plugins.join("\n"),
     );
-    if (cfg.template === "sheldon.plugins.toml") {
+    if (usesPluginConfigs(cfg.template)) {
       content = tpl.replace("{{PLUGIN_CONFIGS}}", loads);
     }
 
@@ -233,7 +233,7 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
           formatDuration(result.installTime),
           ` ± ${formatDuration(result.installStddev || 0)}`,
         );
-      } else if ((name === "oh-my-zsh" || name === "prezto") && count === 25) {
+      } else if (hasNoInstallSupport(name) && count === 25) {
         logger.info("Install benchmark skipped (plugins pre-installed)");
       } else {
         logger.error("Install benchmark failed");
