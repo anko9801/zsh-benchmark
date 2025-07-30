@@ -161,18 +161,18 @@ async function runBenchmark(
     hyperfineCmd =
       `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.loadRuns} --export-json /tmp/${manager.name}-load.json --command-name '${manager.name}-load' 'timeout 10 zsh -ic exit'`;
 
-    const { success, output, error } = await runCommand(hyperfineCmd, {
+    const loadResult = await runCommand(hyperfineCmd, {
       silent: true,
     });
-    if (success && await exists("/tmp/" + manager.name + "-load.json")) {
+    if (loadResult.success && await exists("/tmp/" + manager.name + "-load.json")) {
       const data = JSON.parse(
         await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
       );
       result.loadTime = data.results[0].mean * 1000;
       result.loadStddev = data.results[0].stddev * 1000;
     } else {
-      logger.warn(`Load benchmark failed for ${manager.name}: ${error}`);
-      logger.debug(`Hyperfine output: ${output}`);
+      logger.warn(`Load benchmark failed for ${manager.name}: ${loadResult.error}`);
+      logger.debug(`Hyperfine output: ${loadResult.output}`);
 
       // Retry once with longer timeout
       logger.info("  Retrying with longer timeout...");
