@@ -109,7 +109,7 @@ Deno.test({
       assert(content.includes("zim"));
 
       // Check for ranking table format
-      assert(content.includes("| Rank | Plugin Manager | Time (25 plugins) (ms) | vs Best |"));
+      assert(content.includes("| Rank | Plugin Manager | Time (ms) | vs Best |"));
       assert(content.includes("Load Time Rankings"));
       assert(content.includes("Installation Time Rankings"));
       assert(content.includes("Overall Performance"));

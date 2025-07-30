@@ -113,7 +113,7 @@ export class TableBuilder {
     if (!rankings.length) return "";
     
     const best = rankings[0].score;
-    const title = pluginCount !== undefined ? `${metric} (${pluginCount} plugins)` : metric;
+    const title = metric;
     
     const columns: TableColumn<RankingResult>[] = [
       { header: "Rank", accessor: r => r.medal || `#${r.rank}` },

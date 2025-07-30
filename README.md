@@ -21,7 +21,7 @@
 ![Load Time Comparison](results/load-time-comparison-chart.svg)
 _Shell startup time comparison across different plugin managers_
 
-| Rank | Plugin Manager | Time (25 plugins) (ms) | vs Best |
+| Rank | Plugin Manager | Time (ms) | vs Best |
 |---|---|---:|---:|
 | 🥇 | antigen | 35.16 | - |
 | 🥈 | antidote | 37.48 | +6.6% |
@@ -45,7 +45,7 @@ _Shell startup time comparison across different plugin managers_
 ![Installation Time Comparison](results/install-time-comparison-chart.svg)
 _Plugin installation time comparison across different plugin managers_
 
-| Rank | Plugin Manager | Time (25 plugins) (ms) | vs Best |
+| Rank | Plugin Manager | Time (ms) | vs Best |
 |---|---|---:|---:|
 | 🥇 | antidote | 32.52 | - |
 | 🥈 | zim | 35.00 | +7.6% |

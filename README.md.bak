@@ -7,7 +7,7 @@
 ## 📊 Executive Summary
 
 - **Benchmark Date:** 2025-07-30
-- **Test Environment:** Docker container (Ubuntu 24.04)
+- **Test Environment:** 2 GHz Quad-Core Intel Core i5, 16GB RAM, macOS 15.5
 - **Key Findings:**
   - antidote が総合パフォーマンスで最高評価🥇
   - 25プラグイン環境では antigen が最速 (35ms)
