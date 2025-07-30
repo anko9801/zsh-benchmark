@@ -13,13 +13,7 @@ const testOutputPath = "./test-readme.md";
 
 const testData = {
   "timestamp": "2025-07-29T10:00:00Z",
-  "environment": {
-    "os": "darwin",
-    "osVersion": "24.5.0",
-    "shell": "zsh",
-    "shellVersion": "5.9",
-    "denoVersion": "2.4.2",
-  },
+  "environment": {},
   "results": [
     {
       "manager": "antigen",
@@ -115,7 +109,7 @@ Deno.test({
       assert(content.includes("zim"));
 
       // Check for ranking table format
-      assert(content.includes("| Plugin Manager | Time (ms) | vs Best |"));
+      assert(content.includes("| Rank | Plugin Manager | Time (25 plugins) (ms) | vs Best |"));
       assert(content.includes("Load Time Rankings"));
       assert(content.includes("Installation Time Rankings"));
       assert(content.includes("Overall Performance"));

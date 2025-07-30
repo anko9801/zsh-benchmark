@@ -1,42 +1,30 @@
 // Template engine for README generation
 
 import { TemplateData } from "./types.ts";
-import {
-  calculatePercentageIncrease,
-  formatNumber,
-  formatPercentage,
-} from "../utils.ts";
+import { TableBuilder } from "./table-builder.ts";
 
 export class TemplateEngine {
+  private tableBuilder: TableBuilder;
+  
   constructor() {
-    // No initialization needed - badges are generated via shields.io
+    this.tableBuilder = new TableBuilder();
   }
 
   async render(data: TemplateData, templatePath?: string): Promise<string> {
-    const template = await this.loadTemplate(templatePath);
-    return this.replacePlaceholders(template, data);
-  }
-
-  private async loadTemplate(path?: string): Promise<string> {
-    if (path) {
+    // Load template
+    let template: string;
+    if (templatePath) {
       try {
-        return await Deno.readTextFile(path);
+        template = await Deno.readTextFile(templatePath);
       } catch (error) {
         console.warn(`Failed to load custom template: ${error}`);
+        template = await Deno.readTextFile(new URL("./templates/default.md", import.meta.url).pathname);
       }
+    } else {
+      template = await Deno.readTextFile(new URL("./templates/default.md", import.meta.url).pathname);
     }
-
-    // Load default template
-    try {
-      const defaultPath =
-        new URL("./templates/default.md", import.meta.url).pathname;
-      return await Deno.readTextFile(defaultPath);
-    } catch (error) {
-      throw new Error(`Failed to load template: ${error}`);
-    }
-  }
-
-  private replacePlaceholders(template: string, data: TemplateData): string {
+    
+    // Replace placeholders
     let result = template;
 
     // Replace badges - split into multiple lines for readability
@@ -66,17 +54,21 @@ export class TemplateEngine {
     );
 
     // Replace rankings
+    const loadTimeRankings = data.rankings.loadTime.get(25);
     result = result.replace(
       "{{loadTimeRankings}}",
-      this.formatRankings(data, "loadTime"),
+      loadTimeRankings?.length ? this.tableBuilder.buildRankingTable(loadTimeRankings, "Time", 25) : "No ranking data available",
     );
+    
+    const installTimeRankings = data.rankings.installTime.get(25);
     result = result.replace(
       "{{installTimeRankings}}",
-      this.formatRankings(data, "installTime"),
+      installTimeRankings?.length ? this.tableBuilder.buildRankingTable(installTimeRankings, "Time", 25) : "No ranking data available",
     );
+    
     result = result.replace(
       "{{overallRankings}}",
-      this.formatOverallRankings(data),
+      this.tableBuilder.buildOverallRankingTable(data.rankings.overall),
     );
 
     // Remove comparison table placeholder if still present
@@ -107,66 +99,6 @@ export class TemplateEngine {
     }
 
     // Replace manager badges
-    result = result.replace(
-      "{{managerBadges}}",
-      this.formatManagerBadges(data),
-    );
-
-    // Replace any remaining executedAt placeholders
-    result = result.replace(
-      /\{\{executedAt\}\}/g,
-      data.executiveSummary.executedAt,
-    );
-
-    return result;
-  }
-
-  private formatRankings(
-    data: TemplateData,
-    type: "loadTime" | "installTime",
-  ): string {
-    const rankings = data.rankings[type].get(25);
-    if (!rankings?.length) return "No ranking data available";
-
-    const best = rankings[0].score;
-    return [
-      "| Rank | Plugin Manager | Time (ms) | vs Best |",
-      "|------|----------------|-----------|---------|",
-      ...rankings.map((r) =>
-        `| ${r.medal || `#${r.rank}`} | ${r.manager} | ${
-          formatNumber(r.score, 2)
-        } | ${
-          r.rank === 1
-            ? "-"
-            : `+${formatPercentage(calculatePercentageIncrease(best, r.score))}`
-        } |`
-      ),
-    ].join("\n");
-  }
-
-  private formatOverallRankings(data: TemplateData): string {
-    const rankings = data.rankings.overall;
-    const sections: string[] = [];
-
-    sections.push("| Rank | Plugin Manager | Score |");
-    sections.push("|------|----------------|-------|");
-
-    for (const ranking of rankings) {
-      const rank = `#${ranking.rank}`;
-      const displayRank = ranking.medal || rank;
-      sections.push(
-        `| ${displayRank} | ${ranking.manager} | ${
-          formatNumber(ranking.score, 2)
-        } |`,
-      );
-    }
-
-    return sections.join("\n");
-  }
-
-  private formatManagerBadges(data: TemplateData): string {
-    const sections: string[] = [];
-
     const repoMapping = new Map([
       ["alf", "psyrendust/alf"],
       ["antibody", "getantibody/antibody"],
@@ -186,53 +118,18 @@ export class TemplateEngine {
       ["zpm", "zpm-zsh/zpm"],
       ["zr", "jedahan/zr"],
     ]);
-
-    // Sort by overall ranking (already sorted)
-    const managersWithStars = data.rankings.overall.map((ranking) => {
-      const manager = ranking.manager;
-      return { manager };
-    });
-
-    // Calculate max name length for alignment
-    const maxNameLength = Math.max(
-      ...managersWithStars.map((m) => m.manager.length),
+    
+    result = result.replace(
+      "{{managerBadges}}",
+      this.tableBuilder.buildBadgeTable(data.rankings.overall, repoMapping),
     );
 
-    for (const { manager } of managersWithStars) {
-      const repo = repoMapping.get(manager);
-      if (!repo) continue;
-
-      // Pad manager name for alignment
-      const paddedManager = manager.padEnd(maxNameLength);
-
-      // Create a line for each manager with aligned formatting
-      let managerLine = `| ${paddedManager} | `;
-
-      // Stars badge - use GitHub social style (first)
-      managerLine +=
-        `![stars](https://img.shields.io/github/stars/${repo}?style=social) | `;
-
-      // Version badge (second) - show release/tag or indicate commit-based version
-      // This shows the latest tag/release, or "commit" if none exists
-      managerLine +=
-        `![Version](https://img.shields.io/github/v/tag/${repo}?include_prereleases&sort=semver&label=version&fallback=commit) | `;
-
-      // Last commit badge (third) - show commit date
-      managerLine +=
-        `![Last Update](https://img.shields.io/github/last-commit/${repo}?style=flat&label=updated) |`;
-
-      sections.push(managerLine);
-    }
-
-    // Add table header
-    sections.unshift("| Plugin Manager | Stars | Version | Last Updated |");
-    sections.splice(
-      1,
-      0,
-      "|" + "-".repeat(maxNameLength + 2) +
-        "|-------|---------|--------------|",
+    // Replace any remaining executedAt placeholders
+    result = result.replace(
+      /\{\{executedAt\}\}/g,
+      data.executiveSummary.executedAt,
     );
 
-    return sections.join("\n");
+    return result;
   }
 }

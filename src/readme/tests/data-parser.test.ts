@@ -44,8 +44,7 @@ Deno.test("DataParser extracts managers correctly", () => {
   };
 
   const parsed = parser.extractMetadata(parser.validate(validData));
-  assertEquals(parsed.environment.os, Deno.build.os);
-  assertEquals(parsed.environment.denoVersion, Deno.version.deno);
+  assertEquals(parsed.environment, {});
 });
 
 Deno.test("DataParser parses managers into grouped data", () => {

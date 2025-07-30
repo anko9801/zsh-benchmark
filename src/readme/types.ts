@@ -77,7 +77,6 @@ export interface GraphInfo {
 
 export interface VersionInfo {
   managers: Map<string, string>;
-  tools: Map<string, string>;
   environment: EnvironmentInfo;
 }
 

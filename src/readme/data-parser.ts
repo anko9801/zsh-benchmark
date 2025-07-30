@@ -89,12 +89,7 @@ export class DataParser {
       timestamp: data.metadata?.executedAt
         ? new Date(data.metadata.executedAt)
         : new Date(),
-      environment: {
-        ...data.metadata?.environment,
-        os: data.metadata?.environment?.os || Deno.build.os,
-        denoVersion: data.metadata?.environment?.denoVersion ||
-          Deno.version.deno,
-      },
+      environment: {},
     };
   }
 

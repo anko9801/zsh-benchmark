@@ -35,12 +35,7 @@ export interface BenchmarkData {
 }
 
 export interface EnvironmentInfo {
-  os?: string;
-  osVersion?: string;
-  shell?: string;
-  shellVersion?: string;
-  denoVersion?: string;
-  hyperfineVersion?: string;
+  // Empty for now, can be extended later if needed
 }
 
 export interface CommandResult {

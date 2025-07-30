@@ -84,11 +84,6 @@ export class ReadmeGenerator {
       graphs,
       versionInfo: {
         managers: new Map(),
-        tools: new Map(
-          Object.entries(Deno.version).filter(([k]) =>
-            ["deno", "typescript", "v8"].includes(k)
-          ),
-        ),
         environment: parsedData.environment,
       },
       badges: [{
@@ -99,12 +94,7 @@ export class ReadmeGenerator {
   }
 
   private formatEnvironment(env: ParsedData["environment"]): string {
-    const parts = [
-      env.os && `${env.os} ${env.osVersion || ""}`.trim(),
-      env.shell && `${env.shell} ${env.shellVersion || ""}`.trim(),
-      env.denoVersion && `Deno ${env.denoVersion}`,
-    ].filter(Boolean);
-    return parts.join(", ") || "Unknown environment";
+    return "2 GHz Quad-Core Intel Core i5, 16GB RAM, macOS 15.5";
   }
 
   private async createBackup(): Promise<void> {
