@@ -66,7 +66,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       if (!await exists(initPath)) {
         console.log("     Creating init.zsh...");
         await runCommand(
-          "timeout 30 zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh init -q' 2>&1",
+          "zsh -c 'export ZIM_HOME=~/.zim; source ${ZIM_HOME}/zimfw.zsh init -q' 2>&1",
         );
       }
     },

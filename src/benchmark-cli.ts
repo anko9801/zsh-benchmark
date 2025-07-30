@@ -121,50 +121,33 @@ async function runBenchmark(
     let hyperfineCmd =
       `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
 
-    // Special handling for some managers
-    if (
-      manager.name === "sheldon" || manager.name === "zim" ||
-      manager.name === "antigen"
-    ) {
-      logger.warn(
-        `Special timing for ${manager.name} (hyperfine timeout issues)`,
+    const { success, output, error } = await runCommand(hyperfineCmd, {
+      silent: true,
+    });
+    if (success && await exists("/tmp/" + manager.name + "-install.json")) {
+      const data = JSON.parse(
+        await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
       );
-      const start = Date.now();
-      const { success } = await runCommand("timeout 60 zsh -ic exit");
-      const elapsed = Date.now() - start;
-      if (success) {
-        result.installTime = elapsed;
-        result.installStddev = 0;
-      }
+      result.installTime = data.results[0].mean * 1000;
+      result.installStddev = data.results[0].stddev * 1000;
     } else {
-      const { success, output, error } = await runCommand(hyperfineCmd, {
-        silent: true,
-      });
-      if (success && await exists("/tmp/" + manager.name + "-install.json")) {
+      logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
+      logger.debug(`Hyperfine output: ${output}`);
+
+      // Retry once with longer timeout
+      logger.info("  Retrying with longer timeout...");
+      const retryCmd = hyperfineCmd.replace("timeout 30", "timeout 60");
+      const retry = await runCommand(retryCmd, { silent: true });
+      if (
+        retry.success &&
+        await exists("/tmp/" + manager.name + "-install.json")
+      ) {
         const data = JSON.parse(
           await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
         );
         result.installTime = data.results[0].mean * 1000;
         result.installStddev = data.results[0].stddev * 1000;
-      } else {
-        logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
-        logger.debug(`Hyperfine output: ${output}`);
-
-        // Retry once with longer timeout
-        logger.info("  Retrying with longer timeout...");
-        const retryCmd = hyperfineCmd.replace("timeout 30", "timeout 60");
-        const retry = await runCommand(retryCmd, { silent: true });
-        if (
-          retry.success &&
-          await exists("/tmp/" + manager.name + "-install.json")
-        ) {
-          const data = JSON.parse(
-            await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
-          );
-          result.installTime = data.results[0].mean * 1000;
-          result.installStddev = data.results[0].stddev * 1000;
-          logger.success("  Retry successful!");
-        }
+        logger.success("  Retry successful!");
       }
     }
 
@@ -178,49 +161,32 @@ async function runBenchmark(
     hyperfineCmd =
       `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.loadRuns} --export-json /tmp/${manager.name}-load.json --command-name '${manager.name}-load' 'timeout 10 zsh -ic exit'`;
 
-    if (manager.name === "sheldon" && pluginCount > 20) {
-      logger.warn("Special timing for sheldon (hyperfine timeout issues)");
-      const times: number[] = [];
-      for (let i = 0; i < DEFAULT_CONFIG.hyperfine.loadRuns; i++) {
-        const start = Date.now();
-        await runCommand("timeout 30 zsh -ic exit");
-        times.push(Date.now() - start);
-      }
-      result.loadTime = times.reduce((a, b) => a + b) / times.length;
-      result.loadStddev = Math.sqrt(
-        times.reduce(
-          (sum, time) => sum + Math.pow(time - result.loadTime!, 2),
-          0,
-        ) / times.length,
+    const { success, output, error } = await runCommand(hyperfineCmd, {
+      silent: true,
+    });
+    if (success && await exists("/tmp/" + manager.name + "-load.json")) {
+      const data = JSON.parse(
+        await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
       );
+      result.loadTime = data.results[0].mean * 1000;
+      result.loadStddev = data.results[0].stddev * 1000;
     } else {
-      const { success, output, error } = await runCommand(hyperfineCmd, {
-        silent: true,
-      });
-      if (success && await exists("/tmp/" + manager.name + "-load.json")) {
+      logger.warn(`Load benchmark failed for ${manager.name}: ${error}`);
+      logger.debug(`Hyperfine output: ${output}`);
+
+      // Retry once with longer timeout
+      logger.info("  Retrying with longer timeout...");
+      const retryCmd = hyperfineCmd.replace("timeout 10", "timeout 20");
+      const retry = await runCommand(retryCmd, { silent: true });
+      if (
+        retry.success && await exists("/tmp/" + manager.name + "-load.json")
+      ) {
         const data = JSON.parse(
           await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
         );
         result.loadTime = data.results[0].mean * 1000;
         result.loadStddev = data.results[0].stddev * 1000;
-      } else {
-        logger.warn(`Load benchmark failed for ${manager.name}: ${error}`);
-        logger.debug(`Hyperfine output: ${output}`);
-
-        // Retry once with longer timeout
-        logger.info("  Retrying with longer timeout...");
-        const retryCmd = hyperfineCmd.replace("timeout 10", "timeout 20");
-        const retry = await runCommand(retryCmd, { silent: true });
-        if (
-          retry.success && await exists("/tmp/" + manager.name + "-load.json")
-        ) {
-          const data = JSON.parse(
-            await Deno.readTextFile("/tmp/" + manager.name + "-load.json"),
-          );
-          result.loadTime = data.results[0].mean * 1000;
-          result.loadStddev = data.results[0].stddev * 1000;
-          logger.success("  Retry successful!");
-        }
+        logger.success("  Retry successful!");
       }
     }
 

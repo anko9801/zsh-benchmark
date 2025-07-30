@@ -34,14 +34,14 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/benchmark \
             --entrypoint deno \
-            zsh-benchmark run --allow-all src/generate-graphs.ts
+            zsh-benchmark run --allow-all src/chart-generator.ts
 
       - name: Save benchmark results
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: pr-benchmark-results
-          path: results/latest.json
+          path: results/benchmark-results-latest.json
 
       - name: Compare with main branch
         if: github.event_name == 'pull_request'
@@ -49,32 +49,39 @@ jobs:
         run: |
           # Checkout main branch results
           git fetch origin main
-          git checkout origin/main -- results/latest.json 2>/dev/null || echo "No previous results"
+          git checkout origin/main -- results/benchmark-results-latest.json 2>/dev/null || echo "No previous results"
 
-          if [ -f results/latest.json ]; then
-            mv results/latest.json results/main.json
+          if [ -f results/benchmark-results-latest.json ]; then
+            mv results/benchmark-results-latest.json results/main.json
           fi
 
+          # Restore current results
+          git checkout HEAD -- results/benchmark-results-latest.json
+
           # Generate comparison if both files exist
-          if [ -f results/main.json ] && [ -f results/latest.json ]; then
+          if [ -f results/main.json ] && [ -f results/benchmark-results-latest.json ]; then
             docker run --rm \
               -v ${{ github.workspace }}:/benchmark \
               --entrypoint deno \
               zsh-benchmark run --allow-all -c "
                 const main = JSON.parse(await Deno.readTextFile('results/main.json'));
-                const pr = JSON.parse(await Deno.readTextFile('results/latest.json'));
+                const pr = JSON.parse(await Deno.readTextFile('results/benchmark-results-latest.json'));
                 const comparison = [];
 
-                for (const result of pr.results) {
-                  const mainResult = main.results.find(r => r.manager === result.manager);
-                  if (mainResult) {
-                    const loadDiff = ((result.loadTime - mainResult.loadTime) / mainResult.loadTime * 100).toFixed(1);
-                    const installDiff = ((result.installTime - mainResult.installTime) / mainResult.installTime * 100).toFixed(1);
+                // Compare 25 plugin results
+                for (const manager of pr.managers) {
+                  const prResult = manager.results['25'];
+                  const mainManager = main.managers.find(m => m.name === manager.name);
+                  const mainResult = mainManager?.results['25'];
+                  
+                  if (prResult && mainResult) {
+                    const loadDiff = ((prResult.loadTime - mainResult.loadTime) / mainResult.loadTime * 100).toFixed(1);
+                    const installDiff = ((prResult.installTime - mainResult.installTime) / mainResult.installTime * 100).toFixed(1);
                     comparison.push({
-                      manager: result.manager,
-                      loadTime: result.loadTime,
+                      manager: manager.name,
+                      loadTime: prResult.loadTime,
                       loadDiff: loadDiff,
-                      installTime: result.installTime,
+                      installTime: prResult.installTime,
                       installDiff: installDiff
                     });
                   }
@@ -93,16 +100,28 @@ jobs:
             let comment = '## 📊 Benchmark Results\n\n';
 
             // Read latest results
-            const results = JSON.parse(fs.readFileSync('results/latest.json', 'utf8'));
+            const results = JSON.parse(fs.readFileSync('results/benchmark-results-latest.json', 'utf8'));
 
-            // Add results table
-            comment += '### Current Results\n\n';
+            // Add results table for 25 plugins
+            comment += '### Current Results (25 Plugins)\n\n';
             comment += '| Plugin Manager | Install Time | Load Time |\n';
             comment += '|----------------|--------------|----------|\n';
 
-            const sorted = results.results.sort((a, b) => a.loadTime - b.loadTime);
+            const managerResults = [];
+            for (const manager of results.managers) {
+              const result = manager.results['25'];
+              if (result) {
+                managerResults.push({
+                  name: manager.name,
+                  installTime: result.installTime,
+                  loadTime: result.loadTime
+                });
+              }
+            }
+
+            const sorted = managerResults.sort((a, b) => a.loadTime - b.loadTime);
             for (const result of sorted) {
-              comment += `| ${result.manager} | ${result.installTime.toFixed(0)}ms | ${result.loadTime.toFixed(0)}ms |\n`;
+              comment += `| ${result.name} | ${result.installTime.toFixed(1)}ms | ${result.loadTime.toFixed(1)}ms |\n`;
             }
 
             // Add comparison if available
@@ -116,7 +135,7 @@ jobs:
               for (const comp of comparison) {
                 const loadEmoji = comp.loadDiff > 5 ? '🔴' : comp.loadDiff < -5 ? '🟢' : '⚪';
                 const installEmoji = comp.installDiff > 5 ? '🔴' : comp.installDiff < -5 ? '🟢' : '⚪';
-                comment += `| ${comp.manager} | ${comp.loadTime.toFixed(0)}ms | ${loadEmoji} ${comp.loadDiff}% | ${comp.installTime.toFixed(0)}ms | ${installEmoji} ${comp.installDiff}% |\n`;
+                comment += `| ${comp.manager} | ${comp.loadTime.toFixed(1)}ms | ${loadEmoji} ${comp.loadDiff}% | ${comp.installTime.toFixed(1)}ms | ${installEmoji} ${comp.installDiff}% |\n`;
               }
 
               comment += '\n🟢 Improvement | ⚪ No significant change | 🔴 Regression\n';
