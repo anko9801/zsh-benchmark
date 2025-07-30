@@ -85,7 +85,7 @@ export class TableBuilder {
       { 
         header: "Load (25)", 
         accessor: m => m.results.get(25)?.loadTime ?? null,
-        formatter: v => formatTime(v, 2, best.load25),
+        formatter: v => formatTime(v, 1, best.load25),
         align: "right"
       },
       { 
@@ -97,7 +97,7 @@ export class TableBuilder {
       { 
         header: "Load (0)", 
         accessor: m => m.results.get(0)?.loadTime ?? null,
-        formatter: v => formatTime(v, 2, best.load0),
+        formatter: v => formatTime(v, 1, best.load0),
         align: "right"
       },
     ];
@@ -121,7 +121,7 @@ export class TableBuilder {
       { 
         header: `${title} (ms)`, 
         accessor: r => r.score,
-        formatter: v => formatNumber(v as number, 2),
+        formatter: v => formatNumber(v as number, 1),
         align: "right"
       },
       { 
@@ -144,7 +144,7 @@ export class TableBuilder {
       { 
         header: "Score", 
         accessor: r => r.score,
-        formatter: v => formatNumber(v as number, 2),
+        formatter: v => Math.round(v as number).toString(),
         align: "right"
       },
     ];
