@@ -11,8 +11,8 @@
 - **Key Findings:**
   - antidote が総合パフォーマンスで最高評価🥇
   - 25プラグイン環境では antidote が最速 (32ms)
-  - パフォーマンス差は最大 156.3倍
-  - zim は最小構成で驚異的な速度 (31ms)
+  - パフォーマンス差は最大 155.3倍
+  - zim は最小構成で驚異的な速度 (30ms)
 
 ## 🏆 Performance Rankings (25 Plugins)
 
@@ -23,22 +23,22 @@ _Shell startup time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Time (ms) | vs Best |
 |---|---|---:|---:|
-| 🥇 | antidote | 31.6 | - |
-| 🥈 | znap | 45.1 | +43.0% |
-| 🥉 | zgenom | 47.1 | +49.3% |
-| #4 | prezto | 71.2 | +125.6% |
-| #5 | zim | 91.0 | +188.4% |
-| #6 | oh-my-zsh | 92.0 | +191.3% |
-| #7 | antigen | 110.2 | +248.9% |
-| #8 | zcomet | 111.6 | +253.6% |
-| #9 | antigen-hs | 113.5 | +259.5% |
-| #10 | zr | 113.9 | +260.9% |
-| #11 | sheldon | 119.9 | +279.9% |
-| #12 | alf | 120.2 | +280.8% |
-| #13 | antibody | 166.2 | +426.3% |
-| #14 | zpm | 367.0 | +1062.7% |
-| #15 | zinit | 372.7 | +1080.8% |
-| #16 | zplug | 459.2 | +1354.8% |
+| 🥇 | antidote | 31.9 | - |
+| 🥈 | znap | 42.8 | +34.1% |
+| 🥉 | zgenom | 45.1 | +41.3% |
+| #4 | zim | 88.2 | +176.5% |
+| #5 | antigen | 103.3 | +224.1% |
+| #6 | zcomet | 105.2 | +229.9% |
+| #7 | zr | 110.1 | +245.4% |
+| #8 | antigen-hs | 110.8 | +247.7% |
+| #9 | alf | 112.3 | +252.2% |
+| #10 | sheldon | 116.4 | +265.1% |
+| #11 | prezto | 136.5 | +328.3% |
+| #12 | oh-my-zsh | 157.5 | +393.9% |
+| #13 | antibody | 165.9 | +420.3% |
+| #14 | zpm | 336.3 | +954.9% |
+| #15 | zinit | 355.8 | +1016.1% |
+| #16 | zplug | 849.5 | +2564.9% |
 
 ### Installation Time Rankings
 
@@ -47,22 +47,20 @@ _Plugin installation time comparison across different plugin managers_
 
 | Rank | Plugin Manager | Time (ms) | vs Best |
 |---|---|---:|---:|
-| 🥇 | zim | 31.1 | - |
-| 🥈 | antidote | 32.1 | +3.5% |
-| 🥉 | znap | 45.2 | +45.6% |
-| #4 | zgenom | 48.4 | +56.0% |
-| #5 | oh-my-zsh | 92.6 | +198.2% |
-| #6 | sheldon | 566.2 | +1723.1% |
-| #7 | antibody | 612.4 | +1871.9% |
-| #8 | prezto | 711.8 | +2192.0% |
-| #9 | antigen | 4951.3 | +15843.1% |
-| #10 | antigen-hs | 5092.4 | +16297.5% |
-| #11 | zr | 5122.9 | +16395.6% |
-| #12 | alf | 5217.1 | +16698.8% |
-| #13 | zpm | 6882.2 | +22060.3% |
-| #14 | zcomet | 10758.2 | +34541.1% |
-| #15 | zplug | 12547.2 | +40301.6% |
-| #16 | zinit | 30667.6 | +98648.8% |
+| 🥇 | zim | 30.4 | - |
+| 🥈 | antidote | 31.5 | +3.6% |
+| 🥉 | znap | 42.3 | +39.1% |
+| #4 | zgenom | 45.0 | +48.0% |
+| #5 | sheldon | 560.8 | +1742.8% |
+| #6 | antibody | 605.6 | +1889.8% |
+| #7 | zplug | 849.8 | +2692.3% |
+| #8 | antigen | 4148.9 | +13532.3% |
+| #9 | alf | 5834.0 | +19069.1% |
+| #10 | antigen-hs | 5851.2 | +19125.8% |
+| #11 | zr | 5883.1 | +19230.4% |
+| #12 | zpm | 7270.2 | +23788.1% |
+| #13 | zcomet | 11393.7 | +37337.1% |
+| #14 | zinit | 30682.3 | +100714.8% |
 
 ### Overall Performance
 
@@ -71,21 +69,21 @@ _Plugin installation time comparison across different plugin managers_
 | Rank | Plugin Manager | Score |
 |---|---|---:|
 | 🥇 | antidote | 32 |
-| 🥈 | znap | 38 |
-| 🥉 | zgenom | 40 |
-| #4 | zim | 52 |
-| #5 | oh-my-zsh | 93 |
-| #6 | sheldon | 143 |
-| #7 | antibody | 166 |
-| #8 | prezto | 263 |
-| #9 | antigen-hs | 819 |
-| #10 | zr | 824 |
-| #11 | alf | 840 |
-| #12 | antigen | 890 |
-| #13 | zpm | 1220 |
-| #14 | zcomet | 1669 |
-| #15 | zplug | 2102 |
-| #16 | zinit | 4938 |
+| 🥈 | znap | 36 |
+| 🥉 | zgenom | 39 |
+| #4 | zim | 50 |
+| #5 | oh-my-zsh | 117 |
+| #6 | sheldon | 142 |
+| #7 | antibody | 165 |
+| #8 | prezto | 208 |
+| #9 | zplug | 479 |
+| #10 | antigen | 762 |
+| #11 | alf | 930 |
+| #12 | antigen-hs | 932 |
+| #13 | zr | 936 |
+| #14 | zpm | 1270 |
+| #15 | zcomet | 1762 |
+| #16 | zinit | 4930 |
 
 ## 📦 Plugin Managers
 
@@ -99,13 +97,13 @@ _Plugin installation time comparison across different plugin managers_
 | sheldon | ![stars](https://img.shields.io/github/stars/rossmacarthur/sheldon?style=social) | ![Version](https://img.shields.io/github/v/tag/rossmacarthur/sheldon?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/rossmacarthur/sheldon?style=flat&label=updated) |
 | antibody | ![stars](https://img.shields.io/github/stars/getantibody/antibody?style=social) | ![Version](https://img.shields.io/github/v/tag/getantibody/antibody?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/getantibody/antibody?style=flat&label=updated) |
 | prezto | ![stars](https://img.shields.io/github/stars/sorin-ionescu/prezto?style=social) | ![Version](https://img.shields.io/github/v/tag/sorin-ionescu/prezto?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/sorin-ionescu/prezto?style=flat&label=updated) |
+| zplug | ![stars](https://img.shields.io/github/stars/zplug/zplug?style=social) | ![Version](https://img.shields.io/github/v/tag/zplug/zplug?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zplug/zplug?style=flat&label=updated) |
+| antigen | ![stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social) | ![Version](https://img.shields.io/github/v/tag/zsh-users/antigen?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zsh-users/antigen?style=flat&label=updated) |
+| alf | ![stars](https://img.shields.io/github/stars/psyrendust/alf?style=social) | ![Version](https://img.shields.io/github/v/tag/psyrendust/alf?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/psyrendust/alf?style=flat&label=updated) |
 | antigen-hs | ![stars](https://img.shields.io/github/stars/Tarrasch/antigen-hs?style=social) | ![Version](https://img.shields.io/github/v/tag/Tarrasch/antigen-hs?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/Tarrasch/antigen-hs?style=flat&label=updated) |
 | zr | ![stars](https://img.shields.io/github/stars/jedahan/zr?style=social) | ![Version](https://img.shields.io/github/v/tag/jedahan/zr?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/jedahan/zr?style=flat&label=updated) |
-| alf | ![stars](https://img.shields.io/github/stars/psyrendust/alf?style=social) | ![Version](https://img.shields.io/github/v/tag/psyrendust/alf?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/psyrendust/alf?style=flat&label=updated) |
-| antigen | ![stars](https://img.shields.io/github/stars/zsh-users/antigen?style=social) | ![Version](https://img.shields.io/github/v/tag/zsh-users/antigen?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zsh-users/antigen?style=flat&label=updated) |
 | zpm | ![stars](https://img.shields.io/github/stars/zpm-zsh/zpm?style=social) | ![Version](https://img.shields.io/github/v/tag/zpm-zsh/zpm?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zpm-zsh/zpm?style=flat&label=updated) |
 | zcomet | ![stars](https://img.shields.io/github/stars/agkozak/zcomet?style=social) | ![Version](https://img.shields.io/github/v/tag/agkozak/zcomet?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/agkozak/zcomet?style=flat&label=updated) |
-| zplug | ![stars](https://img.shields.io/github/stars/zplug/zplug?style=social) | ![Version](https://img.shields.io/github/v/tag/zplug/zplug?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zplug/zplug?style=flat&label=updated) |
 | zinit | ![stars](https://img.shields.io/github/stars/zdharma-continuum/zinit?style=social) | ![Version](https://img.shields.io/github/v/tag/zdharma-continuum/zinit?include_prereleases&sort=semver&label=version&fallback=commit) | ![Last Update](https://img.shields.io/github/last-commit/zdharma-continuum/zinit?style=flat&label=updated) |
 
 ## 📝 Methodology
