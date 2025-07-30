@@ -98,17 +98,11 @@ async function runBenchmark(
       await manager.specialInit();
     }
 
-    // Clean cache for install benchmark
-    logger.progress("Cleaning cache");
-    const cacheClean = await runCommand(manager.cacheCleanCommand);
-    if (!cacheClean.success) {
-      logger.warn(`Cache clean failed: ${cacheClean.error}`);
-    }
-
-    // Pre-install command if needed (after cache clean for managers like oh-my-zsh/prezto)
+    // Pre-install command if needed
+    let preInstallCmd = "";
     if (manager.preInstallCommand) {
       if (typeof manager.preInstallCommand === "string") {
-        await runCommand(manager.preInstallCommand);
+        preInstallCmd = manager.preInstallCommand;
       } else {
         // It's a function, call it with the plugins
         const plugins = ALL_PLUGINS.slice(0, pluginCount);
@@ -118,8 +112,14 @@ async function runBenchmark(
 
     // Install benchmark
     logger.progress("Running install benchmark");
+    // Create prepare command that cleans cache and runs pre-install if needed
+    let prepareCmd = manager.cacheCleanCommand;
+    if (preInstallCmd) {
+      prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
+    }
+    
     let hyperfineCmd =
-      `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
+      `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
 
     const { success, output, error } = await runCommand(hyperfineCmd, {
       silent: true,
