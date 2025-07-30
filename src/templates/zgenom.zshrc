@@ -1,4 +1,6 @@
-source "$HOME/.zgenom/zgenom.zsh"
+#!/usr/bin/env zsh
+export ZGEN_DIR="$HOME/.zgenom"
+source "$ZGEN_DIR/zgenom.zsh"
 
 # Force non-interactive mode
 export ZGENOM_AUTOLOAD_COMPINIT=0

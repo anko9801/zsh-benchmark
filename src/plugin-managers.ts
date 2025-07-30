@@ -219,7 +219,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     name: "zgenom",
     repo: "jandamm/zgenom",
     cacheCleanCommand:
-      "if [[ -d ~/.zgenom/.git ]]; then git -C ~/.zgenom clean -dffx; else rm -rf ~/.zgenom/sources ~/.zgenom/*.zsh ~/.zgenom/*.zwc; fi 2>/dev/null || true",
+      "rm -rf ~/.zgenom/sources ~/.zgenom/init.zsh ~/.zgenom/*.zwc ~/.zgenom/.zcompdump* 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "zgenom.zshrc" },
     ],
@@ -231,7 +231,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
         { silent: true }
       );
     },
-    skipInstall: true, // zgenom compiles plugins lazily, not suitable for traditional install time measurement
+    skipInstall: false,
     versionCommand:
       "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
