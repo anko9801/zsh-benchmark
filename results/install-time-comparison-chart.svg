@@ -1,137 +1,132 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1400px" height="600px" viewBox="0 0 1400 600">
 <defs>
-<clipPath id="clip-1" fill-rule="nonzero" ><path d="M 0,486.8 L 0,540 1400,540 1400,486.8 Z" /></clipPath>
-<clipPath id="clip-2" fill-rule="nonzero" ><path d="M 10,0 L 10,600 84.8,600 84.8,0 Z" /></clipPath>
-<clipPath id="clip-3" fill-rule="nonzero" ><path d="M 84.8,101.6 L 84.8,486.8 1300,486.8 1300,101.6 Z" /></clipPath>
-<clipPath id="clip-4" fill-rule="nonzero" ><path d="M 141.509333,448.995027 L 141.509333,486.55 433.157333,486.55 433.157333,448.995027 Z" /></clipPath>
-<clipPath id="clip-5" fill-rule="nonzero" ><path d="M 546.576,430.302716 L 546.576,486.55 838.224,486.55 838.224,430.302716 Z" /></clipPath>
-<clipPath id="clip-6" fill-rule="nonzero" ><path d="M 951.642667,106.857354 L 951.642667,486.55 1243.290667,486.55 1243.290667,106.857354 Z" /></clipPath></defs>
+<clipPath id="clip-1" fill-rule="nonzero" ><path d="M 20,69.2 L 20,106.2 1380,106.2 1380,69.2 Z" /></clipPath>
+<clipPath id="clip-2" fill-rule="nonzero" ><path d="M 0,527.2 L 0,560 1400,560 1400,527.2 Z" /></clipPath>
+<clipPath id="clip-3" fill-rule="nonzero" ><path d="M 20,0 L 20,600 76.8,600 76.8,0 Z" /></clipPath>
+<clipPath id="clip-4" fill-rule="nonzero" ><path d="M 76.8,106.2 L 76.8,527.2 1380,527.2 1380,106.2 Z" /></clipPath></defs>
 <g stroke="none" fill="transparent" fill-rule="nonzero" fill-opacity="1" >
 <rect x="0" y="0" width="1400" height="600" transform="matrix(1 0 0 1 0 0)" /></g>
 <g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1" >
-<text style="font:normal bold 14px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" textLength="1215.2" transform="matrix(1 0 0 1 692.4 527.6000000000001)" 
+<text style="font:normal bold 14px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(1 0 0 1 728.4 547.6)" 
 ><tspan x="0" y="0">Plugin Manager</tspan></text></g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,486.5 L 1300,486.5" />
+<path d="M 77,527.5 L 1380,527.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,486.5 L 84,486.5" />
+<path d="M 68.8,527.5 L 76,527.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,438.5 L 1300,438.5" />
+<path d="M 77,485.5 L 1380,485.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,438.5 L 84,438.5" />
+<path d="M 68.8,485.5 L 76,485.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,390.5 L 1300,390.5" />
+<path d="M 77,443.5 L 1380,443.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,390.5 L 84,390.5" />
+<path d="M 68.8,443.5 L 76,443.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,342.5 L 1300,342.5" />
+<path d="M 77,400.5 L 1380,400.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,342.5 L 84,342.5" />
+<path d="M 68.8,400.5 L 76,400.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,294.5 L 1300,294.5" />
+<path d="M 77,358.5 L 1380,358.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,294.5 L 84,294.5" />
+<path d="M 68.8,358.5 L 76,358.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,246.5 L 1300,246.5" />
+<path d="M 77,316.5 L 1380,316.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,246.5 L 84,246.5" />
+<path d="M 68.8,316.5 L 76,316.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,197.5 L 1300,197.5" />
+<path d="M 77,274.5 L 1380,274.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,197.5 L 84,197.5" />
+<path d="M 68.8,274.5 L 76,274.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,149.5 L 1300,149.5" />
+<path d="M 77,232.5 L 1380,232.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,149.5 L 84,149.5" />
+<path d="M 68.8,232.5 L 76,232.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 85,101.5 L 1300,101.5" />
+<path d="M 77,190.5 L 1380,190.5" />
 </g>
 <g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
-<path d="M 76.8,101.5 L 84,101.5" />
+<path d="M 68.8,190.5 L 76,190.5" />
+</g>
+<g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
+<path d="M 77,148.5 L 1380,148.5" />
+</g>
+<g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
+<path d="M 68.8,148.5 L 76,148.5" />
+</g>
+<g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
+<path d="M 77,106.5 L 1380,106.5" />
+</g>
+<g stroke="#e0e0e0" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none">
+<path d="M 68.8,106.5 L 76,106.5" />
 </g>
 <g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1" >
-<text style="font:normal bold 14px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(6.123233995736766e-17 -1 1 6.123233995736766e-17 22.4 294.20000000000005)" 
+<text style="font:normal bold 14px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(6.123233995736766e-17 -1 1 6.123233995736766e-17 32.4 316.70000000000005)" 
 ><tspan x="0" y="0">Install Time (ms)</tspan></text></g>
+<g stroke="none" fill="rgb(255,99,132)" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-1)" >
+<path d="M 657,84.2 L 657,96.2 677,96.2 677,84.2 Z" />
+</g>
+<g stroke="rgb(255,99,132)" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="none" clip-path="url(#clip-1)" >
+<path d="M 657,84.2 L 657,96.2 677,96.2 677,84.2 Z" />
+</g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-1)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="start" dominant-baseline="middle" transform="matrix(1 0 0 1 0 0)" 
+><tspan x="683" y="90.2">25 plugins</tspan></text></g>
 <g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1" >
-<text style="font:normal bold 18px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" textLength="1290" transform="matrix(1 0 0 1 655 60.8)" 
+<text style="font:normal bold 16px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(1 0 0 1 700 39.6)" 
 ><tspan x="0" y="0">Zsh Plugin Manager Install Time Comparison</tspan></text></g>
 <g stroke="rgb(0,0,0)" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="0.1" fill="none">
-<path d="M 84,486.5 L 1301,486.5" />
+<path d="M 76,527.5 L 1381,527.5" />
 </g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-1)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(1 0 0 1 287.3333333333333 497.80000000000007)" 
-><tspan x="0" y="7.199999999999999">zim</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-1)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(1 0 0 1 692.4 497.80000000000007)" 
-><tspan x="0" y="7.199999999999999">zplug</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-1)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="middle" dominant-baseline="middle" transform="matrix(1 0 0 1 1097.4666666666667 497.80000000000007)" 
-><tspan x="0" y="7.199999999999999">zinit</tspan></text></g>
 <g stroke="rgb(0,0,0)" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="0.1" fill="none">
-<path d="M 84.5,101 L 84.5,486.75" />
+<path d="M 76.5,106 L 76.5,527.75" />
 </g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 486.80000000000007)" 
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 527.2)" 
 ><tspan x="0" y="0">0</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 438.6500000000001)" 
-><tspan x="0" y="0">10,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 390.5)" 
-><tspan x="0" y="0">20,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 342.35)" 
-><tspan x="0" y="0">30,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 294.20000000000005)" 
-><tspan x="0" y="0">40,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 246.05)" 
-><tspan x="0" y="0">50,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 197.9)" 
-><tspan x="0" y="0">60,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 149.75)" 
-><tspan x="0" y="0">70,000</tspan></text></g>
-<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-2)" >
-<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 73.8 101.6)" 
-><tspan x="0" y="0">80,000</tspan></text></g>
-<g stroke="none" fill="rgb(54,162,235)" fill-rule="evenodd" fill-opacity="1"  clip-path="url(#clip-4)" >
-<path d="M 141.509333,448.995027 L 141.509333,486.55 433.157333,486.55 433.157333,448.995027 Z M 142.509333,449.995027 L 142.509333,486.55
-432.157333,486.55 432.157333,449.995027 Z" />
-</g>
-<g stroke="none" fill="rgb(54,162,235)" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-4)" >
-<path d="M 142.509333,449.995027 L 142.509333,486.55 432.157333,486.55 432.157333,449.995027 Z" />
-</g>
-<g stroke="none" fill="rgb(255,99,132)" fill-rule="evenodd" fill-opacity="1"  clip-path="url(#clip-5)" >
-<path d="M 546.576,430.302716 L 546.576,486.55 838.224,486.55 838.224,430.302716 Z M 547.576,431.302716 L 547.576,486.55 837.224,486.55
-837.224,431.302716 Z" />
-</g>
-<g stroke="none" fill="rgb(255,99,132)" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-5)" >
-<path d="M 547.576,431.302716 L 547.576,486.55 837.224,486.55 837.224,431.302716 Z" />
-</g>
-<g stroke="none" fill="rgb(75,192,192)" fill-rule="evenodd" fill-opacity="1"  clip-path="url(#clip-6)" >
-<path d="M 951.642667,106.857354 L 951.642667,486.55 1243.290667,486.55 1243.290667,106.857354 Z M 952.642667,107.857354 L 952.642667,486.55
-1242.290667,486.55 1242.290667,107.857354 Z" />
-</g>
-<g stroke="none" fill="rgb(75,192,192)" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-6)" >
-<path d="M 952.642667,107.857354 L 952.642667,486.55 1242.290667,486.55 1242.290667,107.857354 Z" />
-</g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 485.1)" 
+><tspan x="0" y="0">0.1</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 443.00000000000006)" 
+><tspan x="0" y="0">0.2</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 400.90000000000003)" 
+><tspan x="0" y="0">0.3</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 358.8)" 
+><tspan x="0" y="0">0.4</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 316.70000000000005)" 
+><tspan x="0" y="0">0.5</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 274.6)" 
+><tspan x="0" y="0">0.6</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 232.50000000000006)" 
+><tspan x="0" y="0">0.7</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 190.39999999999998)" 
+><tspan x="0" y="0">0.8</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 148.3)" 
+><tspan x="0" y="0">0.9</tspan></text></g>
+<g stroke="none" fill="#666" fill-rule="nonzero" fill-opacity="1"  clip-path="url(#clip-3)" >
+<text style="font:normal 12px &apos;Helvetica Neue&apos;, &apos;Helvetica&apos;, &apos;Arial&apos;, sans-serif;" text-anchor="end" dominant-baseline="middle" transform="matrix(1 0 0 1 65.8 106.2)" 
+><tspan x="0" y="0">1.0</tspan></text></g>
 </svg>

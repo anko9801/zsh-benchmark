@@ -69,29 +69,66 @@ async function createBarChart(
     ? "Zsh Plugin Manager Load Time Comparison"
     : "Zsh Plugin Manager Install Time Comparison";
 
-  // 25プラグインのデータのみを抽出して棒グラフ用に準備
-  const pluginCount = 25;
-  const barData = sortedManagers
-    .map(([name, values]) => ({
-      manager: name,
-      value: values.get(pluginCount) || 0,
-    }))
-    .filter((item) => item.value > 0)
-    .sort((a, b) => a.value - b.value);
+  // 棒グラフ用にデータを準備
+  const managers0 = [];
+  const managers25 = [];
+  const managerNames = [];
+
+  sortedManagers.forEach(([name, values]) => {
+    const value0 = values.get(0) || 0;
+    const value25 = values.get(25) || 0;
+    
+    // 25プラグインのデータがある場合のみ表示
+    if (value25 > 0) {
+      managerNames.push(name);
+      managers0.push(value0);
+      managers25.push(value25);
+    }
+  });
+
+  // 25プラグインの値でソート
+  const sortedIndices = managers25
+    .map((value, index) => ({ value, index }))
+    .sort((a, b) => a.value - b.value)
+    .map(item => item.index);
+
+  const sortedNames = sortedIndices.map(i => managerNames[i]);
+  const sorted0 = sortedIndices.map(i => managers0[i]);
+  const sorted25 = sortedIndices.map(i => managers25[i]);
+
+  // Install timeの場合は0プラグインのデータは表示しない
+  const datasets = metric === "installTime" 
+    ? [
+        {
+          label: "25 plugins",
+          data: sorted25,
+          backgroundColor: ChartColors.Red,
+          borderColor: ChartColors.Red,
+          borderWidth: 1,
+        },
+      ]
+    : [
+        {
+          label: "0 plugins",
+          data: sorted0,
+          backgroundColor: ChartColors.Blue,
+          borderColor: ChartColors.Blue,
+          borderWidth: 1,
+        },
+        {
+          label: "25 plugins",
+          data: sorted25,
+          backgroundColor: ChartColors.Red,
+          borderColor: ChartColors.Red,
+          borderWidth: 1,
+        },
+      ];
 
   const response = await renderChart({
     type: "bar",
     data: {
-      labels: barData.map((item) => item.manager),
-      datasets: [{
-        label: `${
-          metric === "loadTime" ? "Load Time" : "Install Time"
-        } (${pluginCount} plugins)`,
-        data: barData.map((item) => item.value),
-        backgroundColor: CHART_COLORS.slice(0, barData.length),
-        borderColor: CHART_COLORS.slice(0, barData.length),
-        borderWidth: 1,
-      }],
+      labels: sortedNames,
+      datasets: datasets,
     },
     options: {
       responsive: false,
@@ -101,16 +138,25 @@ async function createBarChart(
           display: true,
           text: title,
           font: {
-            size: 18,
+            size: 16,
             weight: "bold",
+            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
           padding: {
             top: 10,
-            bottom: 30,
+            bottom: 20,
           },
         },
         legend: {
-          display: false,
+          display: true,
+          position: "top",
+          labels: {
+            boxWidth: 20,
+            padding: 15,
+            font: {
+              size: 12,
+            },
+          },
         },
       },
       scales: {
@@ -126,6 +172,11 @@ async function createBarChart(
           },
           grid: {
             display: false,
+          },
+          ticks: {
+            font: {
+              size: 12,
+            },
           },
         },
         y: {
@@ -145,14 +196,19 @@ async function createBarChart(
             color: "#e0e0e0",
             lineWidth: 0.5,
           },
+          ticks: {
+            font: {
+              size: 12,
+            },
+          },
         },
       },
       layout: {
         padding: {
-          left: 10,
-          right: 100,
-          top: 40,
-          bottom: 60,
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 40,
         },
       },
     },
@@ -160,7 +216,11 @@ async function createBarChart(
     height: 600,
   });
 
-  return await response.text();
+  // SVGを取得してtextLength属性を削除
+  let svg = await response.text();
+  svg = svg.replace(/\s*textLength="[^"]*"/g, "");
+  
+  return svg;
 }
 
 export async function generateCharts(
