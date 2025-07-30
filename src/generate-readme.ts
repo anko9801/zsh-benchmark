@@ -5,13 +5,13 @@
 import { parse } from "https://deno.land/std@0.220.0/flags/mod.ts";
 import { bold, yellow } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { BenchmarkData, BenchmarkResult } from "./types.ts";
-import { 
+import {
   calculatePercentageIncrease,
   exists,
   formatDuration,
   formatPercentage,
-  logger, 
-  setupLogging 
+  logger,
+  setupLogging,
 } from "./utils.ts";
 import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
 
@@ -96,7 +96,9 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
       results.sort((a, b) => a.score - b.score);
       results.forEach((result, index) => {
         result.rank = index + 1;
-        if (index < 3) result.medal = ["🥇", "🥈", "🥉"][index] as any;
+        if (index < 3) {
+          result.medal = ["🥇", "🥈", "🥉"][index] as "🥇" | "🥈" | "🥉";
+        }
       });
     };
     assignRanks(loadResults);
@@ -114,7 +116,9 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
   })).sort((a, b) => a.score - b.score);
   overallResults.forEach((result, index) => {
     result.rank = index + 1;
-    if (index < 3) result.medal = ["🥇", "🥈", "🥉"][index] as any;
+    if (index < 3) {
+      result.medal = ["🥇", "🥈", "🥉"][index] as "🥇" | "🥈" | "🥉";
+    }
   });
   rankings.overall = overallResults;
   return rankings;
@@ -356,7 +360,7 @@ async function main(): Promise<void> {
 }
 
 // Helper function to check if file exists
-async function fileExists(path: string): Promise<boolean> {
+async function _fileExists(path: string): Promise<boolean> {
   try {
     await Deno.stat(path);
     return true;

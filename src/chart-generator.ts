@@ -1,13 +1,10 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write
 import { renderChart } from "https://deno.land/x/fresh_charts@0.3.1/mod.ts";
-import {
-  ChartColors,
-  transparentize,
-} from "https://deno.land/x/fresh_charts@0.3.1/utils.ts";
+import { ChartColors } from "https://deno.land/x/fresh_charts@0.3.1/utils.ts";
 import { BenchmarkData } from "./types.ts";
 import { exists } from "./utils.ts";
 
-const CHART_COLORS = [
+const _CHART_COLORS = [
   ChartColors.Blue,
   ChartColors.Red,
   ChartColors.Green,
@@ -48,7 +45,7 @@ async function createBarChart(
     managers.get(result.manager)!.set(result.pluginCount, value);
   }
 
-  const sortedCounts = Array.from(counts).sort((first, second) =>
+  const _sortedCounts = Array.from(counts).sort((first, second) =>
     first - second
   );
   const sortedManagers = Array.from(managers.entries()).sort(
@@ -77,7 +74,7 @@ async function createBarChart(
   sortedManagers.forEach(([name, values]) => {
     const value0 = values.get(0) || 0;
     const value25 = values.get(25) || 0;
-    
+
     // 25プラグインのデータがある場合のみ表示
     if (value25 > 0) {
       managerNames.push(name);
@@ -90,39 +87,39 @@ async function createBarChart(
   const sortedIndices = managers25
     .map((value, index) => ({ value, index }))
     .sort((a, b) => a.value - b.value)
-    .map(item => item.index);
+    .map((item) => item.index);
 
-  const sortedNames = sortedIndices.map(i => managerNames[i]);
-  const sorted0 = sortedIndices.map(i => managers0[i]);
-  const sorted25 = sortedIndices.map(i => managers25[i]);
+  const sortedNames = sortedIndices.map((i) => managerNames[i]);
+  const sorted0 = sortedIndices.map((i) => managers0[i]);
+  const sorted25 = sortedIndices.map((i) => managers25[i]);
 
   // Install timeの場合は0プラグインのデータは表示しない
-  const datasets = metric === "installTime" 
+  const datasets = metric === "installTime"
     ? [
-        {
-          label: "25 plugins",
-          data: sorted25,
-          backgroundColor: ChartColors.Red,
-          borderColor: ChartColors.Red,
-          borderWidth: 1,
-        },
-      ]
+      {
+        label: "25 plugins",
+        data: sorted25,
+        backgroundColor: ChartColors.Red,
+        borderColor: ChartColors.Red,
+        borderWidth: 1,
+      },
+    ]
     : [
-        {
-          label: "0 plugins",
-          data: sorted0,
-          backgroundColor: ChartColors.Blue,
-          borderColor: ChartColors.Blue,
-          borderWidth: 1,
-        },
-        {
-          label: "25 plugins",
-          data: sorted25,
-          backgroundColor: ChartColors.Red,
-          borderColor: ChartColors.Red,
-          borderWidth: 1,
-        },
-      ];
+      {
+        label: "0 plugins",
+        data: sorted0,
+        backgroundColor: ChartColors.Blue,
+        borderColor: ChartColors.Blue,
+        borderWidth: 1,
+      },
+      {
+        label: "25 plugins",
+        data: sorted25,
+        backgroundColor: ChartColors.Red,
+        borderColor: ChartColors.Red,
+        borderWidth: 1,
+      },
+    ];
 
   const response = await renderChart({
     type: "bar",
@@ -219,7 +216,7 @@ async function createBarChart(
   // SVGを取得してtextLength属性を削除
   let svg = await response.text();
   svg = svg.replace(/\s*textLength="[^"]*"/g, "");
-  
+
   return svg;
 }
 

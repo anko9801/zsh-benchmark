@@ -30,7 +30,7 @@ export interface BenchmarkResult {
 
 export interface BenchmarkData {
   results: BenchmarkResult[];
-  metadata?: { executedAt?: string; environment?: any };
+  metadata?: { executedAt?: string; environment?: Record<string, unknown> };
 }
 
 // Common Types
@@ -67,7 +67,7 @@ export interface ParsedData {
   managers: { name: string; results: Map<number, BenchmarkResult> }[];
   pluginCounts: number[];
   timestamp: Date;
-  environment: any;
+  environment: Record<string, unknown>;
 }
 
 export interface RankingResult {
@@ -91,6 +91,9 @@ export interface TemplateData {
   };
   rankings: Rankings;
   graphs: { title: string; path: string; caption: string }[];
-  versionInfo: { managers: Map<string, string>; environment: any };
+  versionInfo: {
+    managers: Map<string, string>;
+    environment: Record<string, unknown>;
+  };
   badges: { name: string; url: string }[];
 }

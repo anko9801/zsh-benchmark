@@ -2,7 +2,7 @@
 import { parse } from "https://deno.land/std@0.220.0/flags/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.220.0/fs/mod.ts";
 import { dirname, join } from "https://deno.land/std@0.220.0/path/mod.ts";
-import { blue, bold, green } from "https://deno.land/std@0.220.0/fmt/colors.ts";
+import { blue, bold } from "https://deno.land/std@0.220.0/fmt/colors.ts";
 import { BenchmarkResult, PluginManager } from "./types.ts";
 import { PLUGIN_MANAGERS } from "./plugin-managers.ts";
 import {
@@ -40,7 +40,9 @@ async function prepareConfig(manager: PluginManager, pluginCount: number) {
       : "# Minimal config\n{{PLUGIN_LOADS}}";
     try {
       tpl = await loadTemplate(cfg.template);
-    } catch {}
+    } catch {
+      // Ignore cleanup errors
+    }
 
     const loads = plugins.map((plugin) => manager.generatePluginLoad(plugin))
       .join(

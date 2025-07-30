@@ -16,15 +16,11 @@
     "strict": true
   },
   "fmt": {
-    "files": {
-      "include": ["src/"],
-      "exclude": ["results/"]
-    }
+    "include": ["src/"],
+    "exclude": ["results/"]
   },
   "lint": {
-    "files": {
-      "include": ["src/"],
-      "exclude": ["results/"]
-    }
+    "include": ["src/"],
+    "exclude": ["results/"]
   }
 }
