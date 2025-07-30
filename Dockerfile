@@ -72,6 +72,8 @@ curl --proto "=https" -fLsS https://rossmacarthur.github.io/install/crate.sh | b
 
 echo "Installing zgenom..."
 git clone https://github.com/jandamm/zgenom.git "${HOME}/.zgenom" || true
+# Fix zgenom permissions
+chmod -R 755 "${HOME}/.zgenom"
 
 echo "Installing zpm..."
 git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm || true
@@ -177,7 +179,18 @@ chmod +x ~/.zr/zr
 echo "All fixes applied!"
 FIXES_SCRIPT
 
-# Layer 7: Copy source files (changes frequently)
+# Layer 7: Additional fixes for zgenom
+RUN <<'ZGENOM_FIX' bash
+echo "Applying zgenom fixes..."
+# Ensure zgenom directory has proper permissions
+chmod -R 755 ~/.zgenom
+# Create necessary zgenom directories
+mkdir -p ~/.zgenom/{sources,plugins} 
+chmod -R 755 ~/.zgenom/{sources,plugins}
+echo "zgenom fixes applied!"
+ZGENOM_FIX
+
+# Layer 8: Copy source files (changes frequently)
 COPY src/ ./src/
 
 # Default command
