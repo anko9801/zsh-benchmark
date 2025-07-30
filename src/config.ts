@@ -53,13 +53,13 @@ export function validateManagers(managers: string[]): string[] {
 }
 
 export function validatePluginCounts(counts: number[]): number[] {
-  const invalidCounts = counts.filter((c) => c < 0 || !Number.isInteger(c));
+  const invalidCounts = counts.filter((c) => c < 0);
 
   if (invalidCounts.length > 0) {
     throw new Error(
       `Invalid plugin counts: ${
         invalidCounts.join(", ")
-      }\nPlugin counts must be non-negative integers`,
+      }\nPlugin counts must be non-negative`,
     );
   }
 

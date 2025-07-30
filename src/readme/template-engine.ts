@@ -2,6 +2,7 @@
 
 import { TemplateData } from "./types.ts";
 import { TableBuilder } from "./table-builder.ts";
+import { PLUGIN_MANAGERS } from "../plugin-managers.ts";
 
 export class TemplateEngine {
   private tableBuilder: TableBuilder;
@@ -99,29 +100,9 @@ export class TemplateEngine {
     }
 
     // Replace manager badges
-    const repoMapping = new Map([
-      ["alf", "psyrendust/alf"],
-      ["antibody", "getantibody/antibody"],
-      ["antidote", "mattmc3/antidote"],
-      ["antigen", "zsh-users/antigen"],
-      ["antigen-hs", "Tarrasch/antigen-hs"],
-      ["oh-my-zsh", "ohmyzsh/ohmyzsh"],
-      ["prezto", "sorin-ionescu/prezto"],
-      ["sheldon", "rossmacarthur/sheldon"],
-      ["zcomet", "agkozak/zcomet"],
-      ["zgen", "tarjoilija/zgen"],
-      ["zgenom", "jandamm/zgenom"],
-      ["zim", "zimfw/zimfw"],
-      ["zinit", "zdharma-continuum/zinit"],
-      ["znap", "marlonrichert/zsh-snap"],
-      ["zplug", "zplug/zplug"],
-      ["zpm", "zpm-zsh/zpm"],
-      ["zr", "jedahan/zr"],
-    ]);
-    
     result = result.replace(
       "{{managerBadges}}",
-      this.tableBuilder.buildBadgeTable(data.rankings.overall, repoMapping),
+      this.tableBuilder.buildBadgeTable(data.rankings.overall, PLUGIN_MANAGERS),
     );
 
     // Replace any remaining executedAt placeholders

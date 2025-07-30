@@ -7,6 +7,7 @@ import {
   formatNumber,
   formatPercentage,
 } from "../utils.ts";
+import { PluginManager } from "../types.ts";
 
 interface TableColumn<T> {
   header: string;
@@ -156,14 +157,17 @@ export class TableBuilder {
     return this.buildTable(rankings, columns);
   }
   
-  buildBadgeTable(rankings: RankingResult[], repoMapping: Map<string, string>): string {
+  buildBadgeTable(rankings: RankingResult[], pluginManagers: Record<string, PluginManager>): string {
     interface BadgeRow {
       manager: string;
       repo: string;
     }
     
     const rows: BadgeRow[] = rankings
-      .map(r => ({ manager: r.manager, repo: repoMapping.get(r.manager) || "" }))
+      .map(r => ({
+        manager: r.manager,
+        repo: pluginManagers[r.manager]?.repo || ""
+      }))
       .filter(r => r.repo);
     
     const columns: TableColumn<BadgeRow>[] = [

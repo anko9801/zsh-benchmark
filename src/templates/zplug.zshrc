@@ -3,7 +3,6 @@ source $ZPLUG_HOME/init.zsh
 
 # Configure zplug to avoid hanging
 export ZPLUG_CLONE_DEPTH=1
-export ZPLUG_THREADS=2
 export ZPLUG_USE_CACHE=false
 export ZPLUG_PROTOCOL=HTTPS
 

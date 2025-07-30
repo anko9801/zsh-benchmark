@@ -180,11 +180,11 @@ async function runBenchmark(
       // Measure first load time (which includes plugin installation)
       const installCommand = `timeout ${installTimeout} zsh -ic exit`;
       
-      // Add hyperfine-specific timeout for zplug
-      const hyperfineTimeout = manager.name === 'zplug' && pluginCount >= 25 ? '--max-runs 3 ' : '';
+      // Reduce runs for zplug with many plugins to avoid timeouts
+      const runs = manager.name === 'zplug' && pluginCount >= 25 ? 3 : DEFAULT_CONFIG.hyperfine.installRuns;
       
       hyperfineCmd =
-        `hyperfine ${hyperfineTimeout}--ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' '${installCommand}'`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
         silent: true,

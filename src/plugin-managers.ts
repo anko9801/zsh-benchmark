@@ -6,6 +6,7 @@ import { runCommand } from "./utils.ts";
 export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
   "oh-my-zsh": {
     name: "oh-my-zsh",
+    repo: "ohmyzsh/ohmyzsh",
     cacheCleanCommand:
       "rm -rf ~/.oh-my-zsh/cache ~/.oh-my-zsh/custom/plugins/* 2>/dev/null || true",
     configFiles: [
@@ -30,6 +31,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "prezto": {
     name: "prezto",
+    repo: "sorin-ionescu/prezto",
     cacheCleanCommand:
       "rm -rf ~/.zprezto-contrib/* ~/.zprezto/cache ~/.cache/prezto 2>/dev/null || true",
     configFiles: [
@@ -56,6 +58,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zim": {
     name: "zim",
+    repo: "zimfw/zimfw",
     cacheCleanCommand: "rm -rf ~/.zim/modules ~/.cache/zim ~/.zimrc.bak-default 2>/dev/null || true",
     configFiles: [
       { path: "~/.zimrc", template: "zim.zimrc", isPluginList: true },
@@ -84,6 +87,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "znap": {
     name: "znap",
+    repo: "marlonrichert/zsh-snap",
     cacheCleanCommand:
       'rm -rf ~/.cache/znap ~/Git/zsh-* 2>/dev/null || true',
     configFiles: [
@@ -96,6 +100,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zinit": {
     name: "zinit",
+    repo: "zdharma-continuum/zinit",
     cacheCleanCommand:
       'find ~/.local/share/zinit -mindepth 1 -maxdepth 1 ! -name "zinit.git" -exec rm -rf {} + 2>/dev/null || true; rm -rf ~/.zinit ~/.cache/zinit ~/.zplugin 2>/dev/null || true',
     configFiles: [
@@ -108,6 +113,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zplug": {
     name: "zplug",
+    repo: "zplug/zplug",
     cacheCleanCommand:
       "if [[ -d ~/.zplug/.git ]]; then git -C ~/.zplug clean -dffx; else rm -rf ~/.zplug/repos ~/.zplug/cache; fi 2>/dev/null || true",
     configFiles: [
@@ -120,6 +126,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "antigen": {
     name: "antigen",
+    repo: "zsh-users/antigen",
     cacheCleanCommand: "rm -rf ~/.antigen 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "antigen.zshrc" },
@@ -131,6 +138,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "antibody": {
     name: "antibody",
+    repo: "getantibody/antibody",
     cacheCleanCommand: "rm -rf ~/.cache/antibody 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "antibody.zshrc" },
@@ -148,6 +156,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "antidote": {
     name: "antidote",
+    repo: "mattmc3/antidote",
     cacheCleanCommand:
       "rm -rf ~/.cache/antidote ~/.zsh_plugins.zsh 2>/dev/null || true",
     configFiles: [
@@ -166,6 +175,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "sheldon": {
     name: "sheldon",
+    repo: "rossmacarthur/sheldon",
     cacheCleanCommand:
       "rm -rf ~/.local/share/sheldon ~/.cache/sheldon 2>/dev/null || true",
     configFiles: [
@@ -186,6 +196,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zgenom": {
     name: "zgenom",
+    repo: "jandamm/zgenom",
     cacheCleanCommand:
       "if [[ -d ~/.zgenom/.git ]]; then git -C ~/.zgenom clean -dffx; else rm -rf ~/.zgenom/sources ~/.zgenom/*.zsh ~/.zgenom/*.zwc; fi 2>/dev/null || true",
     configFiles: [
@@ -198,6 +209,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zpm": {
     name: "zpm",
+    repo: "zpm-zsh/zpm",
     cacheCleanCommand: "rm -rf ~/.local/share/zsh/plugins 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "zpm.zshrc" },
@@ -209,6 +221,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zr": {
     name: "zr",
+    repo: "jedahan/zr",
     cacheCleanCommand: "rm -rf ~/.zr/plugins 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "zr.zshrc" },
@@ -219,6 +232,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "antigen-hs": {
     name: "antigen-hs",
+    repo: "Tarrasch/antigen-hs",
     cacheCleanCommand: "rm -rf ~/.antigen-hs/repos 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "antigen-hs.zshrc" },
@@ -229,6 +243,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "zcomet": {
     name: "zcomet",
+    repo: "agkozak/zcomet",
     cacheCleanCommand:
       "rm -rf ~/.zcomet/downloads ~/.zcomet/repos 2>/dev/null || true",
     configFiles: [
@@ -242,6 +257,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
 
   "alf": {
     name: "alf",
+    repo: "psyrendust/alf",
     cacheCleanCommand: "rm -rf ~/.alf/plugins 2>/dev/null || true",
     configFiles: [
       { path: "~/.zshrc", template: "alf.zshrc" },

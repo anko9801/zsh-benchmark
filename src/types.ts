@@ -2,6 +2,7 @@
 
 export interface PluginManager {
   name: string;
+  repo: string;
   cacheCleanCommand: string;
   configFiles: ConfigFile[];
   specialInit?: () => Promise<void>;
