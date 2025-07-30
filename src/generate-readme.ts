@@ -160,6 +160,29 @@ const buildRankingTable = (
 
   // Add N/A entries for oh-my-zsh and prezto if requested
   if (includeNAEntries) {
+    // Filter out oh-my-zsh and prezto from regular results first
+    const filteredResults = results.filter((result) =>
+      result.manager !== "oh-my-zsh" && result.manager !== "prezto"
+    );
+    
+    // Replace regular results with filtered results
+    const filteredTableRows = filteredResults.map((result) =>
+      `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
+        formatDuration(result.score)
+      } | ${
+        bestValue && result.score !== bestValue
+          ? `+${
+            formatPercentage(
+              calculatePercentageIncrease(bestValue, result.score),
+            )
+          }`
+          : "-"
+      } |`
+    );
+    
+    // Replace the regular result rows with filtered ones
+    tableRows.splice(includeVanilla ? 1 : 0, results.length, ...filteredTableRows);
+    
     tableRows.push("| - | oh-my-zsh | N/A | - |");
     tableRows.push("| - | prezto | N/A | - |");
   }
@@ -172,7 +195,12 @@ const buildRankingTable = (
 };
 
 const buildOverallTable = (results: RankingResult[]) => {
-  const tableRows = results.map((result) =>
+  // Filter out oh-my-zsh and prezto from rankings first
+  const filteredResults = results.filter((result) =>
+    result.manager !== "oh-my-zsh" && result.manager !== "prezto"
+  );
+
+  const tableRows = filteredResults.map((result) =>
     `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
       result.score.toFixed(2)
     } |`
