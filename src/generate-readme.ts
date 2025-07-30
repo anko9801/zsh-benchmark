@@ -130,12 +130,13 @@ const buildRankingTable = (
   bestValue?: number,
   includeNAEntries = false,
   includeVanilla = false,
+  vanillaTime?: number,
 ) => {
   const tableRows: string[] = [];
 
   // Add vanilla at the top if requested
-  if (includeVanilla) {
-    tableRows.push("| - | vanilla (no plugins) | 0ms | - |");
+  if (includeVanilla && vanillaTime !== undefined) {
+    tableRows.push(`| - | vanilla (no plugins) | ${formatDuration(vanillaTime)} | - |`);
   }
 
   // Add regular results
@@ -196,6 +197,9 @@ async function generateReadme(
   const best = rankings.loadTime.get(25)?.[0];
   const worst = rankings.loadTime.get(25)?.slice(-1)[0];
   const diff = best && worst ? (worst.score / best.score).toFixed(1) : "N/A";
+  
+  // Get vanilla (0 plugins) load time
+  const vanillaTime = rankings.loadTime.get(0)?.[0]?.score;
 
   const content = [
     "# Zsh Plugin Manager Benchmark Results",
@@ -228,6 +232,7 @@ async function generateReadme(
       best?.score,
       false, // Don't include N/A entries for load time table
       true,  // Include vanilla at the top
+      vanillaTime, // Pass the actual vanilla load time
     ),
     "",
     "### Installation Time Rankings",
