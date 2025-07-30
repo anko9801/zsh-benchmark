@@ -105,6 +105,16 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "znap.zshrc" },
     ],
     generatePluginLoad: (plugin) => `znap source ${plugin}`,
+    preInstallCommand: async (plugins: string[]) => {
+      if (plugins.length > 0) {
+        // Force znap to clone all plugins before benchmarking
+        const pluginList = plugins.map(p => `'${p}'`).join(' ');
+        await runCommand(
+          `zsh -c "source ~/Git/zsh-snap/znap.zsh && znap clone ${pluginList}"`,
+          { silent: true }
+        );
+      }
+    },
     versionCommand:
       "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
@@ -214,6 +224,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
       { path: "~/.zshrc", template: "zgenom.zshrc" },
     ],
     generatePluginLoad: (plugin) => `  zgenom load ${plugin}`,
+    preInstallCommand: "zsh -c 'source ~/.zshrc' 2>/dev/null || true",
     versionCommand:
       "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },

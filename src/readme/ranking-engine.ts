@@ -52,23 +52,26 @@ export class RankingEngine {
           return null;
         }
         
-        const scores = Array.from(manager.results.values())
-          .flatMap((r) => [
-            r.loadTime !== null ? { score: r.loadTime, weight: 0.8 } : null,
-            r.installTime !== null
-              ? { score: r.installTime, weight: 0.2 }
-              : null,
-          ])
-          .filter((s): s is { score: number; weight: number } => s !== null);
+        // Calculate score using: Load Time * 0.8 + 0.002 * Install Time
+        let totalScore = 0;
+        let validResults = 0;
+        
+        for (const result of manager.results.values()) {
+          if (result.loadTime !== null) {
+            let score = result.loadTime * 0.8;
+            
+            // Add install time component if available
+            if (result.installTime !== null) {
+              score += 0.002 * result.installTime;
+            }
+            
+            totalScore += score;
+            validResults++;
+          }
+        }
 
-        const totalWeight = scores.reduce((sum, s) => sum + s.weight, 0);
-        const weightedSum = scores.reduce(
-          (sum, s) => sum + s.score * s.weight,
-          0,
-        );
-
-        return totalWeight > 0
-          ? { manager: manager.name, score: weightedSum / totalWeight, rank: 0 }
+        return validResults > 0
+          ? { manager: manager.name, score: totalScore / validResults, rank: 0 }
           : null;
       })
       .filter((r): r is RankingResult => r !== null)
