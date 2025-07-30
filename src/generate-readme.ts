@@ -211,7 +211,7 @@ async function generateReadme(
     "## 📊 Executive Summary",
     "",
     `- **Benchmark Date:** ${date}`,
-    "- **Test Environment:** Ubuntu 24.04 (Docker on macOS 15.5), MacBook Pro (2020), Intel Core i5 2GHz (4 cores), 16GB RAM",
+    "- **Test Environment:** Ubuntu 24.04 (Docker on GitHub Actions), 4 vCPUs, 16GB RAM",
     "- **Key Findings:**",
     `  - ${rankings.overall[0].manager} が総合パフォーマンスで最高評価🥇`,
     `  - 25プラグイン環境では ${best?.manager} が最速 (${
