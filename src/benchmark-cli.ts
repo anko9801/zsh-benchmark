@@ -270,7 +270,13 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
           ` ± ${formatDuration(result.installStddev || 0)}`,
         );
       } else {
-        logger.error("Install benchmark failed");
+        // Check if it was skipped for oh-my-zsh/prezto with 25 plugins
+        const wasSkipped = (managerName === "oh-my-zsh" || managerName === "prezto") && count === 25;
+        if (wasSkipped) {
+          logger.info("Install benchmark skipped (plugins pre-installed)");
+        } else {
+          logger.error("Install benchmark failed");
+        }
       }
 
       if (result.loadTime !== null) {
