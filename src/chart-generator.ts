@@ -27,7 +27,7 @@ const CHART_COLORS = [
   ChartColors.DeepPurple,
 ];
 
-async function createLineChart(
+async function createBarChart(
   data: BenchmarkData,
   metric: "loadTime" | "installTime",
 ): Promise<string> {
@@ -65,35 +65,37 @@ async function createLineChart(
     },
   );
 
-  // Create datasets for Chart.js
-  const datasets = sortedManagers.map(([name, values], index) => {
-    const data = sortedCounts.map((count) => values.get(count) || null);
-    const color = CHART_COLORS[index % CHART_COLORS.length];
-
-    return {
-      label: name,
-      data: data,
-      borderColor: color,
-      backgroundColor: transparentize(color, 0.5),
-      borderWidth: 2.5,
-      tension: 0.1,
-      pointRadius: 5,
-      pointHoverRadius: 7,
-    };
-  });
-
   const title = metric === "loadTime"
     ? "Zsh Plugin Manager Load Time Comparison"
     : "Zsh Plugin Manager Install Time Comparison";
 
+  // 25プラグインのデータのみを抽出して棒グラフ用に準備
+  const pluginCount = 25;
+  const barData = sortedManagers
+    .map(([name, values]) => ({
+      manager: name,
+      value: values.get(pluginCount) || 0,
+    }))
+    .filter((item) => item.value > 0)
+    .sort((a, b) => a.value - b.value);
+
   const response = await renderChart({
-    type: "line",
+    type: "bar",
     data: {
-      labels: sortedCounts.map(String),
-      datasets: datasets,
+      labels: barData.map((item) => item.manager),
+      datasets: [{
+        label: `${
+          metric === "loadTime" ? "Load Time" : "Install Time"
+        } (${pluginCount} plugins)`,
+        data: barData.map((item) => item.value),
+        backgroundColor: CHART_COLORS.slice(0, barData.length),
+        borderColor: CHART_COLORS.slice(0, barData.length),
+        borderWidth: 1,
+      }],
     },
     options: {
       responsive: false,
+      maintainAspectRatio: false,
       plugins: {
         title: {
           display: true,
@@ -102,10 +104,13 @@ async function createLineChart(
             size: 18,
             weight: "bold",
           },
+          padding: {
+            top: 10,
+            bottom: 30,
+          },
         },
         legend: {
-          display: true,
-          position: "right",
+          display: false,
         },
       },
       scales: {
@@ -113,11 +118,14 @@ async function createLineChart(
           display: true,
           title: {
             display: true,
-            text: "Number of Plugins",
+            text: "Plugin Manager",
             font: {
               size: 14,
               weight: "bold",
             },
+          },
+          grid: {
+            display: false,
           },
         },
         y: {
@@ -133,6 +141,18 @@ async function createLineChart(
             },
           },
           beginAtZero: true,
+          grid: {
+            color: "#e0e0e0",
+            lineWidth: 0.5,
+          },
+        },
+      },
+      layout: {
+        padding: {
+          left: 10,
+          right: 100,
+          top: 40,
+          bottom: 60,
         },
       },
     },
@@ -156,14 +176,14 @@ export async function generateCharts(
   await Deno.mkdir(outputDir, { recursive: true });
 
   // Generate load time chart
-  const loadTimeChart = await createLineChart(data, "loadTime");
+  const loadTimeChart = await createBarChart(data, "loadTime");
   await Deno.writeTextFile(
     `${outputDir}/load-time-comparison-chart.svg`,
     loadTimeChart,
   );
 
   // Generate install time chart
-  const installTimeChart = await createLineChart(data, "installTime");
+  const installTimeChart = await createBarChart(data, "installTime");
   await Deno.writeTextFile(
     `${outputDir}/install-time-comparison-chart.svg`,
     installTimeChart,
