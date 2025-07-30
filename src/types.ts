@@ -11,23 +11,23 @@ export interface PluginManager {
   preInstallCommand?: string | ((plugins: string[]) => Promise<void>);
   postInstallCommand?: string;
   versionCommand?: string;
-  
+
   // Installation behavior flags
   specialInstallMeasure?: boolean;
   skipInstall?: boolean;
   customInstallCommand?: string;
   noInstallSupport?: boolean;
-  
+
   // Benchmark behavior
   slowInstallSettings?: {
     minPluginCount: number;
     runs: number;
     timeout: number;
   };
-  
+
   // Table display behavior
   requiresSpecialTableHandling?: boolean;
-  
+
   // Template-specific behavior
   templateConfig?: {
     separator?: string;

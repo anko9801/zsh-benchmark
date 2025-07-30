@@ -354,7 +354,13 @@ function parseArgs(args: string[]): GenerateReadmeOptions {
       h: "help",
       d: "debug",
     },
-    default: DEFAULT_OPTIONS,
+    default: {
+      input: DEFAULT_OPTIONS.inputFile,
+      output: DEFAULT_OPTIONS.outputFile,
+      language: DEFAULT_OPTIONS.language,
+      backup: DEFAULT_OPTIONS.backup,
+      debug: DEFAULT_OPTIONS.debug,
+    },
   });
 
   if (flags.help) {
@@ -435,8 +441,9 @@ async function main(): Promise<void> {
 
     logger.info(`✅ README successfully generated at ${options.outputFile}`);
   } catch (error) {
-    logger.error(`❌ Error: ${error.message}`);
-    if (options.debug) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`❌ Error: ${errorMessage}`);
+    if (options.debug && error instanceof Error) {
       console.error(error.stack);
     }
     Deno.exit(1);

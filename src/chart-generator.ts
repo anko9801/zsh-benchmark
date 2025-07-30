@@ -4,6 +4,7 @@ import { ChartColors } from "https://deno.land/x/fresh_charts@0.3.1/utils.ts";
 import { BenchmarkData } from "./types.ts";
 import { exists } from "./utils.ts";
 
+// Unused color constants - keeping for reference
 const _CHART_COLORS = [
   ChartColors.Blue,
   ChartColors.Red,
@@ -12,16 +13,6 @@ const _CHART_COLORS = [
   ChartColors.Purple,
   ChartColors.Yellow,
   ChartColors.Grey,
-  ChartColors.Pink,
-  ChartColors.Cyan,
-  ChartColors.Lime,
-  ChartColors.Indigo,
-  ChartColors.Teal,
-  ChartColors.Brown,
-  ChartColors.DeepOrange,
-  ChartColors.LightBlue,
-  ChartColors.Amber,
-  ChartColors.DeepPurple,
 ];
 
 async function createBarChart(
@@ -67,9 +58,9 @@ async function createBarChart(
     : "Zsh Plugin Manager Install Time Comparison";
 
   // 棒グラフ用にデータを準備
-  const managers0 = [];
-  const managers25 = [];
-  const managerNames = [];
+  const managers0: number[] = [];
+  const managers25: number[] = [];
+  const managerNames: string[] = [];
 
   sortedManagers.forEach(([name, values]) => {
     const value0 = values.get(0) || 0;
@@ -128,7 +119,6 @@ async function createBarChart(
       datasets: datasets,
     },
     options: {
-      responsive: false,
       maintainAspectRatio: false,
       plugins: {
         title: {

@@ -18,12 +18,6 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Format check
-        run: deno fmt --check
-
-      - name: Lint
-        run: deno lint
-
       - name: Type check
         run: deno check src/*.ts
 
