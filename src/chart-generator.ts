@@ -148,8 +148,8 @@ class ChartGenerator {
         }
       }
 
-      // Draw bars for full plugins
-      if (dataFull && dataFull[timeKey] !== null) {
+      // Draw bars for full plugins (skip for vanilla)
+      if (manager !== "vanilla" && dataFull && dataFull[timeKey] !== null) {
         const value = dataFull[timeKey];
         const barHeight = (value / maxValue) * chartHeight;
         const y = height - margin.bottom - barHeight;

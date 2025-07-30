@@ -57,7 +57,6 @@ export interface TableOptions {
 export interface TemplateData {
   executiveSummary: ExecutiveSummary;
   rankings: Rankings;
-  comparisonTable: string;
   graphs: GraphInfo[];
   versionInfo: VersionInfo;
   badges: BadgeInfo[];

@@ -42,17 +42,13 @@ export class ReadmeGenerator {
     log("Detecting graphs...");
     const graphs = await this.graphHandler.detectGraphs();
 
-    log("Building comparison table...");
-    const comparisonTable = this.tableBuilder.buildComparisonTable(parsedData, {
-      highlightBest: true,
-    });
+    // Comparison table removed per user request
 
     log("Preparing template data...");
     const templateData = this.prepareTemplateData(
       parsedData,
       rankings,
       graphs,
-      comparisonTable,
     );
 
     if (this.options.backup) await this.createBackup();
@@ -71,7 +67,6 @@ export class ReadmeGenerator {
     parsedData: ParsedData,
     rankings: Rankings,
     graphs: GraphInfo[],
-    comparisonTable: string,
   ): TemplateData {
     return {
       executiveSummary: {
@@ -80,7 +75,6 @@ export class ReadmeGenerator {
         keyFindings: this.generateKeyFindings(parsedData, rankings),
       },
       rankings,
-      comparisonTable,
       graphs,
       versionInfo: {
         managers: new Map(),
@@ -144,14 +138,6 @@ export class ReadmeGenerator {
       findings.push(`パフォーマンス差は最大 ${ratio}倍`);
     }
 
-    const zimResult = data.managers.find((m) => m.name === "zim")?.results.get(
-      0,
-    );
-    if (zimResult?.loadTime && zimResult.loadTime < 40) {
-      findings.push(
-        `zim は最小構成で驚異的な速度 (${Math.round(zimResult.loadTime)}ms)`,
-      );
-    }
 
     return findings;
   }

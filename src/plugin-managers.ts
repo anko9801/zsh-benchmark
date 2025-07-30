@@ -4,6 +4,17 @@ import { PluginManager } from "./types.ts";
 import { runCommand } from "./utils.ts";
 
 export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
+  "vanilla": {
+    name: "vanilla",
+    repo: "zsh-users/zsh",
+    cacheCleanCommand: "true", // No cache to clean
+    configFiles: [
+      { path: "~/.zshrc", template: "vanilla.zshrc" },
+    ],
+    generatePluginLoad: (_plugin) => "", // No plugins
+    versionCommand: "zsh --version | awk '{print $2}'",
+  },
+
   "oh-my-zsh": {
     name: "oh-my-zsh",
     repo: "ohmyzsh/ohmyzsh",

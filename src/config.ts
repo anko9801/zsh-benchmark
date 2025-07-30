@@ -33,7 +33,7 @@ export const DEFAULT_CONFIG: Config = {
   },
   defaults: {
     pluginCounts: [0, 25],
-    managers: Object.keys(PLUGIN_MANAGERS),
+    managers: ["vanilla", ...Object.keys(PLUGIN_MANAGERS).filter(m => m !== "vanilla")],
   },
 };
 

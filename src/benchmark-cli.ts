@@ -286,6 +286,12 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
     logger.header(`Testing: ${managerName}`);
 
     for (const count of pluginCounts) {
+      // Skip vanilla for non-zero plugin counts
+      if (managerName === "vanilla" && count > 0) {
+        logger.info(`Skipping vanilla with ${count} plugins (not applicable)`);
+        continue;
+      }
+      
       logger.subheader(`Testing with ${count} plugins`);
       const result = await runBenchmark(manager, count);
       results.push(result);
