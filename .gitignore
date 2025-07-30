@@ -37,3 +37,6 @@ benchmark-*.json
 
 CLAUDE.md
 .kiro/
+
+# Backup files
+README.md.bak

@@ -27,6 +27,8 @@
 
 ### Overall Performance
 
+**Score Calculation**: `(Load Time × 0.8) + (Install Time × 0.2)` - Lower is better
+
 {{overallRankings}}
 
 ## 📦 Plugin Managers

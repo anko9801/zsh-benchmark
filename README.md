@@ -7,7 +7,7 @@
 ## 📊 Executive Summary
 
 - **Benchmark Date:** 2025-07-30
-- **Test Environment:** 2 GHz Quad-Core Intel Core i5, 16GB RAM, macOS 15.5
+- **Test Environment:** Ubuntu 24.04 (Docker on macOS 15.5), MacBook Pro (2020), Intel Core i5 2GHz (4 cores), 16GB RAM
 - **Key Findings:**
   - antidote が総合パフォーマンスで最高評価🥇
   - 25プラグイン環境では antigen が最速 (35ms)
@@ -65,6 +65,8 @@ _Plugin installation time comparison across different plugin managers_
 | #16 | zplug | 665.32 | +1945.6% |
 
 ### Overall Performance
+
+**Score Calculation**: `(Load Time × 0.8) + (Install Time × 0.2)` - Lower is better
 
 | Rank | Plugin Manager | Score |
 |---|---|---:|
