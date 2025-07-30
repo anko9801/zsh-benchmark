@@ -77,21 +77,23 @@ jobs:
                 const comparison = [];
 
                 // Compare 25 plugin results
-                for (const manager of pr.managers) {
-                  const prResult = manager.results['25'];
-                  const mainManager = main.managers.find(m => m.name === manager.name);
-                  const mainResult = mainManager?.results['25'];
+                for (const prResult of pr.results) {
+                  if (prResult.pluginCount === 25) {
+                    const mainResult = main.results.find(r => r.manager === prResult.manager && r.pluginCount === 25);
 
-                  if (prResult && mainResult) {
-                    const loadDiff = ((prResult.loadTime - mainResult.loadTime) / mainResult.loadTime * 100).toFixed(1);
-                    const installDiff = ((prResult.installTime - mainResult.installTime) / mainResult.installTime * 100).toFixed(1);
-                    comparison.push({
-                      manager: manager.name,
-                      loadTime: prResult.loadTime,
-                      loadDiff: loadDiff,
-                      installTime: prResult.installTime,
-                      installDiff: installDiff
-                    });
+                    if (mainResult && mainResult.loadTime && prResult.loadTime) {
+                      const loadDiff = ((prResult.loadTime - mainResult.loadTime) / mainResult.loadTime * 100).toFixed(1);
+                      const installDiff = mainResult.installTime && prResult.installTime 
+                        ? ((prResult.installTime - mainResult.installTime) / mainResult.installTime * 100).toFixed(1)
+                        : '0.0';
+                      comparison.push({
+                        manager: prResult.manager,
+                        loadTime: prResult.loadTime,
+                        loadDiff: loadDiff,
+                        installTime: prResult.installTime,
+                        installDiff: installDiff
+                      });
+                    }
                   }
                 }
 
@@ -116,12 +118,11 @@ jobs:
             comment += '|----------------|--------------|----------|\n';
 
             const managerResults = [];
-            for (const manager of results.managers) {
-              const result = manager.results['25'];
-              if (result) {
+            for (const result of results.results) {
+              if (result.pluginCount === 25 && result.loadTime) {
                 managerResults.push({
-                  name: manager.name,
-                  installTime: result.installTime,
+                  name: result.manager,
+                  installTime: result.installTime || 0,
                   loadTime: result.loadTime
                 });
               }
@@ -129,7 +130,8 @@ jobs:
 
             const sorted = managerResults.sort((a, b) => a.loadTime - b.loadTime);
             for (const result of sorted) {
-              comment += `| ${result.name} | ${result.installTime.toFixed(1)}ms | ${result.loadTime.toFixed(1)}ms |\n`;
+              const installTimeStr = result.installTime > 0 ? `${result.installTime.toFixed(1)}ms` : 'N/A';
+              comment += `| ${result.name} | ${installTimeStr} | ${result.loadTime.toFixed(1)}ms |\n`;
             }
 
             // Add comparison if available
