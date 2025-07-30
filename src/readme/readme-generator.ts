@@ -94,6 +94,13 @@ export class ReadmeGenerator {
   }
 
   private formatEnvironment(env: ParsedData["environment"]): string {
+    // Check if running in GitHub Actions
+    if (Deno.env.get("GITHUB_ACTIONS") === "true") {
+      const runnerOs = Deno.env.get("RUNNER_OS") || "Linux";
+      const runnerArch = Deno.env.get("RUNNER_ARCH") || "X64";
+      return `Ubuntu 24.04 (Docker), GitHub Actions ${runnerOs}-${runnerArch} runner`;
+    }
+    // Default for local development
     return "Ubuntu 24.04 (Docker on macOS 15.5), MacBook Pro (2020), Intel Core i5 2GHz (4 cores), 16GB RAM";
   }
 

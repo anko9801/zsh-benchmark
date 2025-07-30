@@ -36,6 +36,13 @@ jobs:
             --entrypoint deno \
             zsh-benchmark run --allow-all src/generate-comparison-chart.ts
 
+      - name: Generate README
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/benchmark \
+            --entrypoint deno \
+            zsh-benchmark run --allow-all src/generate-readme.ts
+
       - name: Save benchmark results
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
