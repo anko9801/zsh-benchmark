@@ -35,6 +35,9 @@ jobs:
       - name: Lint
         run: deno lint
 
+      - name: Type check
+        run: deno check src/**/*.ts
+
       - name: Build Docker image
         run: docker build -t zsh-benchmark .
 

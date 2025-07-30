@@ -113,7 +113,7 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
     manager,
     score,
     rank: 0,
-  })).sort((a, b) => a.score - b.score);
+  } as RankingResult)).sort((a, b) => a.score - b.score);
   overallResults.forEach((result, index) => {
     result.rank = index + 1;
     if (index < 3) {
