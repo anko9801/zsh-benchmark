@@ -100,6 +100,45 @@ async function restoreConfigs() {
   }
 }
 
+async function getManagerVersion(managerName: string): Promise<string> {
+  const versionCommands: Record<string, string> = {
+    "oh-my-zsh":
+      "cd ~/.oh-my-zsh && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "prezto":
+      "cd ~/.zprezto && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "zim":
+      "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
+    "znap":
+      "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "zinit":
+      "cd ~/.local/share/zinit/zinit.git && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "zplug":
+      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
+    "antigen":
+      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
+    "antibody": "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
+    "antidote": "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
+    "sheldon":
+      "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
+    "zgenom":
+      "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "zpm":
+      "cd ~/.zpm && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "zr": "echo 'custom implementation'",
+    "antigen-hs": "echo 'custom implementation'",
+    "zcomet":
+      "cd ~/.zcomet && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
+    "alf": "echo 'custom implementation'",
+  };
+  
+  const cmd = versionCommands[managerName];
+  if (cmd) {
+    const { output } = await runCommand(cmd, { silent: true });
+    return output.trim();
+  }
+  return "unknown";
+}
+
 async function runBenchmark(
   manager: PluginManager,
   pluginCount: number,
@@ -115,6 +154,10 @@ async function runBenchmark(
     logger.debug(
       `Starting benchmark for ${manager.name} with ${pluginCount} plugins`,
     );
+    
+    // Get version information
+    result.version = await getManagerVersion(manager.name);
+    logger.debug(`${manager.name} version: ${result.version}`);
 
     // Prepare configuration
     logger.debug(`Preparing configuration files...`);
@@ -263,6 +306,9 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
       results.push(result);
 
       // Display results
+      // Display version
+      logger.info(`Version: ${result.version || 'unknown'}`);
+      
       if (result.installTime !== null) {
         logger.result(
           "Install time",
@@ -350,31 +396,31 @@ async function versions(managers: string[]) {
 
   const versionCommands: Record<string, string> = {
     "oh-my-zsh":
-      "cd ~/.oh-my-zsh && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.oh-my-zsh && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "prezto":
-      "cd ~/.zprezto && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.zprezto && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "zim":
       "zsh -c 'source ~/.zim/zimfw.zsh && zimfw version' 2>/dev/null || echo 'unknown'",
     "znap":
-      "cd ~/Git/zsh-snap && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "zinit":
-      "cd ~/.local/share/zinit/zinit.git && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.local/share/zinit/zinit.git && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "zplug":
-      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || echo 'unknown'",
+      "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
     "antigen":
-      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh | cut -d'=' -f2 | tr -d '\"' || echo 'unknown'",
+      "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
     "antibody": "antibody -v 2>/dev/null | awk '{print $3}' || echo 'unknown'",
-    "antidote": "antidote -v 2>/dev/null | awk '{print $2}' || echo 'unknown'",
+    "antidote": "zsh -c 'source /usr/local/share/antidote/antidote.zsh && antidote -v' 2>/dev/null | awk 'NR==1 {print $3}' || cd /usr/local/share/antidote && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
     "sheldon":
-      "sheldon --version 2>/dev/null | awk '{print $2}' || echo 'unknown'",
+      "sheldon --version 2>/dev/null | awk 'NR==1 {print $2}' || echo 'unknown'",
     "zgenom":
-      "cd ~/.zgenom && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.zgenom && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "zpm":
-      "cd ~/.zpm && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.zpm && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "zr": "echo 'custom implementation'",
     "antigen-hs": "echo 'custom implementation'",
     "zcomet":
-      "cd ~/.zcomet && git describe --tags --abbrev=0 2>/dev/null || echo 'unknown'",
+      "cd ~/.zcomet && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
     "alf": "echo 'custom implementation'",
   };
 

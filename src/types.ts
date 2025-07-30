@@ -24,6 +24,7 @@ export interface BenchmarkResult {
   installStddev?: number;
   loadStddev?: number;
   error?: string;
+  version?: string;  // Version or commit hash of the plugin manager
 }
 
 export interface BenchmarkData {
