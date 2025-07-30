@@ -34,7 +34,13 @@ class ChartGenerator {
       return { manager: m, value };
     }).sort((a, b) => a.value - b.value);
 
+    // Put vanilla first
     const sortedManagers = managerAvgs.map((m) => m.manager);
+    const vanillaIndex = sortedManagers.indexOf("vanilla");
+    if (vanillaIndex > 0) {
+      sortedManagers.splice(vanillaIndex, 1);
+      sortedManagers.unshift("vanilla");
+    }
 
     // SVG parameters
     const { width, height, margin } = this.options;

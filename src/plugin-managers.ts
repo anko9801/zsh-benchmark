@@ -104,7 +104,7 @@ export const PLUGIN_MANAGERS: Record<string, PluginManager> = {
     configFiles: [
       { path: "~/.zshrc", template: "znap.zshrc" },
     ],
-    generatePluginLoad: (plugin) => `znap clone ${plugin}`,
+    generatePluginLoad: (plugin) => `znap source ${plugin}`,
     versionCommand:
       "cd ~/Git/zsh-snap && (git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo 'unknown')",
   },
