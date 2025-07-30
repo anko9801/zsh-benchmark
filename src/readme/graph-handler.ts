@@ -8,7 +8,7 @@ export class GraphHandler {
     
     try {
       for await (const entry of Deno.readDir(resultsDir)) {
-        if (entry.isFile && entry.name.endsWith(".svg") && !entry.name.includes("scalability")) {
+        if (entry.isFile && entry.name.endsWith(".svg")) {
           const path = `${resultsDir}/${entry.name}`;
           const title = this.getTitle(entry.name);
           const caption = this.getCaption(entry.name);

@@ -111,43 +111,53 @@ async function runBenchmark(
     }
 
     // Install benchmark
-    logger.progress("Running install benchmark");
-    // Create prepare command that cleans cache and runs pre-install if needed
-    let prepareCmd = manager.cacheCleanCommand;
-    if (preInstallCmd) {
-      prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
-    }
+    // Skip install benchmark for prezto and oh-my-zsh with 25 plugins
+    // because they pre-install all plugins
+    const skipInstall = (manager.name === "prezto" || manager.name === "oh-my-zsh") && pluginCount === 25;
     
-    let hyperfineCmd =
-      `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
-
-    const { success, output, error } = await runCommand(hyperfineCmd, {
-      silent: true,
-    });
-    if (success && await exists("/tmp/" + manager.name + "-install.json")) {
-      const data = JSON.parse(
-        await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
-      );
-      result.installTime = data.results[0].mean * 1000;
-      result.installStddev = data.results[0].stddev * 1000;
+    if (skipInstall) {
+      logger.info("Skipping install benchmark (plugins pre-installed)");
+      result.installTime = null;
+      result.installStddev = null;
     } else {
-      logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
-      logger.debug(`Hyperfine output: ${output}`);
+      logger.progress("Running install benchmark");
+      // Create prepare command that cleans cache and runs pre-install if needed
+      let prepareCmd = manager.cacheCleanCommand;
+      if (preInstallCmd) {
+        prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
+      }
+      
+      let hyperfineCmd =
+        `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
 
-      // Retry once with longer timeout
-      logger.info("  Retrying with longer timeout...");
-      const retryCmd = hyperfineCmd.replace("timeout 30", "timeout 60");
-      const retry = await runCommand(retryCmd, { silent: true });
-      if (
-        retry.success &&
-        await exists("/tmp/" + manager.name + "-install.json")
-      ) {
+      const { success, output, error } = await runCommand(hyperfineCmd, {
+        silent: true,
+      });
+      if (success && await exists("/tmp/" + manager.name + "-install.json")) {
         const data = JSON.parse(
           await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
         );
         result.installTime = data.results[0].mean * 1000;
         result.installStddev = data.results[0].stddev * 1000;
-        logger.success("  Retry successful!");
+      } else {
+        logger.warn(`Install benchmark failed for ${manager.name}: ${error}`);
+        logger.debug(`Hyperfine output: ${output}`);
+
+        // Retry once with longer timeout
+        logger.info("  Retrying with longer timeout...");
+        const retryCmd = hyperfineCmd.replace("timeout 30", "timeout 60");
+        const retry = await runCommand(retryCmd, { silent: true });
+        if (
+          retry.success &&
+          await exists("/tmp/" + manager.name + "-install.json")
+        ) {
+          const data = JSON.parse(
+            await Deno.readTextFile("/tmp/" + manager.name + "-install.json"),
+          );
+          result.installTime = data.results[0].mean * 1000;
+          result.installStddev = data.results[0].stddev * 1000;
+          logger.success("  Retry successful!");
+        }
       }
     }
 
