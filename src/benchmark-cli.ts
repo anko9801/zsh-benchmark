@@ -32,6 +32,14 @@ async function prepareConfig(
   const plugins = ALL_PLUGINS.slice(0, pluginCount);
 
   for (const config of manager.configFiles) {
+    const configPath = expandPath(config.path);
+    
+    // Create backup of existing config if it exists
+    if (await exists(configPath)) {
+      const backupPath = `${configPath}.bak`;
+      logger.debug(`Creating backup: ${backupPath}`);
+      await Deno.copyFile(configPath, backupPath);
+    }
     let template: string;
     try {
       template = await loadTemplate(config.template);
@@ -67,9 +75,28 @@ async function prepareConfig(
       content = content.replace("{{PLUGIN_LOADS}}", pluginLoads);
     }
 
-    const configPath = expandPath(config.path);
     await ensureDir(dirname(configPath));
     await Deno.writeTextFile(configPath, content);
+  }
+}
+
+async function restoreConfigs() {
+  const configPaths = [
+    "~/.zshrc",
+    "~/.zimrc",
+    "~/.zplugrc",
+    "~/.config/sheldon/plugins.toml",
+  ];
+  
+  for (const path of configPaths) {
+    const expandedPath = expandPath(path);
+    const backupPath = `${expandedPath}.bak`;
+    
+    if (await exists(backupPath)) {
+      logger.debug(`Restoring ${expandedPath} from backup`);
+      await Deno.copyFile(backupPath, expandedPath);
+      await Deno.remove(backupPath);
+    }
   }
 }
 
@@ -115,6 +142,8 @@ async function runBenchmark(
     // because they pre-install all plugins
     const skipInstall = (manager.name === "prezto" || manager.name === "oh-my-zsh") && pluginCount === 25;
     
+    let hyperfineCmd: string; // Declare here so it's available for load benchmark
+    
     if (skipInstall) {
       logger.info("Skipping install benchmark (plugins pre-installed)");
       result.installTime = null;
@@ -127,7 +156,7 @@ async function runBenchmark(
         prepareCmd = `${manager.cacheCleanCommand} && ${preInstallCmd}`;
       }
       
-      let hyperfineCmd =
+      hyperfineCmd =
         `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${DEFAULT_CONFIG.hyperfine.installRuns} --prepare "${prepareCmd.replace(/"/g, '\\"')}" --export-json /tmp/${manager.name}-install.json --command-name '${manager.name}-install' 'timeout 30 zsh -ic exit'`;
 
       const { success, output, error } = await runCommand(hyperfineCmd, {
@@ -273,6 +302,11 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
 
   await Deno.writeTextFile(resultsPath, JSON.stringify({ results }, null, 2));
   logger.success(`\n✅ Results saved to: ${resultsPath}`);
+  
+  // Restore original config files from backups
+  logger.info("\nRestoring original configuration files...");
+  await restoreConfigs();
+  logger.success("✅ Original configurations restored");
 }
 
 async function test(managers: string[]) {
@@ -298,6 +332,11 @@ async function test(managers: string[]) {
       if (error) logger.error(`     Error: ${error}`);
     }
   }
+  
+  // Restore original config files after testing
+  logger.info("\nRestoring original configuration files...");
+  await restoreConfigs();
+  logger.success("✅ Original configurations restored");
 }
 
 async function versions(managers: string[]) {
