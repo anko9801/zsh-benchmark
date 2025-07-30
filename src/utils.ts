@@ -72,7 +72,7 @@ export async function runCommand(
 }
 
 // Formatting utilities
-export const formatDuration = (ms: number, precision = 2): string =>
+export const formatDuration = (ms: number, precision = 1): string =>
   `${ms.toFixed(precision)}ms`;
 export const formatPercentage = (value: number, precision = 1): string =>
   `${value.toFixed(precision)}%`;
