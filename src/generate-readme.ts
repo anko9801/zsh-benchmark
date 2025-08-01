@@ -222,6 +222,16 @@ const buildOverallTable = (results: RankingResult[]) => {
     !requiresSpecialTableHandling(result.manager)
   );
 
+  // Re-rank and re-assign medals after filtering
+  filteredResults.forEach((result, index) => {
+    result.rank = index + 1;
+    if (index < 3) {
+      result.medal = ["🥇", "🥈", "🥉"][index] as "🥇" | "🥈" | "🥉";
+    } else {
+      result.medal = undefined;
+    }
+  });
+
   const tableRows = filteredResults.map((result) =>
     `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
       result.score.toFixed(2)
