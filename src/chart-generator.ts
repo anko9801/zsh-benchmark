@@ -19,12 +19,13 @@ async function createBarChart(
   data: BenchmarkData,
   metric: "loadTime" | "installTime",
 ): Promise<string> {
-  // Prepare data
-  const managers = new Map<string, Map<number, number>>();
+  // Prepare data with error bars
+  const managers = new Map<string, Map<number, {value: number, stddev: number}>>();
   const counts = new Set<number>();
 
   for (const result of data.results) {
     const value = result[metric];
+    const stddev = metric === "loadTime" ? result.loadStddev : result.installStddev;
     if (
       value === null || (metric === "installTime" && result.pluginCount === 0)
     ) {
@@ -33,7 +34,10 @@ async function createBarChart(
 
     counts.add(result.pluginCount);
     if (!managers.has(result.manager)) managers.set(result.manager, new Map());
-    managers.get(result.manager)!.set(result.pluginCount, value);
+    managers.get(result.manager)!.set(result.pluginCount, {
+      value,
+      stddev: stddev || 0
+    });
   }
 
   const _sortedCounts = Array.from(counts).sort((first, second) =>
@@ -42,11 +46,11 @@ async function createBarChart(
   const sortedManagers = Array.from(managers.entries()).sort(
     (firstEntry, secondEntry) => {
       const aSum = Array.from(firstEntry[1].values()).reduce(
-        (sum, value) => sum + value,
+        (sum, data) => sum + data.value,
         0,
       );
       const bSum = Array.from(secondEntry[1].values()).reduce(
-        (sum, value) => sum + value,
+        (sum, data) => sum + data.value,
         0,
       );
       return aSum - bSum;
@@ -57,20 +61,24 @@ async function createBarChart(
     ? "Zsh Plugin Manager Load Time Comparison"
     : "Zsh Plugin Manager Install Time Comparison";
 
-  // 棒グラフ用にデータを準備
+  // 棒グラフ用にデータを準備（エラーバー付き）
   const managers0: number[] = [];
   const managers25: number[] = [];
+  const managers0Error: number[] = [];
+  const managers25Error: number[] = [];
   const managerNames: string[] = [];
 
   sortedManagers.forEach(([name, values]) => {
-    const value0 = values.get(0) || 0;
-    const value25 = values.get(25) || 0;
+    const data0 = values.get(0) || {value: 0, stddev: 0};
+    const data25 = values.get(25) || {value: 0, stddev: 0};
 
     // 25プラグインのデータがある場合のみ表示
-    if (value25 > 0) {
+    if (data25.value > 0) {
       managerNames.push(name);
-      managers0.push(value0);
-      managers25.push(value25);
+      managers0.push(data0.value);
+      managers25.push(data25.value);
+      managers0Error.push(data0.stddev);
+      managers25Error.push(data25.stddev);
     }
   });
 
@@ -83,6 +91,8 @@ async function createBarChart(
   const sortedNames = sortedIndices.map((i) => managerNames[i]);
   const sorted0 = sortedIndices.map((i) => managers0[i]);
   const sorted25 = sortedIndices.map((i) => managers25[i]);
+  const sorted0Error = sortedIndices.map((i) => managers0Error[i]);
+  const sorted25Error = sortedIndices.map((i) => managers25Error[i]);
 
   // Install timeの場合は0プラグインのデータは表示しない
   const datasets = metric === "installTime"
@@ -144,6 +154,26 @@ async function createBarChart(
               size: 12,
             },
           },
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const datasetIndex = context.datasetIndex;
+              const dataIndex = context.dataIndex;
+              const value = context.parsed.y;
+              let errorData;
+              
+              if (metric === "installTime") {
+                errorData = sorted25Error;
+              } else {
+                errorData = datasetIndex === 0 ? sorted0Error : sorted25Error;
+              }
+              
+              const stddev = errorData[dataIndex] || 0;
+              
+              return `${context.dataset.label}: ${value.toFixed(1)}ms ± ${stddev.toFixed(1)}ms`;
+            }
+          }
         },
       },
       scales: {
