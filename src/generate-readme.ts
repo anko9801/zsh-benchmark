@@ -239,7 +239,7 @@ const buildOverallTable = (results: RankingResult[]) => {
   );
 
   // Add N/A entries for managers that require special handling
-  for (const manager of ["oh-my-zsh", "prezto"]) {
+  for (const manager of ["oh-my-zsh", "prezto", "zcomet"]) {
     if (requiresSpecialTableHandling(manager)) {
       tableRows.push(`| - | ${manager} | N/A |`);
     }
