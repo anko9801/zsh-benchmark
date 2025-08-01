@@ -68,6 +68,10 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
   };
   const overallScores = new Map<string, number>();
 
+  // 基準値設定（ミリ秒）
+  const LOAD_TIME_BASE = 100;    // 100ms = 快適なシェル起動時間
+  const INSTALL_TIME_BASE = 5000; // 5秒 = 快適なインストール時間
+
   for (const pluginCount of parsedData.pluginCounts) {
     const loadResults: RankingResult[] = [],
       installResults: RankingResult[] = [];
@@ -88,12 +92,14 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
           rank: 0,
         });
       }
-      overallScores.set(
-        manager.name,
-        (overallScores.get(manager.name) || 0) +
-          ((result.loadTime || 0) * 0.8 + (result.installTime || 0) * 0.2) /
-            100,
-      );
+      
+      // 25プラグインの結果のみを使用してスコア計算
+      if (pluginCount === 25) {
+        const loadScore = (result.loadTime || 0) / LOAD_TIME_BASE;
+        const installScore = (result.installTime || 0) / INSTALL_TIME_BASE;
+        const totalScore = loadScore * 0.8 + installScore * 0.2;
+        overallScores.set(manager.name, totalScore);
+      }
     }
     const assignRanks = (results: RankingResult[]) => {
       results.sort((a, b) => a.score - b.score);
@@ -318,7 +324,7 @@ async function generateReadme(
     "",
     "### Overall Performance",
     "",
-    "**Score Calculation**: `(Load Time × 0.8) + (Install Time × 0.2)` - Lower is better",
+    "**Score Calculation**: `(Load Time / 100ms × 0.8) + (Install Time / 5000ms × 0.2)` - Lower is better",
     "",
     ...buildOverallTable(rankings.overall),
     "",
