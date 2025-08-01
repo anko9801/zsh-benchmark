@@ -68,9 +68,27 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
   };
   const overallScores = new Map<string, number>();
 
-  // 基準値設定（ミリ秒）
-  const LOAD_TIME_BASE = 100;    // 100ms = 快適なシェル起動時間
-  const INSTALL_TIME_BASE = 5000; // 5秒 = 快適なインストール時間
+  // 25プラグインの平均値を計算する
+  let loadTimeSum = 0;
+  let loadTimeCount = 0;
+  let installTimeSum = 0;
+  let installTimeCount = 0;
+
+  // まず平均値を計算
+  for (const manager of parsedData.managers) {
+    const result = manager.results.get(25);
+    if (result && result.loadTime !== null) {
+      loadTimeSum += result.loadTime;
+      loadTimeCount++;
+    }
+    if (result && result.installTime !== null) {
+      installTimeSum += result.installTime;
+      installTimeCount++;
+    }
+  }
+
+  const loadTimeAvg = loadTimeCount > 0 ? loadTimeSum / loadTimeCount : 100;
+  const installTimeAvg = installTimeCount > 0 ? installTimeSum / installTimeCount : 5000;
 
   for (const pluginCount of parsedData.pluginCounts) {
     const loadResults: RankingResult[] = [],
@@ -95,8 +113,8 @@ const calculateRankings = (parsedData: ReturnType<typeof parseData>) => {
       
       // 25プラグインの結果のみを使用してスコア計算
       if (pluginCount === 25) {
-        const loadScore = (result.loadTime || 0) / LOAD_TIME_BASE;
-        const installScore = (result.installTime || 0) / INSTALL_TIME_BASE;
+        const loadScore = (result.loadTime || 0) / loadTimeAvg;
+        const installScore = (result.installTime || 0) / installTimeAvg;
         const totalScore = loadScore * 0.8 + installScore * 0.2;
         overallScores.set(manager.name, totalScore);
       }
@@ -324,7 +342,7 @@ async function generateReadme(
     "",
     "### Overall Performance",
     "",
-    "**Score Calculation**: `(Load Time / 100ms × 0.8) + (Install Time / 5000ms × 0.2)` - Lower is better",
+    "**Score Calculation**: `(Load Time / Load Time Average × 0.8) + (Install Time / Install Time Average × 0.2)` - Lower is better",
     "",
     ...buildOverallTable(rankings.overall),
     "",
