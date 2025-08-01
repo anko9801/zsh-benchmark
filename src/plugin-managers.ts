@@ -425,6 +425,8 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       runs: 1,
       timeout: 300,
     },
+    noInstallSupport: true,
+    requiresSpecialTableHandling: true,
     versionCommand: getGitVersion("~/.zcomet"),
   },
 
