@@ -17,6 +17,7 @@ const createCommand =
   (prefix: string, suffix = ""): (plugin: string) => string =>
   (plugin: string) => `${prefix} ${plugin}${suffix}`;
 
+
 const gitClonePlugins = (dir: string) => async (plugins: string[]) => {
   await runCommand(`mkdir -p ${dir}`);
   for (const plugin of plugins) {
@@ -386,8 +387,39 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       { path: "~/.zshrc.zcomet", template: "zcomet-plugins.zcomet" },
     ],
     generatePluginLoad: createCommand("zcomet load"),
-    // zcomet downloads plugins asynchronously - wait for all downloads to complete
-    customInstallCommand: `bash -c 'EXPECTED=$(grep -c "^zcomet load" ~/.zshrc.zcomet 2>/dev/null || echo 25); zsh -ic exit & sleep 5; LAST_COMPLETE=0; STABLE_COUNT=0; for i in {1..180}; do COMPLETE=$(find ~/.zcomet/repos -name HEAD 2>/dev/null | wc -l); if [ $COMPLETE -eq $LAST_COMPLETE ]; then STABLE_COUNT=$((STABLE_COUNT + 1)); else STABLE_COUNT=0; fi; LAST_COMPLETE=$COMPLETE; if [ $COMPLETE -ge $EXPECTED ] && [ $STABLE_COUNT -ge 10 ]; then break; fi; sleep 1; done'`,
+    // zcomet downloads plugins asynchronously - wait for completion
+    customInstallCommand: `bash -c '
+      # Get expected plugin count
+      EXPECTED=$(grep -c "^zcomet load" ~/.zshrc.zcomet 2>/dev/null || echo 0)
+      
+      # Start zsh in background
+      zsh -ic exit & 
+      
+      # Monitor download progress
+      LAST_COMPLETE=0
+      STABLE_COUNT=0
+      TIMEOUT=0
+      
+      while [ $TIMEOUT -lt 180 ]; do 
+        COMPLETE=$(find ~/.zcomet/repos -name HEAD 2>/dev/null | wc -l)
+        
+        if [ $COMPLETE -eq $LAST_COMPLETE ]; then 
+          STABLE_COUNT=$((STABLE_COUNT + 1))
+        else 
+          STABLE_COUNT=0
+        fi
+        
+        LAST_COMPLETE=$COMPLETE
+        
+        # Exit when all plugins downloaded and stable for 3 seconds
+        if [ $COMPLETE -ge $EXPECTED ] && [ $STABLE_COUNT -ge 3 ]; then 
+          break
+        fi
+        
+        TIMEOUT=$((TIMEOUT + 1))
+        sleep 1
+      done
+    '`,
     slowInstallSettings: {
       minPluginCount: 1,
       runs: 1,
