@@ -171,8 +171,10 @@ const buildRankingTable = (
     // Re-rank filtered results
     filteredResults.forEach((result, index) => {
       result.rank = index + 1;
-      // Keep medals only for top 3
-      if (index >= 3) {
+      // Re-assign medals to top 3
+      if (index < 3) {
+        result.medal = ["🥇", "🥈", "🥉"][index] as "🥇" | "🥈" | "🥉";
+      } else {
         result.medal = undefined;
       }
     });
