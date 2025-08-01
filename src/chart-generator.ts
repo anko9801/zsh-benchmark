@@ -107,18 +107,20 @@ async function createBarChart(
     ]
     : [
       {
-        label: "0 plugins",
-        data: sorted0,
-        backgroundColor: ChartColors.Blue,
-        borderColor: ChartColors.Blue,
-        borderWidth: 1,
-      },
-      {
         label: "25 plugins",
         data: sorted25,
-        backgroundColor: ChartColors.Red,
+        backgroundColor: "rgba(255, 99, 132, 0.8)", // 赤色、少し透明
         borderColor: ChartColors.Red,
-        borderWidth: 1,
+        borderWidth: 2,
+        order: 1, // 後ろに表示
+      },
+      {
+        label: "0 plugins (baseline)",
+        data: sorted0,
+        backgroundColor: "rgba(54, 162, 235, 0.9)", // 青色、より不透明
+        borderColor: ChartColors.Blue,
+        borderWidth: 2,
+        order: 2, // 前に表示
       },
     ];
 
@@ -166,7 +168,8 @@ async function createBarChart(
               if (metric === "installTime") {
                 errorData = sorted25Error;
               } else {
-                errorData = datasetIndex === 0 ? sorted0Error : sorted25Error;
+                // Load timeの場合: dataset 0 = 25 plugins, dataset 1 = 0 plugins
+                errorData = datasetIndex === 0 ? sorted25Error : sorted0Error;
               }
               
               const stddev = errorData[dataIndex] || 0;
