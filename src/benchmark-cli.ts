@@ -120,7 +120,7 @@ async function runBenchmark(
 
     // Install benchmark
     const skipInstall =
-      (hasNoInstallSupport(manager.name) && pluginCount === 25) ||
+      hasNoInstallSupport(manager.name) ||
       (manager.skipInstall && pluginCount > 0);
 
     if (!skipInstall) {
