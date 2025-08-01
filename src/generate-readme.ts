@@ -168,6 +168,15 @@ const buildRankingTable = (
       !requiresSpecialTableHandling(result.manager)
     );
 
+    // Re-rank filtered results
+    filteredResults.forEach((result, index) => {
+      result.rank = index + 1;
+      // Keep medals only for top 3
+      if (index >= 3) {
+        result.medal = undefined;
+      }
+    });
+
     // Replace regular results with filtered results
     const filteredTableRows = filteredResults.map((result) =>
       `| ${result.medal || `#${result.rank}`} | ${result.manager} | ${
@@ -191,7 +200,7 @@ const buildRankingTable = (
     );
 
     // Add N/A entries for managers that require special handling
-    for (const manager of ["oh-my-zsh", "prezto"]) {
+    for (const manager of ["oh-my-zsh", "prezto", "zcomet"]) {
       if (requiresSpecialTableHandling(manager)) {
         tableRows.push(`| - | ${manager} | N/A | - |`);
       }
