@@ -82,22 +82,19 @@ export const getSlowManagerSettings = (
   return null;
 };
 
-export const getSpecialInstallCommand = (manager: string): string | null => {
+export const getSpecialInstallCommand = (manager: string, pluginCount: number): string | null => {
   const mgr = PLUGIN_MANAGERS[manager as keyof typeof PLUGIN_MANAGERS];
-  if (manager === "zgenom") {
-    return `zsh -c 'source ~/.zshrc && zgenom update'`;
-  }
   return mgr?.customInstallCommand || null;
 };
 
 export const getPluginLoadSeparator = (templateName: string): string => {
   // Special case for sheldon TOML format
-  return templateName === "sheldon.plugins.toml" ? "\n\n" : "\n";
+  return templateName === "sheldon-plugins.toml" ? "\n\n" : "\n";
 };
 
 export const usesPluginConfigs = (templateName: string): boolean => {
   // Special case for sheldon TOML format
-  return templateName === "sheldon.plugins.toml";
+  return templateName === "sheldon-plugins.toml";
 };
 
 // ============================================================================
@@ -135,7 +132,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "vanilla",
     repo: "zsh-users/zsh",
     cacheCleanCommand: "true",
-    configFiles: createConfigFiles("vanilla.zshrc"),
+    configFiles: createConfigFiles("vanilla-config.zshrc"),
     generatePluginLoad: () => "",
     versionCommand: "zsh --version | awk '{print $2}'",
   },
@@ -147,7 +144,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.oh-my-zsh/cache",
       "~/.oh-my-zsh/custom/plugins/*",
     ),
-    configFiles: createConfigFiles("oh-my-zsh.zshrc"),
+    configFiles: createConfigFiles("oh-my-zsh-config.zshrc"),
     generatePluginLoad: (plugin) =>
       `source ~/.oh-my-zsh/custom/plugins/${getPluginName(plugin)}/${
         getPluginName(plugin)
@@ -167,8 +164,8 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.cache/prezto",
     ),
     configFiles: [
-      { path: "~/.zpreztorc", template: "prezto.zpreztorc" },
-      { path: "~/.zshrc", template: "prezto.zshrc" },
+      { path: "~/.zpreztorc", template: "prezto-config.zpreztorc" },
+      { path: "~/.zshrc", template: "prezto-config.zshrc" },
     ],
     generatePluginLoad: (plugin) =>
       `# External plugin: ${plugin}\n[[ -d ~/.zprezto-contrib/${
@@ -191,8 +188,8 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.zimrc.bak-default",
     ),
     configFiles: [
-      { path: "~/.zimrc", template: "zim.zimrc", isPluginList: true },
-      { path: "~/.zshrc", template: "zim.zshrc" },
+      { path: "~/.zimrc", template: "zim-plugins.zimrc", isPluginList: true },
+      { path: "~/.zshrc", template: "zim-config.zshrc" },
     ],
     generatePluginLoad: createCommand("zmodule"),
     specialInit: async () => {
@@ -218,7 +215,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     repo: "marlonrichert/zsh-snap",
     cacheCleanCommand:
       'find ~/Git -maxdepth 1 -name "zsh-*" ! -name "zsh-snap" -type d -exec rm -rf {} \\; 2>/dev/null || true; rm -rf ~/.cache/znap 2>/dev/null || true',
-    configFiles: createConfigFiles("znap.zshrc"),
+    configFiles: createConfigFiles("znap-config.zshrc"),
     generatePluginLoad: createCommand("znap source"),
     preInstallCommand: async (plugins) => {
       if (plugins.length > 0) {
@@ -238,7 +235,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     repo: "zdharma-continuum/zinit",
     cacheCleanCommand:
       'find ~/.local/share/zinit -mindepth 1 -maxdepth 1 ! -name "zinit.git" -exec rm -rf {} + 2>/dev/null || true; rm -rf ~/.zinit ~/.cache/zinit ~/.zplugin 2>/dev/null || true',
-    configFiles: createConfigFiles("zinit.zshrc"),
+    configFiles: createConfigFiles("zinit-config.zshrc"),
     generatePluginLoad: createCommand("zinit light"),
     versionCommand: getGitVersion("~/.local/share/zinit/zinit.git"),
   },
@@ -252,7 +249,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.zplug/log",
       "~/.zplug/.zcompdump*",
     ),
-    configFiles: createConfigFiles("zplug.zshrc"),
+    configFiles: createConfigFiles("zplug-config.zshrc"),
     generatePluginLoad: (plugin) => `zplug "${plugin}"`,
     versionCommand:
       "zsh -c 'source ~/.zplug/init.zsh && echo $ZPLUG_VERSION' 2>/dev/null || cd ~/.zplug && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
@@ -267,7 +264,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "antigen",
     repo: "zsh-users/antigen",
     cacheCleanCommand: cleanCacheDirs("~/.antigen"),
-    configFiles: createConfigFiles("antigen.zshrc"),
+    configFiles: createConfigFiles("antigen-config.zshrc"),
     generatePluginLoad: createCommand("antigen bundle"),
     versionCommand:
       "grep 'ANTIGEN_VERSION=' ~/.antigen/antigen.zsh 2>/dev/null | cut -d'=' -f2 | tr -d '\"' || cd ~/.antigen && git rev-parse --short HEAD 2>/dev/null || echo 'unknown'",
@@ -278,9 +275,9 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     repo: "getantibody/antibody",
     cacheCleanCommand: cleanCacheDirs("~/.cache/antibody"),
     configFiles: createConfigFiles(
-      "antibody.zshrc",
+      "antibody-config.zshrc",
       "~/.antibody_plugins.txt",
-      "antibody.plugins.txt",
+      "antibody-plugins.txt",
     ),
     generatePluginLoad: createCommand("antibody bundle"),
     preInstallCommand:
@@ -297,9 +294,9 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.zsh_plugins.zsh",
     ),
     configFiles: createConfigFiles(
-      "antidote.zshrc",
+      "antidote-config.zshrc",
       "~/.zsh_plugins.txt",
-      "antidote.zsh_plugins.txt",
+      "antidote-plugins.txt",
     ),
     generatePluginLoad: (plugin) => plugin,
     postInstallCommand:
@@ -318,9 +315,9 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     configFiles: [
       {
         path: "~/.config/sheldon/plugins.toml",
-        template: "sheldon.plugins.toml",
+        template: "sheldon-plugins.toml",
       },
-      { path: "~/.zshrc", template: "sheldon.zshrc" },
+      { path: "~/.zshrc", template: "sheldon-config.zshrc" },
     ],
     generatePluginLoad: (plugin) =>
       `[plugins.${getPluginName(plugin)}]\ngithub = "${plugin}"`,
@@ -342,16 +339,14 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
       "~/.zgenom/*.zwc",
       "~/.zgenom/.zcompdump*",
     ),
-    configFiles: createConfigFiles("zgenom.zshrc"),
+    configFiles: createConfigFiles("zgenom-config.zshrc"),
     generatePluginLoad: createCommand("  zgenom load"),
-    preInstallCommand: async () => {
-      await runCommand(
-        "rm -rf ~/.zgenom/sources ~/.zgenom/init.zsh ~/.zgenom/.zcompdump* 2>/dev/null || true",
-        { silent: true },
-      );
+    postInstallCommand: "zsh -c 'source ~/.zshrc; zgenom compile'",
+    slowInstallSettings: {
+      minPluginCount: 1,
+      runs: 1,
+      timeout: 300,  // 5 minutes for zgenom
     },
-    skipInstall: false,
-    specialInstallMeasure: true,
     versionCommand: getGitVersion("~/.zgenom"),
   },
 
@@ -359,7 +354,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "zpm",
     repo: "zpm-zsh/zpm",
     cacheCleanCommand: cleanCacheDirs("~/.local/share/zsh/plugins"),
-    configFiles: createConfigFiles("zpm.zshrc"),
+    configFiles: createConfigFiles("zpm-config.zshrc"),
     generatePluginLoad: createCommand("zpm load"),
     versionCommand: getGitVersion("~/.zpm"),
   },
@@ -368,7 +363,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "zr",
     repo: "jedahan/zr",
     cacheCleanCommand: cleanCacheDirs("~/.zr/plugins"),
-    configFiles: createConfigFiles("zr.zshrc"),
+    configFiles: createConfigFiles("zr-config.zshrc"),
     generatePluginLoad: createCommand("zr load"),
     versionCommand: "echo 'custom implementation'",
   },
@@ -377,7 +372,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "antigen-hs",
     repo: "Tarrasch/antigen-hs",
     cacheCleanCommand: cleanCacheDirs("~/.antigen-hs/repos"),
-    configFiles: createConfigFiles("antigen-hs.zshrc"),
+    configFiles: createConfigFiles("antigen-hs-config.zshrc"),
     generatePluginLoad: createCommand("antigen-hs bundle"),
     versionCommand: "echo 'custom implementation'",
   },
@@ -387,10 +382,17 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     repo: "agkozak/zcomet",
     cacheCleanCommand: cleanCacheDirs("~/.zcomet/downloads", "~/.zcomet/repos"),
     configFiles: [
-      { path: "~/.zshrc", template: "zcomet.zshrc" },
-      { path: "~/.zshrc.zcomet", template: "zcomet.zshrc.zcomet" },
+      { path: "~/.zshrc", template: "zcomet-config.zshrc" },
+      { path: "~/.zshrc.zcomet", template: "zcomet-plugins.zcomet" },
     ],
     generatePluginLoad: createCommand("zcomet load"),
+    // zcomet downloads plugins asynchronously - wait for all downloads to complete
+    customInstallCommand: `bash -c 'EXPECTED=$(grep -c "^zcomet load" ~/.zshrc.zcomet 2>/dev/null || echo 25); zsh -ic exit & sleep 5; LAST_COMPLETE=0; STABLE_COUNT=0; for i in {1..180}; do COMPLETE=$(find ~/.zcomet/repos -name HEAD 2>/dev/null | wc -l); if [ $COMPLETE -eq $LAST_COMPLETE ]; then STABLE_COUNT=$((STABLE_COUNT + 1)); else STABLE_COUNT=0; fi; LAST_COMPLETE=$COMPLETE; if [ $COMPLETE -ge $EXPECTED ] && [ $STABLE_COUNT -ge 10 ]; then break; fi; sleep 1; done'`,
+    slowInstallSettings: {
+      minPluginCount: 1,
+      runs: 1,
+      timeout: 300,
+    },
     versionCommand: getGitVersion("~/.zcomet"),
   },
 
@@ -398,7 +400,7 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     name: "alf",
     repo: "psyrendust/alf",
     cacheCleanCommand: cleanCacheDirs("~/.alf/plugins"),
-    configFiles: createConfigFiles("alf.zshrc"),
+    configFiles: createConfigFiles("alf-config.zshrc"),
     generatePluginLoad: createCommand("alf load"),
     versionCommand: "echo 'custom implementation'",
   },

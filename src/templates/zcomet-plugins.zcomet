@@ -1,0 +1,4 @@
+{{PLUGIN_LOADS}}
+
+# Ensure plugins are loaded
+zcomet compinit

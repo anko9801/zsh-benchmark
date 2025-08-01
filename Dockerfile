@@ -194,5 +194,8 @@ ZGENOM_FIX
 # Layer 8: Copy source files (changes frequently)
 COPY src/ ./src/
 
+# Layer 9: Cache Deno dependencies
+RUN deno cache src/benchmark-cli.ts
+
 # Default command
 CMD ["deno", "task", "benchmark"]

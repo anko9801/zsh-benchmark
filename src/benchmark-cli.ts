@@ -130,16 +130,18 @@ async function runBenchmark(
         DEFAULT_CONFIG.hyperfine.installRuns;
       const timeout = slowSettings?.timeout ||
         (pluginCount >= 25 ? 120 : 60);
-      const specialInstallCmd = getSpecialInstallCommand(manager.name);
-      const installCmd = manager.customInstallCommand || specialInstallCmd ||
+      const specialInstallCmd = getSpecialInstallCommand(manager.name, pluginCount);
+      const installCmd = specialInstallCmd ||
         `timeout ${timeout} zsh -ic exit`;
 
+
+      const prepareCmd = manager.cacheCleanCommand;
+      // Escape single quotes in installCmd for shell
+      const escapedInstallCmd = installCmd.replace(/'/g, "'\\''")
       const cmd =
         `hyperfine --ignore-failure --warmup ${DEFAULT_CONFIG.hyperfine.warmupRuns} --runs ${runs} ` +
-        `--prepare "${
-          manager.cacheCleanCommand.replace(/"/g, '"')
-        }" --export-json /tmp/${manager.name}-install.json ` +
-        `--command-name '${manager.name}-install' '${installCmd}'`;
+        `--prepare '${prepareCmd}' --export-json /tmp/${manager.name}-install.json ` +
+        `--command-name '${manager.name}-install' '${escapedInstallCmd}'`;
 
       const res = await runCommand(cmd, { silent: true });
       if (res.success && await exists(`/tmp/${manager.name}-install.json`)) {
@@ -332,8 +334,6 @@ async function versions(managers: string[]) {
 
 // Main CLI
 if (import.meta.main) {
-  await setupLogging("INFO");
-
   const args = parse(Deno.args, {
     string: ["managers", "counts", "runs", "warmup"],
     boolean: ["help", "version", "debug"],
@@ -372,8 +372,9 @@ ${bold("EXAMPLES:")}
     Deno.exit(0);
   }
 
+  await setupLogging(args.debug ? "DEBUG" : "INFO");
+  
   try {
-    if (args.debug) await setupLogging("DEBUG");
     if (args.runs) {
       const runs = parseInt(args.runs, 10);
       if (!isNaN(runs)) {
