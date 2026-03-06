@@ -32,6 +32,7 @@ import {
   runCommand,
   setupLogging,
 } from "./utils.ts";
+import { addInteractiveMetrics } from "./interactive-benchmark.ts";
 
 const loadTemplate = async (name: string) =>
   await Deno.readTextFile(
@@ -209,11 +210,14 @@ async function runBenchmark(
   return result;
 }
 
-async function benchmark(managers: string[], pluginCounts: number[]) {
+async function benchmark(managers: string[], pluginCounts: number[], interactive = false) {
   logger.info(blue(bold("🚀 Zsh Plugin Manager Scalability Benchmark")));
   logger.info(
     blue(`📊 Testing with plugin counts: ${pluginCounts.join(", ")}`),
   );
+  if (interactive) {
+    logger.info(blue(`🎯 Including interactive latency measurements`));
+  }
 
   const results: BenchmarkResult[] = [];
 
@@ -260,6 +264,16 @@ async function benchmark(managers: string[], pluginCounts: number[]) {
       } else {
         logger.error("Load benchmark failed");
       }
+    }
+  }
+
+  // Add interactive metrics if requested
+  if (interactive) {
+    logger.info(blue(bold("\n🎯 Measuring Interactive Latencies")));
+    try {
+      await addInteractiveMetrics(results);
+    } catch (error) {
+      logger.error("Failed to measure interactive metrics:", error);
     }
   }
 
@@ -356,11 +370,12 @@ ${bold("COMMANDS:")}
     help         Show this help message
 
 ${bold("OPTIONS:")}
-    --managers     Space-separated list of managers to test
-    --counts       Space-separated list of plugin counts (default: 0 25)
-    --runs, -r     Number of runs for hyperfine (default: install=10, load=20)
-    --warmup, -w   Number of warmup runs for hyperfine (default: 1)
-    --debug, -d    Enable debug logging
+    --managers       Space-separated list of managers to test
+    --counts         Space-separated list of plugin counts (default: 0 25)
+    --runs, -r       Number of runs for hyperfine (default: install=10, load=20)
+    --warmup, -w     Number of warmup runs for hyperfine (default: 1)
+    --interactive    Measure interactive latencies (first prompt, command lag, etc)
+    --debug, -d      Enable debug logging
 
 ${bold("EXAMPLES:")}
     deno run --allow-all benchmark-cli.ts
@@ -399,7 +414,7 @@ ${bold("EXAMPLES:")}
         await versions(opts.managers);
         break;
       default:
-        await benchmark(opts.managers, opts.pluginCounts);
+        await benchmark(opts.managers, opts.pluginCounts, args.interactive);
     }
   } catch (error) {
     logError("Command failed", error as Error);

@@ -276,6 +276,56 @@ const buildOverallTable = (results: RankingResult[]) => {
   ];
 };
 
+const buildInteractiveTable = (results: BenchmarkResult[]) => {
+  // Filter for 25 plugin results with interactive metrics
+  const interactiveResults = results.filter(r => 
+    r.pluginCount === 25 && 
+    (r.firstPromptLag !== undefined || r.firstCommandLag !== undefined || r.commandLag !== undefined || r.inputLag !== undefined)
+  );
+  
+  if (interactiveResults.length === 0) {
+    return [
+      "| Plugin Manager | First Prompt | First Command | Command Lag | Input Lag | Rating |",
+      "| --- | ---: | ---: | ---: | ---: | --- |",
+      "| (No interactive data available) | - | - | - | - | - |",
+    ];
+  }
+  
+  const rows = interactiveResults.map(r => {
+    const firstPrompt = r.firstPromptLag !== undefined && r.firstPromptLag !== null 
+      ? `${r.firstPromptLag.toFixed(1)}ms` : "-";
+    const firstCommand = r.firstCommandLag !== undefined && r.firstCommandLag !== null 
+      ? `${r.firstCommandLag.toFixed(1)}ms` : "-";
+    const commandLag = r.commandLag !== undefined && r.commandLag !== null 
+      ? `${r.commandLag.toFixed(1)}ms` : "-";
+    const inputLag = r.inputLag !== undefined && r.inputLag !== null 
+      ? `${r.inputLag.toFixed(1)}ms` : "-";
+    
+    // Human perception ratings based on romkatv/zsh-bench thresholds
+    let rating = "";
+    if (r.firstPromptLag !== undefined && r.firstPromptLag !== null) {
+      rating += r.firstPromptLag < 50 ? "🟢" : r.firstPromptLag < 150 ? "🟡" : "🔴";
+    }
+    if (r.commandLag !== undefined && r.commandLag !== null) {
+      rating += r.commandLag < 10 ? "🟢" : r.commandLag < 30 ? "🟡" : "🔴";
+    }
+    if (r.inputLag !== undefined && r.inputLag !== null) {
+      rating += r.inputLag < 20 ? "🟢" : r.inputLag < 50 ? "🟡" : "🔴";
+    }
+    
+    return `| ${r.manager} | ${firstPrompt} | ${firstCommand} | ${commandLag} | ${inputLag} | ${rating} |`;
+  });
+  
+  return [
+    "| Plugin Manager | First Prompt | First Command | Command Lag | Input Lag | Rating |",
+    "| --- | ---: | ---: | ---: | ---: | --- |",
+    ...rows,
+    "",
+    "_Rating: 🟢 Imperceptible, 🟡 Noticeable, 🔴 Slow_",
+    "_Thresholds: First Prompt < 50ms, Command < 10ms, Input < 20ms_",
+  ];
+};
+
 // Core README generation function
 async function generateReadme(
   input = "./results/benchmark-results-latest.json",
@@ -345,6 +395,12 @@ async function generateReadme(
     "**Score Calculation**: `(Load Time / Load Time Average × 0.8) + (Install Time / Install Time Average × 0.2)` - Lower is better",
     "",
     ...buildOverallTable(rankings.overall),
+    "",
+    "### Interactive Latencies (Experimental)",
+    "",
+    "Inspired by [romkatv/zsh-bench](https://github.com/romkatv/zsh-bench) - measures user-perceivable delays",
+    "",
+    ...buildInteractiveTable(data.results),
     "",
     "## 📦 Plugin Managers",
     "",

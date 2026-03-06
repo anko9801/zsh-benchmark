@@ -428,6 +428,8 @@ export const PLUGIN_MANAGERS: Record<ManagerName, PluginManager> = {
     skipInstall: true,
     requiresSpecialTableHandling: true,
     versionCommand: getGitVersion("~/.zcomet"),
+    // Mark as supporting async detection
+    supportsAsyncDetection: true,
   },
 
   alf: {
