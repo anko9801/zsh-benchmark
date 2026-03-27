@@ -58,7 +58,7 @@ jobs:
 
       - name: Save benchmark results
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pr-benchmark-results
           path: results/benchmark-results-latest.json
@@ -239,7 +239,7 @@ jobs:
           fi
 
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: benchmark-results
           path: results/
